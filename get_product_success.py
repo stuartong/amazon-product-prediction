@@ -108,8 +108,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     data = get_product_success(args.meta_url,args.review_url)
-    data[0].to_pickle('data/'+data[2]+'.pkl')
-    data[1].to_pickle('data/'+data[3]+".pkl")
+    data[0].to_pickle('data/combined_'+data[2][5:-8]+'.pkl')
+    data[1].to_pickle('data/review_'+data[3][:-8]+".pkl")
 
 '''
 To run in terminal - use the following example command
