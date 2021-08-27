@@ -17,6 +17,7 @@ def get_product_success(cat_meta_url,cat_review_url):
     Example: http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Video_Games.json.gz
     cat_review_url - URL of categories reviews
     Example: http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Video_Games.json.gz
+    
 
     Outputs:
     1. combined_df - Meta data joined with success metrics from review_df
@@ -54,7 +55,7 @@ def get_product_success(cat_meta_url,cat_review_url):
     # fill NA with blanks
     meta_df.fillna('',inplace=True)
     # remove unformated rows
-    meta_df = meta_df[meta_df.title.str.contains('getTime')]
+    meta_df = meta_df[~meta_df.title.str.contains('getTime')]
 
     # open gzip of review_data and get json data
     data = []
@@ -79,8 +80,10 @@ def get_product_success(cat_meta_url,cat_review_url):
     # join summary with meta_data
     combined_df = meta_df.join(summary_df,on='asin')
 
+
     # fill NaN with 0 in combined_df - i.e. no reviews
     combined_df[['tot_stars','tot_reviews','avg_stars']] = combined_df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
+
 
     # ADD IN OTHER DATA EXPLORATION HERE ROUTINES HERE
     # Are stars/reviews indicative of product success? 
