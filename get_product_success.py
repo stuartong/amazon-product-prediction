@@ -4,6 +4,7 @@ import gzip
 import pandas as pd
 import requests
 import argparse
+from tqdm import tqdm
 from urllib.request import urlopen
 
 def get_product_success(cat_meta_url,cat_review_url):
@@ -29,26 +30,33 @@ def get_product_success(cat_meta_url,cat_review_url):
     review_filename = cat_review_url.split('/')[-1]
     
     # get meta_data and save it to file
+    print("Downloading Metadata...")
     with open(meta_filename,"wb") as f:
         r = requests.get(cat_meta_url)
         f.write(r.content)
     f.close()
+    print('Metadata Download Complete!')
+
 
     # get review_data and save it to file
+    print("Downloading Review Data...")
     with open(review_filename,"wb") as f:
         r = requests.get(cat_review_url)
         f.write(r.content)
     f.close()
+    print("Review Data Download Complete!")
 
     # open gzip of meta_data and get json data
+    print("Reading Metadata...")
     data = []
     with gzip.open(meta_filename) as f:
-        for l in f:
+        for l in tqdm(f):
             data.append(json.loads(l.strip()))
     f.close()
     
     # save meta_data to dataframe
     meta_df = pd.DataFrame.from_dict(data)
+    print("Metadata Converted")
 
     # clean meta_data as recommended
      
@@ -58,15 +66,18 @@ def get_product_success(cat_meta_url,cat_review_url):
     meta_df = meta_df[~meta_df.title.str.contains('getTime')]
 
     # open gzip of review_data and get json data
+    print("Reading Review Data...")
     data = []
     with gzip.open(review_filename) as f:
-        for l in f:
+        for l in tqdm(f):
             data.append(json.loads(l.strip()))
     f.close()
-
+    
     # save review_data to dataframe
     review_df = pd.DataFrame.from_dict(data)
     
+    print("Review Data Converted")
+
     # get success metrics - target variables
     # ONLY KEEP ONE FOR training models 
     # DO NOT USE UNUSED VARIABLE FOR TRAINING - DATA LEAK
@@ -93,6 +104,7 @@ def get_product_success(cat_meta_url,cat_review_url):
 
 
     # Clean Up - delete downloaded gzip files
+    print("Cleaning up temp files...")
     os.remove(meta_filename)
     os.remove(review_filename)
 
