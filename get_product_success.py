@@ -6,8 +6,7 @@ import requests
 import argparse
 from tqdm import tqdm
 from urllib.request import urlopen
-from preprocess_data import clean_categories_column, clean_vectorize_features_column, clean_vectorize_review_column
-
+from preprocess_data import clean_categories_column, create_full_feature_column
 def get_product_success(cat_meta_url,cat_review_url):
     '''
     This function takes the meta data and review URL for a category
@@ -100,6 +99,8 @@ def get_product_success(cat_meta_url,cat_review_url):
     combined_df.drop_duplicates(subset= "asin", inplace= True)
     #cleaning and preprocessing category column
     combined_df= clean_categories_column(combined_df)
+    #merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
+    combined_df= create_full_feature_column(combined_df)
     
     # ADD IN OTHER DATA EXPLORATION HERE ROUTINES HERE
     # Are stars/reviews indicative of product success? 

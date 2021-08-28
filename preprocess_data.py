@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from collections import Counter, defaultdict
+import re
 
 def clean_categories_column(df):
     """clean_categories_column takes in a dataframe and return the categories
@@ -29,11 +30,23 @@ def clean_categories_column(df):
     df["category"]= df["category"].apply(lambda row : [word.lower() for word in row if word in cat_500])
     return df
 
-def clean_vectorize_features_column(df):
-    pass
+def create_full_feature_column(df):
+    """create_full_feature_column takes the df and combines category, description, brand, feature
+    columns into one full_feature column and extract alphanumeric characters only
 
-def clean_vectorize_review_column(df):
-    pass
+
+
+    Args:
+        df (dataframe): target dataframe
+
+    Returns:
+        df (dataframe): updated dataframe with full_feature column
+    """
+    df["full_features"]= (df["category"]+ df["description"]+ df["brand"]+ df["feature"]).lower()
+    df["full_features"]= df["full_features"].replace("\\t", "").replace("\\n", "")
+    df["full_features"]= df["full_features"].apply(lambda row: re.findall(r'\w+', row, re.I, re.DOTALL))
+    df.drop(columns= ["category", "description", "brand", "feature"], inplace= True)
+    return df
 
 if __name__ == "main)":
     import argparse
