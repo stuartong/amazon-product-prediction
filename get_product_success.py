@@ -96,6 +96,8 @@ def get_product_success(cat_meta_url,cat_review_url):
     # fill NaN with 0 in combined_df - i.e. no reviews
     combined_df[['tot_stars','tot_reviews','avg_stars']] = combined_df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
 
+    #removing duplicate products based on "asin" column
+    combined_df.drop_duplicates(subset= "asin", inplace= True)
     #cleaning and preprocessing category column
     combined_df= clean_categories_column(combined_df)
     
