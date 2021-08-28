@@ -6,6 +6,7 @@ import requests
 import argparse
 from tqdm import tqdm
 from urllib.request import urlopen
+from preprocess_data import clean_categories_column, clean_vectorize_features_column, clean_vectorize_review_column
 
 def get_product_success(cat_meta_url,cat_review_url):
     '''
@@ -95,7 +96,9 @@ def get_product_success(cat_meta_url,cat_review_url):
     # fill NaN with 0 in combined_df - i.e. no reviews
     combined_df[['tot_stars','tot_reviews','avg_stars']] = combined_df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
 
-
+    #cleaning and preprocessing category column
+    combined_df= clean_categories_column(combined_df)
+    
     # ADD IN OTHER DATA EXPLORATION HERE ROUTINES HERE
     # Are stars/reviews indicative of product success? 
     # Can a product with zero reviews be successful? Check correlation with salesrank?
