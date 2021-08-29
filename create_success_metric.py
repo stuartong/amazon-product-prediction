@@ -43,7 +43,7 @@ def create_success_metric(review_df,meta_df):
     combined_df['new_rank'] = [' '.join(map(str,l)) for l in combined_df['rank']]
     combined_df['new_rank'] = combined_df['new_rank'].str.replace(',','')
     combined_df['new_rank'] = combined_df['new_rank'].str.extract(r'(\d+)')
-    combined_df['new_rank'] = combined_df['new_rank'].astype(int)
+    combined_df['new_rank'] = combined_df['new_rank'].astype(float)
 
     # fill blanks/NaNs (i.e. no reviews etc) with 0
     fill_miss = ['tot_stars','tot_reviews','avg_stars','score','new_rank']
@@ -93,7 +93,7 @@ def check_score_rank(combined_df):
     plt.savefig('charts/log_distribution.png')
 
     # plot log_distribution of score vs rank - Non-zero
-    sns.lmplot(x='log_new_rank',y='score',data=scatter_nozero)
+    sns.lmplot(x='log_new_rank',y='log_score',data=scatter_nozero)
     plt.title('Log Distribution of Scores vs Rank - Non-zero')
     plt.savefig('charts/log_distribution(NZ).png')
 
