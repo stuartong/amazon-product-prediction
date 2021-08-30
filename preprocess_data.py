@@ -30,6 +30,32 @@ def clean_categories_column(df):
     df["category"]= df["category"].apply(lambda row : [word.lower() for word in row if word in cat_500])
     return df
 
+def clean_text(sent):
+    """takes a string and returns a list of lemmatized words that are not in the NLTK english stopwords
+
+    
+
+    Args:
+        sent (str|list): string or list of strings
+
+    Returns:
+        list: list of lemmatized version of the original text
+    """
+    from nltk.stem import WordNetLemmatizer
+    from nltk.corpus import stopwords
+    stop_words= stopwords.words("english")
+    lemmatizer= WordNetLemmatizer()
+    # 
+    try:
+        extracted_words=  re.findall(r'(?:\\\\[\']?t|\\\\n|<[^>]+>|[-]{2,})|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', sent)
+        filtered_words= [word for word in extracted_words if word not in stop_words]
+        lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
+        return lemmatized_words
+    except:
+        filtered_words= [word for word in sent if word not in stop_words]
+        lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
+        return lemmatized_words
+
 def create_full_feature_column(df):
     """create_full_feature_column takes the df and combines category, description, brand, feature
     columns into one full_feature column and extract alphanumeric characters only
