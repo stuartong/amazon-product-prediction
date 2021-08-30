@@ -43,7 +43,7 @@ def create_full_feature_column(df):
         df (dataframe): updated dataframe with full_feature column
     """
     df["full_features"]= (df["category"]+ df["description"]+ df["brand"]+ df["feature"]).lower()
-    df["full_features"]= df["full_features"].apply(lambda row: re.findall(r'(?:\\\\t\s*|\\\\n\s*|&amp;\s|.?</?\w+>|< a href.*]|<div style=.*])*(\w+\s@\s\w+|[a-zA-Z0-9-/.]+)', row, re.I, re.DOTALL))
+    df["full_features"]= df["full_features"].apply(lambda row: re.findall(r'(?:\\\\[\']?t|\\\\n|<[^>]+>|[-]{2,})|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', row, re.I, re.DOTALL))
     df.drop(columns= ["category", "description", "brand", "feature"], inplace= True)
     return df
 
