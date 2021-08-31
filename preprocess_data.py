@@ -32,12 +32,8 @@ def clean_categories_column(df):
 
 def clean_text(sent):
     """takes a string and returns a list of lemmatized words that are not in the NLTK english stopwords
-
-    
-
     Args:
         sent (str|list): string or list of strings
-
     Returns:
         list: list of lemmatized version of the original text
     """
@@ -45,16 +41,19 @@ def clean_text(sent):
     from nltk.corpus import stopwords
     stop_words= stopwords.words("english")
     lemmatizer= WordNetLemmatizer()
-    # 
-    try:
-        extracted_words=  re.findall(r'(?:\\\\[\']?t|\\\\n|<[^>]+>|[-]{2,})|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', sent)
-        filtered_words= [word for word in extracted_words if word not in stop_words]
+
+    if type(sent) == "list":
+        text= " ".join(sent)
+        extracted_words=  re.findall(r'(?:\\+[\']?t|\\+n|<[^>]+>|[-]{2,}|&amp)|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', text)
+        filtered_words= [word for word in extracted_words if (word not in stop_words) & (len(word)>1)]
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
         return lemmatized_words
-    except:
-        filtered_words= [word for word in sent if word not in stop_words]
+    else:
+        extracted_words=  re.findall(r'(?:\\+[\']?t|\\+n|<[^>]+>|[-]{2,}|&amp)|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', sent)
+        filtered_words= [word for word in extracted_words if (word not in stop_words) & (len(word)>1)]
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
         return lemmatized_words
+  
 
 def create_full_feature_column(df):
     """create_full_feature_column takes the df and combines category, description, brand, feature
