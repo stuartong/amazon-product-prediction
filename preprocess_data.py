@@ -69,7 +69,7 @@ def create_full_feature_column(df):
     Returns:
         df (dataframe): updated dataframe with full_feature column
     """
-    df["full_features"]= df["category"]+ df["description"]+ df["brand"]+ df["feature"] +df["title"]
+    df["full_features"]= (df["category"]+ df["description"]+ df["brand"]+ df["feature"] +df["title"]).map(pd.unique)
     df.drop(columns= ["category", "description", "brand", "feature", "title"], inplace= True)
     return df
 
