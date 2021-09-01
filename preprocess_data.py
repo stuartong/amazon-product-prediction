@@ -39,18 +39,18 @@ def clean_text(sent):
     import re
     from nltk.stem import WordNetLemmatizer
     from nltk.corpus import stopwords
-    stop_words= stopwords.words("english")
+    stop_words= stopwords.words("english") 
     lemmatizer= WordNetLemmatizer()
 
     if type(sent) == list:
-        print("dtype is list of strings")
+        # print("dtype is list of strings")
         text= " ".join(sent)
         extracted_words=  re.findall(r'(?:\\+[\']?t|\\+n|<[^>]+>|[-]{2,}|&amp|https?://[^\s]+)|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', string= text)
         filtered_words= [word.lower() for word in extracted_words if (word not in stop_words) & (len(word)>1)]
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
         return lemmatized_words
     elif type(sent) == str:
-        print("dtype is string")
+        # print("dtype is string")
         extracted_words=  re.findall(r'(?:\\+[\']?t|\\+n|<[^>]+>|[-]{2,}|&amp|https?://[^\s]+)|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', string= sent)
         filtered_words= [word.lower() for word in extracted_words if (word not in stop_words) & (len(word)>1)]
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
