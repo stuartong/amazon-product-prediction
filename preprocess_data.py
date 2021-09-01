@@ -37,6 +37,7 @@ def clean_text(sent):
     Returns:
         list: list of lemmatized version of the original text
     """
+    import re
     from nltk.stem import WordNetLemmatizer
     from nltk.corpus import stopwords
     stop_words= stopwords.words("english")
@@ -44,12 +45,13 @@ def clean_text(sent):
 
     if type(sent) == "list":
         text= " ".join(sent)
-        extracted_words=  re.findall(r'(?:\\+[\']?t|\\+n|<[^>]+>|[-]{2,}|&amp)|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', text)
+        extracted_words=  re.findall(r'(?:\\+[\']?t|\\+n|<[^>]+>|[-]{2,}|&amp|https?://[^\s]+)|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', string= text)
         filtered_words= [word for word in extracted_words if (word not in stop_words) & (len(word)>1)]
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
         return lemmatized_words
-    else:
-        extracted_words=  re.findall(r'(?:\\+[\']?t|\\+n|<[^>]+>|[-]{2,}|&amp)|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', sent)
+    elif type(sent) == str:
+        print("error")
+        extracted_words=  re.findall(r'(?:\\+[\']?t|\\+n|<[^>]+>|[-]{2,}|&amp|https?://[^\s]+)|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', string= sent)
         filtered_words= [word for word in extracted_words if (word not in stop_words) & (len(word)>1)]
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
         return lemmatized_words
