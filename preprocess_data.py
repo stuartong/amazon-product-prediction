@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from collections import Counter, defaultdict
-import re
 
 def clean_categories_column(df):
     """clean_categories_column takes in a dataframe and return the categories
