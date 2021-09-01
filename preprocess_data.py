@@ -58,7 +58,7 @@ def clean_text(sent):
   
 
 def create_full_feature_column(df):
-    """create_full_feature_column takes the df and combines category, description, brand, feature
+    """create_full_feature_column takes the df and combines category, description, brand, feature, title
     columns into one full_feature column and extract alphanumeric characters only
 
 
@@ -69,8 +69,8 @@ def create_full_feature_column(df):
     Returns:
         df (dataframe): updated dataframe with full_feature column
     """
-    df["full_features"]= df["category"]+ df["description"]+ df["brand"]+ df["feature"]
-    df.drop(columns= ["category", "description", "brand", "feature"], inplace= True)
+    df["full_features"]= df["category"]+ df["description"]+ df["brand"]+ df["feature"] +df["title"]
+    df.drop(columns= ["category", "description", "brand", "feature", "title"], inplace= True)
     return df
 
 # if __name__ == "main)":
