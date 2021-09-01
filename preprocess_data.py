@@ -57,38 +57,38 @@ def clean_text(sent):
         return lemmatized_words
   
 
-def create_full_feature_column(df):
-    """create_full_feature_column takes the df and combines category, description, brand, feature
-    columns into one full_feature column and extract alphanumeric characters only
+# def create_full_feature_column(df):
+#     """create_full_feature_column takes the df and combines category, description, brand, feature
+#     columns into one full_feature column and extract alphanumeric characters only
 
 
 
-    Args:
-        df (dataframe): target dataframe
+#     Args:
+#         df (dataframe): target dataframe
 
-    Returns:
-        df (dataframe): updated dataframe with full_feature column
-    """
-    df["full_features"]= (df["category"]+ df["description"]+ df["brand"]+ df["feature"]).lower()
-    df["full_features"]= df["full_features"].apply(lambda row: re.findall(r'(?:\\\\[\']?t|\\\\n|<[^>]+>|[-]{2,})|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', row, re.I, re.DOTALL))
-    df.drop(columns= ["category", "description", "brand", "feature"], inplace= True)
-    return df
+#     Returns:
+#         df (dataframe): updated dataframe with full_feature column
+#     """
+#     df["full_features"]= (df["category"]+ df["description"]+ df["brand"]+ df["feature"]).lower()
+#     df["full_features"]= df["full_features"].apply(lambda row: re.findall(r'(?:\\\\[\']?t|\\\\n|<[^>]+>|[-]{2,})|(\d+[,]\d+ ?[xX]? ?\d+[,]\d+|[a-zA-Z0-9-/.]+)', row, re.I, re.DOTALL))
+#     df.drop(columns= ["category", "description", "brand", "feature"], inplace= True)
+#     return df
 
-if __name__ == "main)":
-    import argparse
-    parser= argparse.ArgumentParser()
-    parser.add_argument(####ADD ARGUMENTS###)
-    )
-    parser.add_argument(
-        "output",
-        help= "output path (string)")
-    args= parser.parse_args()
+# if __name__ == "main)":
+#     import argparse
+#     parser= argparse.ArgumentParser()
+#     parser.add_argument(####ADD ARGUMENTS###)
+#     )
+#     parser.add_argument(
+#         "output",
+#         help= "output path (string)")
+#     args= parser.parse_args()
 
-    df= pd.read_pickle(### PATH TO DF##
-                       )
-    df= clean_categories_column(df)
-    df= clean_vectorize_features_column(df)
-    df= clean_vectorize_review_column(df)
-    #saving the cleaned df
-    df.to_pickle(args.output)
+#     df= pd.read_pickle(### PATH TO DF##
+#                        )
+#     df= clean_categories_column(df)
+#     df= clean_vectorize_features_column(df)
+#     df= clean_vectorize_review_column(df)
+#     #saving the cleaned df
+#     df.to_pickle(args.output)
     
