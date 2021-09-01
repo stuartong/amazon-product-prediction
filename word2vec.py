@@ -13,7 +13,7 @@ def get_pretrained_model(target_model= 'glove-wiki-gigaword-300' ):
         pretrained KeyedVector
     """
     import gensim.downloader as api
-    return api.load(target_model)
+    return gensim.models.KeyedVectors.load(api.load(target_model))
 
 def generate_dense_features(tokenized_texts, model_vectors= None, use_mean= True):
     """This function takes tokenized_texts in list format and a pretrained word2vec model
