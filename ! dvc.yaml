@@ -11,12 +11,13 @@ stages:
     - meta_filename
     - review_filename
   supervised_ml:
-    cmd: python supervised_ml.py combined_df 
+    cmd: python run_supervised.py combined_df 
     deps:
-      - supervised_ml.py
+      - sun_supervised.py
       - combined_df
     outs:
       - supervised_model.pkl
+      - visuals.jpg
   product_summary:
       cmd: python product_summary.py combined_df review_df
       deps:
@@ -25,14 +26,24 @@ stages:
         - review_df
       outs:
         - combined_df #should Name change?
-  clustering:
-    cmd: python clustering.py combined_df review_df
+  clustering_reviews:
+    cmd: python clustering_reviews.py combined_df review_df
     deps:
-      - clustering.py  
+      - clustering_reviews.py  
       - combined_df
       - review_df
     outs:
-      - clustering_model.pkl
+      - clustering_reviews_model.pkl
+      - clusters.jpg
+      - review_df # with potential fake news removed?
+  clustering_product_reviews:
+    cmd: python clustering_product_reviews.py combined_df review_df
+    deps:
+      - clustering_product_reviews.py  
+      - combined_df
+      - review_df
+    outs:
+      - clustering_product_reviews_model.pkl
       - clusters.jpg
       - review_df # with potential fake news removed?
   
