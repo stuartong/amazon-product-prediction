@@ -6,7 +6,8 @@ import requests
 import argparse
 from tqdm import tqdm
 from urllib.request import urlopen
-from preprocess_data import clean_categories_column, create_full_feature_column
+from preprocess_data import clean_categories_column, clean_text, create_full_feature_column
+from word2vec import generate_dense_features, get_pretrained_model
 def get_product_success(cat_meta_url,cat_review_url):
     '''
     This function takes the meta data and review URL for a category
@@ -62,7 +63,7 @@ def get_product_success(cat_meta_url,cat_review_url):
      
     # fill NA with blanks
     meta_df.fillna('',inplace=True)
-    # remove unformated rows
+    # remove unformatted rows
     meta_df = meta_df[~meta_df.title.str.contains('getTime')]
 
     # open gzip of review_data and get json data
@@ -94,14 +95,21 @@ def get_product_success(cat_meta_url,cat_review_url):
 
     # fill NaN with 0 in combined_df - i.e. no reviews
     combined_df[['tot_stars','tot_reviews','avg_stars']] = combined_df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
-
-    #removing duplicate products based on "asin" column
-    combined_df.drop_duplicates(subset= "asin", inplace= True)
-    #cleaning and preprocessing category column
-    combined_df= clean_categories_column(combined_df)
-    #merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
-    combined_df= create_full_feature_column(combined_df)
     
+    #Step1: removing duplicate products based on "asin" column
+    combined_df.drop_duplicates(subset= "asin", inplace= True)
+    #Step2: downsampling the categories that only appear 500 times in column
+    combined_df= clean_categories_column(combined_df)
+    #step3: cleaning and vectorizing the text in 'brand', 'title', 'feature', 'category', 'description' columns
+    for col in ["category", "description", "title", "feature", "brand"]:
+        combined_df[col]= combined_df[col].apply(lambda row: clean_text(row))
+    #Step4:merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
+    combined_df= create_full_feature_column(combined_df)
+    #step 5: Get pretrained word2vec model
+    
+    #step: creating wordvec columns to the df
+    # model= 
+    # combined_df["wordvec"]= 
     # ADD IN OTHER DATA EXPLORATION HERE ROUTINES HERE
     # Are stars/reviews indicative of product success? 
     # Can a product with zero reviews be successful? Check correlation with salesrank?
