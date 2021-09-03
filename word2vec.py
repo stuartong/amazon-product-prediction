@@ -38,7 +38,7 @@ def generate_dense_features(tokenized_texts, model= None, use_mean= True):
     else:
         cached_vocab= model.key_to_index.keys()
         target_list= []
-        for item in tqdm(tokenized_texts):
+        for item in tokenized_texts:
             words= [word for word in item if model.index_to_key]
         if len(words) > 0:
             if use_mean == True:
