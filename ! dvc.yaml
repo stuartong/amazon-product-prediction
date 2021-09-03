@@ -1,0 +1,39 @@
+stages:
+  load:
+    cmd: python get_product_success.py '' ''
+    deps: 
+    - get_product_success.py
+    - ''
+    - ''
+    outs:
+    - combined_df
+    - review_df
+    - meta_filename
+    - review_filename
+  supervised_ml:
+    cmd: python supervised_ml.py combined_df 
+    deps:
+      - supervised_ml.py
+      - combined_df
+    outs:
+      - supervised_model.pkl
+  product_summary:
+      cmd: python product_summary.py combined_df review_df
+      deps:
+        - product_summary.py
+        - combined_df
+        - review_df
+      outs:
+        - combined_df #should Name change?
+  clustering:
+    cmd: python clustering.py combined_df review_df
+    deps:
+      - clustering.py  
+      - combined_df
+      - review_df
+    outs:
+      - clustering_model.pkl
+      - clusters.jpg
+      - review_df # with potential fake news removed?
+  
+
