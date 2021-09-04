@@ -18,7 +18,7 @@ import numpy as np
 '''
 
 
-def sentiment_analysis():
+def sentiment_analysis(rating):
     if (rating == 5) or (rating == 4):
         return 'Positive'
     elif rating == 3:
