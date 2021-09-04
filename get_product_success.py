@@ -6,8 +6,11 @@ import requests
 import argparse
 from tqdm import tqdm
 from urllib.request import urlopen
+
 from preprocess_data import clean_categories_column, clean_text, create_full_feature_column
+from preprocess_review_data import clean_review_column, clean_review, create_full_feature_review
 from word2vec import generate_dense_features, get_pretrained_model
+
 def get_product_success(cat_meta_url,cat_review_url):
     '''
     This function takes the meta data and review URL for a category
@@ -78,11 +81,24 @@ def get_product_success(cat_meta_url,cat_review_url):
     review_df = pd.DataFrame.from_dict(data)
     
     print("Review Data Converted")
+   
+    # --------------------------------------------------------------------------------------------------------------------------- #
 
     # get success metrics - target variables
     # ONLY KEEP ONE FOR training models 
     # DO NOT USE UNUSED VARIABLE FOR TRAINING - DATA LEAK
-
+    
+    ### let us futher process the review_df alone
+    #Step1 : cleaning the review_df from any duplicates in 'reviewText' column
+    review_df = clean_review_column(review_df)
+    #Step2 : cleaning the text in 'reviewText', 'summary' columns
+    for col in ['reviewText', 'summary']:
+        review_df[col]= review_df[col].apply(lambda row: clean_review(row))
+    #Step3 : merging 'reviewText', 'summary' columns into 1 and extracting alphanumeric values only
+    review_df = create_full_feature_review(review_df)
+    
+    
+    ### let us futher process the metadata
     summary_df = review_df.groupby('asin').agg(
         tot_stars = ('overall','sum'),
         tot_reviews = ('overall','count'),
@@ -91,7 +107,6 @@ def get_product_success(cat_meta_url,cat_review_url):
     
     # join summary with meta_data
     combined_df = meta_df.join(summary_df,on='asin')
-
 
     # fill NaN with 0 in combined_df - i.e. no reviews
     combined_df[['tot_stars','tot_reviews','avg_stars']] = combined_df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
