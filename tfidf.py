@@ -19,7 +19,7 @@ def count_vectorizer(corpus):
     corpus = list(text)
     vectorizer = TfidfVectorizer()
     
-    tfidf = TfidfVectorizer(max_features = 6000) #example, please change this accordingly
+    tfidf = vectorizer(max_features = 6000) #example, please change this accordingly
     tfidf.fit(corpus)
     tfidf_features = tfidf.transform(corpus)
     
