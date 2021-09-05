@@ -120,17 +120,13 @@ def get_product_success(cat_meta_url,cat_review_url):
         combined_df[col]= combined_df[col].apply(lambda row: clean_text(row))
     #Step4:merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
     combined_df= create_full_feature_column(combined_df)
-    #step 5: Get pretrained word2vec model
-    
+    #step 5: Get and initialize pretrained word2vec model
+    word2vec_model= get_pretrained_model()
     #step: creating wordvec columns to the df
-    # model= 
-    # combined_df["wordvec"]= 
-    # ADD IN OTHER DATA EXPLORATION HERE ROUTINES HERE
-    # Are stars/reviews indicative of product success? 
-    # Can a product with zero reviews be successful? Check correlation with salesrank?
-
-
-
+    combined_df["wordvec"]= combined_df["full_features"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
+    
+    
+    
 
     # Clean Up - delete downloaded gzip files
     print("Cleaning up temp files...")
