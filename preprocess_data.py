@@ -27,6 +27,7 @@ def clean_categories_column(df):
     cat_counter_dict= dict(Counter(total_cat_lst))
     cat_500= [cat for cat in cat_counter_dict if cat_counter_dict[cat]>=500]
     df["category"]= df["category"].apply(lambda row : [word.lower() for word in row if word in cat_500])
+    print("category column successfully processed!")
     return df
 
 def clean_text(sent):
@@ -41,7 +42,7 @@ def clean_text(sent):
     from nltk.corpus import stopwords
     stop_words= stopwords.words("english") 
     lemmatizer= WordNetLemmatizer()
-
+    print("extracting, filtering, and lemmatizing process initiated")
     if type(sent) == list:
         # print("dtype is list of strings")
         text= " ".join(sent)
@@ -69,8 +70,9 @@ def create_full_feature_column(df):
     Returns:
         df (dataframe): updated dataframe with full_feature column
     """
-    df["full_features"]= (df["category"]+ df["description"]+ df["brand"]+ df["feature"] +df["title"]).map(pd.unique)
+    df["full_features"]= (df["category"]+ df["description"]+ df["brand"].str.split()+ df["feature"] +df["title"]).map(pd.unique)
     df.drop(columns= ["category", "description", "brand", "feature", "title"], inplace= True)
+    print("full features column created")
     return df
 
 # if __name__ == "main)":

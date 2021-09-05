@@ -101,7 +101,7 @@ def get_product_success(cat_meta_url,cat_review_url):
     #Step2: downsampling the categories that only appear 500 times in column
     combined_df= clean_categories_column(combined_df)
     #step3: cleaning and vectorizing the text in 'brand', 'title', 'feature', 'category', 'description' columns
-    for col in ["category", "description", "title", "feature", "brand"]:
+    for col in ["description", "title", "feature"]:
         combined_df[col]= combined_df[col].apply(lambda row: clean_text(row))
     #Step4:merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
     combined_df= create_full_feature_column(combined_df)

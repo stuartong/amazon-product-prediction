@@ -36,7 +36,7 @@ def generate_dense_features(tokenized_texts, model= None, use_mean= True):
               or type print(list(gensim.downloader.info()['models'].keys())) to get all available list in gensim
               """)
     else:
-        cached_vocab= model.key_to_index.keys()
+        
         target_list= []
         for item in tokenized_texts:
             words= [word for word in item if model.index_to_key]
