@@ -50,7 +50,7 @@ def clean_review(sent):
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
         return lemmatized_words
     elif type(sent) == str:
-        print('dtype is string')
+        # print('dtype is string')
         extracted_words=  re.findall(r"(\w+|\d\'\d)", string=sent) #FIX THIS, if want to capture 5'6" for example
         filtered_words= [word.lower() for word in extracted_words if (word not in stop_words) & (len(word)>1)]
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]

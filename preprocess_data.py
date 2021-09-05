@@ -42,7 +42,7 @@ def clean_text(sent):
     from nltk.corpus import stopwords
     stop_words= stopwords.words("english") 
     lemmatizer= WordNetLemmatizer()
-    print("extracting, filtering, and lemmatizing process initiated")
+    
     if type(sent) == list:
         # print("dtype is list of strings")
         text= " ".join(sent)
