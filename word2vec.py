@@ -35,7 +35,7 @@ def get_pretrained_model(target_model= 'glove-wiki-gigaword-300' ):
         model= KeyedVectors.load_word2vec_format(path)    
     return model
 
-def generate_dense_features(tokenized_texts, model= None, use_mean= True):
+def generate_dense_features(tokenized_text, model= None, use_mean= True):
     """This function takes tokenized_texts in list format and a pretrained word2vec model
     and returns an array of either a vector of word embeddings or the mean of that vector
     depending on the users choice
@@ -58,7 +58,7 @@ def generate_dense_features(tokenized_texts, model= None, use_mean= True):
     else:
         
         target_list= []
-        for item in tokenized_texts:
+        for item in tokenized_text:
             words= [word for word in item if model.index_to_key]
         if len(words) > 0:
             if use_mean == True:
