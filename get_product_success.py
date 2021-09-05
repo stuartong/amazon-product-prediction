@@ -95,7 +95,7 @@ def get_product_success(cat_meta_url,cat_review_url):
     for col in ['reviewText', 'summary']:
         review_df[col]= review_df[col].apply(lambda row: clean_review(row))
     #Step3 : merging 'reviewText', 'summary' columns into 1 and extracting alphanumeric values only
-    review_df = create_full_feature_review(review_df)
+    # review_df = create_full_feature_review(review_df)
     
     
     ### let us futher process the metadata
@@ -116,6 +116,7 @@ def get_product_success(cat_meta_url,cat_review_url):
     #Step2: downsampling the categories that only appear 500 times in column
     combined_df= clean_categories_column(combined_df)
     #step3: cleaning and vectorizing the text in 'brand', 'title', 'feature', 'category', 'description' columns
+    print("extracting, filtering, and lemmatizing process initiated")
     for col in ["description", "title", "feature"]:
         combined_df[col]= combined_df[col].apply(lambda row: clean_text(row))
     #Step4:merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
