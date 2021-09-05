@@ -6,3 +6,5 @@ data/
 data/.DS_Store
 get_data.ipynb
 .*
+electronics_eda.ipynb
+!.dvc
