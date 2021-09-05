@@ -62,12 +62,18 @@ def generate_dense_features(tokenized_text, model= None, use_mean= True):
             words= [word for word in item if model.index_to_key]
         if len(words) > 0:
             if use_mean == True:
-                #get the mean of the word2vec of every word in tokenized_text
-                feature= np.mean(model[words], axis= 0)
-                target_list.append(feature)
+                try:
+                    #get the mean of the word2vec of every word in tokenized_text
+                    feature= np.mean([model[word] for word in words] , axis= 0)
+                    target_list.append(feature)
+                except:
+                    pass
             else:
-                #just append the full word2vec
-                target_list.append([model[word] for word in words])
+                try:
+                    #just append the full word2vec
+                    target_list.append([model[word] for word in words])
+                except:
+                    pass
         else:
             #just append zeros with the same vector dimension
             target_list.append(model.vector_size)
