@@ -33,6 +33,9 @@ def get_pretrained_model(target_model= 'glove-wiki-gigaword-300' ):
         print("Download Complete!")
         print("Initializing model")
         model= KeyedVectors.load_word2vec_format(path)    
+
+    ### TRY THE DVC OPEN FILE USING PYTHON API instead of downloding it
+    #https://dvc.org/doc/start/data-and-model-access
     return model
 
 def generate_dense_features(tokenized_text, model= None, use_mean= True):

@@ -2,10 +2,10 @@ meta_Video_Games.json.gz
 data/video_games_meta.pkl
 Video_Games.json.gz
 parse_and_clean_data.ipynb
-data/
 data/.DS_Store
 get_data.ipynb
 .*
 electronics_eda.ipynb
 !.dvc
 /combined_Appliances.pkl
+/charts
