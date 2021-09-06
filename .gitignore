@@ -8,3 +8,4 @@ get_data.ipynb
 .*
 electronics_eda.ipynb
 !.dvc
+/combined_Appliances.pkl
