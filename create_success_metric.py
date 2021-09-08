@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def create_success_metric(review_df,meta_df):
+def create_success_metric(review_df,meta_df,cutoff):
     '''
     This function uses the review_df to calculate success metrics for a product
     and appends the results to the meta_df 
@@ -49,6 +49,28 @@ def create_success_metric(review_df,meta_df):
     fill_miss = ['tot_stars','tot_reviews','avg_stars','score','new_rank']
     combined_df[fill_miss] = combined_df[fill_miss].fillna(value=0)
 
+    # define class label function to update df
+    def class_condition(s,cutoff):
+        '''
+        Function to evaluate the score and return the class based on cutoff
+
+        Class 0: Score <= Cutoff - Bad Products
+        Class 1: Score > Cutoff - Good Products
+        '''
+        if s['score'] <= cutoff:
+            class_label = 0
+        elif s['score'] > cutoff:
+            class_label = 1
+        return class_label
+
+    # create new column class_label in combined_df
+    combined_df['class_label'] = combined_df.apply(class_condition,args=(cutoff,),axis=1)
+
+    # Plot class balance
+    plt.hist(combined_df['class_label'])
+    plt.title('Class Balance')
+    plt.savefig('charts/class_balance.png')
+    
     # Check scores and ranks
     check_score_rank(combined_df)
 
