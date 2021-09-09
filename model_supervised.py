@@ -3,12 +3,27 @@ import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import GridSearchCV
 from split_data import split_data
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import SVMSMOTE
 from collections import Counter
 
-def run_model(df,model_type,params,scale=True,oversample=False):
+def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_dict=None,n_jobs=1,return_train_score=False,):
     '''
-    Function to run classifier model
+    Function to run classifier model on data
+    
+    Inputs:
+    
+    Required
+    1. df - cleaned df with metrics and classes in place (dataframe)
+    2. model_type - model type (sklearn class without'()')
+    3. params - hyperparameters to use in model (dict)
+    Optional
+    4. scale - minmax scale all features (True/False, default: True)
+    5. oversample - SVMSMOTE to over/undersample data for class imbalance (True/False, default: False)
+    6. gscv - Run GridSearchCV - time consuming (True/False, default: False)
+    7. param_dict - params to tune for gridsearch (dict, default: None)
+    8. n_jobs - speed up gridsearch (default - 1 (no parallel)) - use -1 for all available CPU (int)
+    9. return_train_score - True/False to effect of params on score - computationally expensive (True/False, defualt: False)
+
 
     Tested on model_types:
     1. LogisticRegression
@@ -67,23 +82,47 @@ def run_model(df,model_type,params,scale=True,oversample=False):
     else:
         pass
 
-    # if oversample is True, we will use SMOTE to oversample
-    # oversampling generally for less data - considering undersampling but risks overfitting
+    # if oversample is True, we will use SMOTEEN to oversample
     # minority class only on the training data
+    # oversampling generally for less data - considering undersampling but risks overfitting
+
     if oversample==True:
         print('Oversampling Data')
         print('Origianl dataset shape:', Counter(y_train))
         
-        smote = SMOTE()
+        smote = SVMSMOTE(random_state=0)
         X_train, y_train = smote.fit_resample(X_train,y_train)
         print('Resampple dataset shape:', Counter(y_train))
     else:
         print('No oversampling done')
         print('Current Class Balance:', Counter(y_train))
     
-    # fit classifier
-    # TO DO INSERT GridSearchCV routine here to get optimised hyperparameters
-    clf = model_type(**params).fit(X_train,y_train)
+    # gridsearch/fit classifier
+    if gscv == False:
+        clf = model_type(**params).fit(X_train,y_train)
+    elif (gscv==True) & (param_dict==None):
+        print('GridSearchCV requires param_dict in order to run')
+        clf = model_type(**params).fit(X_train,y_train)
+    elif (gscv==True) & (len(param_dict)>=1):
+        print('Running GridSearch and fitting model with the best params')
+        model=model_type()
+        CV_clf = GridSearchCV(model_type(),
+                              param_dict,
+                              scoring='f1_weighted',
+                              return_train_score=return_train_score,
+                              n_jobs=n_jobs,
+                              verbose=3
+                              )
+        CV_clf.fit(X_train,y_train)
+        clf = CV_clf.best_estimator_
+        best_score = CV_clf.best_score_
+        best_params = CV_clf.best_params_
+        print(f'Best Score for CV: {best_score}')
+        print(f'Best Parameters: {best_params}')
+        if return_train_score==True:
+            print(CV_clf.cv_results_)
+        else:
+            pass
 
     return clf,X_train,X_test,X_val,y_train,y_test,y_val
 
