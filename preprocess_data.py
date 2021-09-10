@@ -56,13 +56,29 @@ def clean_text(sent):
         filtered_words= [word.lower() for word in extracted_words if (word not in stop_words) & (len(word)>1)]
         lemmatized_words= [lemmatizer.lemmatize(word) for word in filtered_words]
         return lemmatized_words
-  
 
-def create_full_feature_column(df):
-    """create_full_feature_column takes the df and combines category, description, brand, feature, title
-    columns into one full_feature column and extract alphanumeric characters only
+def quantify_features(df):
+    """quantify_features returns a df with a new column 'quantified_features_array' where it grants a binary classification of availability or absence of tech1, tech2 and calculates number of images per products and words in description
 
 
+    Args:
+        df (dataframe): target dataframe
+
+    Returns:
+        df: dataframe with a new 'quantified_features_array' column
+    """
+    # creating binary columns for tech1 and tech2 where 1 is given if it contains data else 0 
+    df["len_tech1"], df["len_tech2"]= [np.where(df[tech].map(len) >0, 1, 0) for tech in ["tech1", "tech2"]]
+    #create column to count how many images are provided for a product
+    df["num_image"]= df["imageURLHighRes"].map(len)
+    #counting the number of words in description column
+    df["descrption_num"]= df["description"].map(len)
+    df["quantified_features_array"]= [np.array([float(len_tech1), float(len_tech2), float(num_img), float(desc_num)]) for len_tech1, len_tech2, num_img, desc_num in zip(df["len_tech1"], df["len_tech2"], df["num_image"], df["descrption_num"])]
+    return df
+
+def consolidate_text_columns(df):
+    """consolidate_text_columns takes the df and combines vectorized text from category, description, brand, feature, title
+    columns into one consolidated_text column and extract alphanumeric characters only
 
     Args:
         df (dataframe): target dataframe
@@ -70,9 +86,9 @@ def create_full_feature_column(df):
     Returns:
         df (dataframe): updated dataframe with full_feature column
     """
-    df["full_features"]= (df["category"]+ df["description"]+ df["brand"].str.split()+ df["feature"] +df["title"]).map(pd.unique)
+    df["consolidated_text_column"]= (df["category"]+ df["description"]+ df["brand"].str.split()+ df["feature"] +df["title"]).map(pd.unique)
     df.drop(columns= ["category", "description", "brand", "feature", "title"], inplace= True)
-    print("full features column created")
+    print("Consolidated vectorized text column created")
     return df
 
 # if __name__ == "main)":
