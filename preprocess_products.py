@@ -70,7 +70,7 @@ if __name__ == "__main__":
             parent_dir= "data"
             directory= "features"
             path= os.path.join(parent_dir, directory)
-            os.makedirs(path)
+            os.makedirs(path, exist_ok= True)
             df.to_pickle('data/features/products.pkl')
     else:
         parent_dir= os.mkdir("data")

@@ -123,7 +123,7 @@ if __name__ == '__main__':
             parent_dir= "data"
             directory= "prepared"
             path= os.path.join(parent_dir, directory)
-            os.makedirs(path)
+            os.makedirs(path, exist_ok= True)
             product_df.to_pickle('data/prepared/products.pkl')
             review_df.to_pickle('data/prepared/reviews.pkl')
     else:
