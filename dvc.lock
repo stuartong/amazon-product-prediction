@@ -4,17 +4,17 @@ stages:
     cmd: python load_data.py http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
       http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
     deps:
+    - path: .\load_data.py
+      md5: ffc4d90d5cb305779d64489fa42e714b
+      size: 4367
     - path: http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
       etag: '"5d9e86fd-42730f5"'
       size: 69677301
     - path: http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
       etag: '"60a1a28f-391c4f4"'
       size: 59884788
-    - path: load_data.py
-      md5: e2f56a28c4528fd2a1c464d5e54049fe
-      size: 4090
     outs:
-    - path: dvc_data
-      md5: c2f7b7c9f0c0034f5babfbd5c3d55d1f.dir
-      size: 5
-      nfiles: 1
+    - path: data
+      md5: f920bc990b580ca0e479f42acf2cc6a0.dir
+      size: 835032391
+      nfiles: 2
