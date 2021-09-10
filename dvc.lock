@@ -11,10 +11,10 @@ stages:
       etag: '"60a1a28f-391c4f4"'
       size: 59884788
     - path: load_data.py
-      md5: 6cc028002b72885992e17d0c46f0c07f
-      size: 4067
+      md5: e2f56a28c4528fd2a1c464d5e54049fe
+      size: 4090
     outs:
     - path: dvc_data
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: c2f7b7c9f0c0034f5babfbd5c3d55d1f.dir
+      size: 5
+      nfiles: 1
