@@ -17,4 +17,4 @@ if __name__ == "__main__":
     parser.add_argument("cutoff", help= "cuttoff mark of number of points to consider a product good or bad")
     args= parser.parse_args()
     product_df= create_success_metrics(args.product_df_path, args.review_df_path, args.cutoff)
-    product_df.to_pickle(args.product_df_path + "pkl")
+    product_df.to_pickle(args.product_df_path + ".pkl")
