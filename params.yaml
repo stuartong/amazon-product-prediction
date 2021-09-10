@@ -1,5 +1,5 @@
 preprocess_products:
-    word2vec_features: True
+    word2vec_features: False
     handpicked_features: True
     word2vec_model_name: 'glove-wiki-gigaword-300'
 

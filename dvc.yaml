@@ -8,4 +8,12 @@ stages:
     - http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
     outs:
     - data/prepared
-
+  preprocess_products:
+    cmd: python preprocess_products.py data/prepared
+    deps:
+    - preprocess_products.py
+    - data/prepared
+    params:
+    - preprocess_products
+    outs:
+    - data/features

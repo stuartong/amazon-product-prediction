@@ -5,7 +5,7 @@ from word2vec import get_pretrained_model, generate_dense_features
 import os
 
 
-def preprocess_products(product_df_path, word2vec_features= True, handpicked_features= True, word2vec_model_name= 'glove-wiki-gigaword-300'):
+def preprocess_products(product_df_path):
     #import params from the params.yaml file
     import yaml
     with open("params.yaml", "r") as file:
@@ -15,7 +15,7 @@ def preprocess_products(product_df_path, word2vec_features= True, handpicked_fea
     word2vec_model_name= params["preprocess_products"]["word2vec_model_name"]
     #import df
     print("reading {} file".format(product_df_path.split('/')[-1]))
-    df= pd.read_pickle(product_df_path)    
+    df= pd.read_pickle(product_df_path+ "/products.pkl")    
     # fill NaN with 0 in df - i.e. no reviews
     df[['tot_stars','tot_reviews','avg_stars']] = df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
     #Step1: removing duplicate products based on "asin" column
@@ -56,12 +56,9 @@ if __name__ == "__main__":
     import argparse
     parser= argparse.ArgumentParser()
     parser.add_argument("product_df_path", help= "path to target dataframe location (str)")
-    parser.add_argument("word2vec_features", help= "Boolean to create word2vec feature array")
-    parser.add_argument("handpicked_features", help= "Boolean to create hand_picked feature representation of tech1, tech2, number of images, length of words in description space")
-    parser.add_argument("word2vec_model_name", help= "word2vec model name")
     args= parser.parse_args()
     #running the function
-    df= preprocess_products(args.product_df_path, args.word2vec_features, args.handpicked_features, args.word2vec_model_name)
+    df= preprocess_products(args.product_df_path)
     
     if os.path.isdir("data"):
         if os.path.isdir("data/features"):
