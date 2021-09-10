@@ -17,3 +17,12 @@ stages:
     - preprocess_products
     outs:
     - data/features
+  success_metrics:
+    cmd: python create_success_metrics.py data/features
+    deps:
+    - create_success_metrics.py 
+    - data/features
+    params:
+    - success_metrics.cutoff
+    outs:
+    - data/metrics
