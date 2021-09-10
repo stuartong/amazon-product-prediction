@@ -8,7 +8,7 @@ from tqdm import tqdm
 from urllib.request import urlopen
 
 
-def load_data(cat_meta_url,cat_review_url):
+def get_product_success(cat_meta_url,cat_review_url):
     '''
     This function takes the meta data and review URL for a category
     and parses, cleans and converts data to Pandas dataframes.
@@ -119,12 +119,12 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    product_df, review_df, meta_filename, review_filename = load_data(args.meta_url,args.review_url)
-    # data[0].to_pickle('data/combined_'+data[2][5:-8]+'.pkl')
-    # data[1].to_pickle('data/review_'+data[3][:-8]+".pkl")
+    data = get_product_success(args.meta_url,args.review_url)
+    data[0].to_pickle('data/combined_'+data[2][5:-8]+'.pkl')
+    data[1].to_pickle('data/review_'+data[3][:-8]+".pkl")
 
 '''
 To run in terminal - use the following example command
-python3.7 load_data.py http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Video_Games.json.gz http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Video_Games.json.gz
+python3.7 get_product_success.py http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Video_Games.json.gz http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Video_Games.json.gz
 '''
 
