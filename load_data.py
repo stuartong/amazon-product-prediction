@@ -7,9 +7,6 @@ import argparse
 from tqdm import tqdm
 from urllib.request import urlopen
 
-from preprocess_data import clean_categories_column, clean_text, create_full_feature_column
-from preprocess_review_data import clean_review_column, clean_review, create_full_feature_review
-from word2vec import generate_dense_features, get_pretrained_model
 
 def get_product_success(cat_meta_url,cat_review_url):
     '''
@@ -87,17 +84,7 @@ def get_product_success(cat_meta_url,cat_review_url):
     # get success metrics - target variables
     # ONLY KEEP ONE FOR training models 
     # DO NOT USE UNUSED VARIABLE FOR TRAINING - DATA LEAK
-    
-    ### let us futher process the review_df alone
-    #Step1 : cleaning the review_df from any duplicates in 'reviewText' column
-    review_df = clean_review_column(review_df)
-    #Step2 : cleaning the text in 'reviewText', 'summary' columns
-    for col in ['reviewText', 'summary']:
-        review_df[col]= review_df[col].apply(lambda row: clean_review(row))
-    #Step3 : merging 'reviewText', 'summary' columns into 1 and extracting alphanumeric values only
-    # review_df = create_full_feature_review(review_df)
-    
-    
+
     ### let us futher process the metadata
     summary_df = review_df.groupby('asin').agg(
         tot_stars = ('overall','sum'),
@@ -108,23 +95,7 @@ def get_product_success(cat_meta_url,cat_review_url):
     # join summary with meta_data
     combined_df = meta_df.join(summary_df,on='asin')
 
-    # fill NaN with 0 in combined_df - i.e. no reviews
-    combined_df[['tot_stars','tot_reviews','avg_stars']] = combined_df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
-    
-    #Step1: removing duplicate products based on "asin" column
-    combined_df.drop_duplicates(subset= "asin", inplace= True)
-    #Step2: downsampling the categories that only appear 500 times in column
-    combined_df= clean_categories_column(combined_df)
-    #step3: cleaning and vectorizing the text in 'brand', 'title', 'feature', 'category', 'description' columns
-    print("extracting, filtering, and lemmatizing process initiated")
-    for col in ["description", "title", "feature"]:
-        combined_df[col]= combined_df[col].apply(lambda row: clean_text(row))
-    #Step4:merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
-    combined_df= create_full_feature_column(combined_df)
-    #step 5: Get and initialize pretrained word2vec model
-    word2vec_model= get_pretrained_model()
-    #step: creating wordvec columns to the df
-    combined_df["wordvec"]= combined_df["full_features"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
+  
     
     
     
