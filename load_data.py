@@ -115,16 +115,25 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     product_df, review_df, meta_filename, review_filename = load_data(args.meta_url , args.review_url)
-    if os.path.isdir("data/prepared"):
-        product_df.to_pickle('data/prepared/products.pkl')
-        review_df.to_pickle('data/prepared/reviews.pkl')
+    if os.path.isdir("data"):
+        if os.path.isdir("data/prepared"):
+            product_df.to_pickle('data/prepared/products.pkl')
+            review_df.to_pickle('data/prepared/reviews.pkl')
+        else:
+            parent_dir= "data"
+            directory= "prepared"
+            path= os.path.join(parent_dir, directory)
+            os.makedirs(path)
+            product_df.to_pickle('data/prepared/products.pkl')
+            review_df.to_pickle('data/prepared/reviews.pkl')
     else:
-        os.mkdir("data/prepared")
+        parent_dir= os.mkdir("data")
+        directory= "prepared"
+        path= os.path.join(parent_dir, directory)
+        os.makedirs(path)
         product_df.to_pickle('data/prepared/products.pkl')
         review_df.to_pickle('data/prepared/reviews.pkl')
     
-    product_df.to_pickle('data/products_{}.pkl'.format(meta_filename[5:-8]))
-    review_df.to_pickle('data/reviews_{}.pkl'.format(review_filename[:-8]))
 
 '''
 To run in terminal - use the following example command

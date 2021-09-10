@@ -7,4 +7,15 @@ stages:
     - http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
     - http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
     outs:
-    - data
+    - data/prepared
+  preprocess_products:
+    cmd: python preprocess_products.py data/prepared/products.pkl preprocess_products.word2vec_features preprocess_products.handpicked_features preprocess_products.word2vec_model_name
+    deps:
+      - preprocess_products.py
+      - data/prepared/products.pkl
+    params:
+      - preprocess_products.word2vec_features
+      - preprocess_products.handpicked_features
+      - preprocess_products.word2vec_model_name
+    outs:
+      - data/features

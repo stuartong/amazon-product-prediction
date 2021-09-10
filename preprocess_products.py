@@ -2,9 +2,17 @@ import pandas as pd
 import numpy as np
 from preprocess_data_module import clean_categories_column, clean_text, quantify_features, consolidate_text_columns
 from word2vec import get_pretrained_model, generate_dense_features
+import os
 
 
 def preprocess_products(product_df_path, word2vec_features= True, handpicked_features= True, word2vec_model_name= 'glove-wiki-gigaword-300'):
+    #import params from the params.yaml file
+    import yaml
+    with open("params.yaml", "r") as file:
+        params= yaml.safe_load(file)
+    word2vec_features= params["preprocess_products"]["word2vec_features"]
+    handpicked_features= params["preprocess_products"]["handpicked_features"]
+    word2vec_model_name= params["preprocess_products"]["word2vec_model_name"]
     #import df
     print("reading {} file".format(product_df_path.split('/')[-1]))
     df= pd.read_pickle(product_df_path)    
@@ -54,7 +62,23 @@ if __name__ == "__main__":
     args= parser.parse_args()
     #running the function
     df= preprocess_products(args.product_df_path, args.word2vec_features, args.handpicked_features, args.word2vec_model_name)
-    df.to_pickle(args.product_df_path+".pkl")
+    
+    if os.path.isdir("data"):
+        if os.path.isdir("data/features"):
+            df.to_pickle('data/features/products.pkl')
+        else:
+            parent_dir= "data"
+            directory= "features"
+            path= os.path.join(parent_dir, directory)
+            os.makedirs(path)
+            df.to_pickle('data/features/products.pkl')
+    else:
+        parent_dir= os.mkdir("data")
+        directory= "features"
+        path= os.path.join(parent_dir, directory)
+        os.makedirs(path)
+        df.to_pickle('data/features/products.pkl')   
+    
     
     
 
