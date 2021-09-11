@@ -17,6 +17,13 @@ stages:
     - preprocess_products
     outs:
     - data/features
+  preprocess_reviews:
+    cmd: python preprocess_review.py data/prepared
+    deps:
+    - preprocess_reviews.py
+    - data/prepared
+    outs:
+    - data/features
   success_metrics:
     cmd: python create_success_metrics.py data/features
     deps:
@@ -26,3 +33,4 @@ stages:
     - success_metrics.cutoff
     outs:
     - data/metrics
+  
