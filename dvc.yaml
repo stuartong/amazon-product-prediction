@@ -3,7 +3,7 @@ stages:
     cmd: python load_data.py http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
       http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
     deps:
-    - .\load_data.py
+    - load_data.py
     - http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
     - http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
     outs:
