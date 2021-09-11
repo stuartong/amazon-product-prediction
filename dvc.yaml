@@ -33,4 +33,21 @@ stages:
     - success_metrics.cutoff
     outs:
     - data/metrics
+  supervised_model:
+  cmd: python model_supervised.py 
+  deps:
+  - model_supervised.py
+  - data/metrics
+  params:
+  - supervised_model.model_type
+  - supervised_model.params     
+  - supervised_model.scale
+  - supvervised_model.oversample
+  - supervised_model.gscv
+  - supervised_model.param_dict
+  - supervised_model.n_jobs
+  - supervised_model.return_train_score
+  - supervised_model.split
+  outs:
+  - data/model.pkl
   
