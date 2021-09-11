@@ -90,12 +90,16 @@ def get_product_success(cat_meta_url,cat_review_url):
     
     ### let us futher process the review_df alone
     #Step1 : cleaning the review_df from any duplicates in 'reviewText' column
-    review_df = clean_review_column(review_df)
+    #review_df = clean_review_column(review_df)
     #Step2 : cleaning the text in 'reviewText', 'summary' columns
     for col in ['reviewText', 'summary']:
         review_df[col]= review_df[col].apply(lambda row: clean_review(row))
     #Step3 : merging 'reviewText', 'summary' columns into 1 and extracting alphanumeric values only
-    # review_df = create_full_feature_review(review_df)
+    review_df = create_full_feature_review(review_df)
+    #Step4 : Get and initialize pretrained word2vec model
+    word2vec_model= get_pretrained_model()
+    #Step5 : creating wordvec columns to the df
+    review_df["wordvec"]= review_df["full_features"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
     
     
     ### let us futher process the metadata
