@@ -5,6 +5,21 @@ preprocess_products:
     
 success_metrics:
     cutoff: 10
-supervised_ml:
+
+supervised_model:
+    model_type: LogisticRegression
+    params: 
+        random_state : 42
+        max_iter : 5000
+        solver: saga
+        class_weight : balanced 
+    scale: True
+    oversample: False
+    gscv: False
+    param_dict: None
+    n_jobs: 1
+    return_train_score: False
+    split: 0.6
+    
     
     
