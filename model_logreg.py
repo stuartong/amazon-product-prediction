@@ -27,16 +27,16 @@ def run_logreg(df,scale=True,oversample=False):
 
     # split the data to train/test/validate split
     # and get X and y for splits
-    # change string 'wordvec' to string 'features' once moutaz fixes code
+    
     train, val, test = split_data(df,0.60)
 
-    X_train = np.stack(train['wordvec'],axis=0)
+    X_train = np.stack(train['features'],axis=0)
     y_train = list(train['class_label'])
 
-    X_test = np.stack(test['wordvec'],axis=0)
+    X_test = np.stack(test['features'],axis=0)
     y_test = list(test['class_label'])
 
-    X_val = np.stack(val['wordvec'],axis=0)
+    X_val = np.stack(val['features'],axis=0)
     y_val = list(val['class_label'])
 
     # if scale is True, we will fit and transform all X
