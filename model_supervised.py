@@ -6,7 +6,7 @@ from split_data import split_data
 from imblearn.over_sampling import SVMSMOTE
 from collections import Counter
 
-def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_dict=None,n_jobs=1,return_train_score=False,):
+def run_model(df):
     '''
     Function to run classifier model on data
     
@@ -37,7 +37,19 @@ def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_
     Input: Cleaned df with metrics and classes in place
     Output: Model, split and transformed data for scoring function
     '''
-
+    import yaml
+    with open("params.yaml", "r") as file:
+        param_file= yaml.safe_load(file)
+        
+    model_type= param_file["supervised_model"]["model_type"]
+    params= param_file["supervised_model"]["params"] 
+    scale= param_file["supervised_model"]["scale"]
+    oversample= param_file["supervised_model"]["oversample"]
+    gscv= param_file["supervised_model"]["gscv"]
+    param_dict= param_file["supervised_model"]["param_dict"]
+    n_jobs= param_file["supervised_model"]["n_jobs"]
+    return_train_score= param_file["supervised_model"]["return_train_score"]
+    split= param_file["supervised_model"]["split"]
     # import models 
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
@@ -60,7 +72,7 @@ def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_
     # split the data to train/test/validate split
     # and get X and y for splits
     # change string 'wordvec' to string 'features' once moutaz fixes code
-    train, val, test = split_data(df,0.60)
+    train, val, test = split_data(df,split)
 
     X_train = np.stack(train['wordvec'],axis=0)
     y_train = list(train['class_label'])
@@ -92,7 +104,7 @@ def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_
         
         smote = SVMSMOTE(random_state=0)
         X_train, y_train = smote.fit_resample(X_train,y_train)
-        print('Resampple dataset shape:', Counter(y_train))
+        print('Resample dataset shape:', Counter(y_train))
     else:
         print('No oversampling done')
         print('Current Class Balance:', Counter(y_train))
