@@ -44,31 +44,32 @@ def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_
     from sklearn.ensemble import GradientBoostingClassifier
     from sklearn.neural_network import MLPClassifier
 
-    feature = 'wordvec'
+    feature = 'features'
 
     # list of models where feature scaling is recommended
     scaling_recommended = [LogisticRegression,SVC]
 
-    # check and drop empty vectors
-    empty = len(df[df[feature].map(len)==0])
-    print(f"Dropping {empty} rows with empty vectors")
-    df = df[df[feature].map(len)!=0].copy()
+    # check and drop feature matrix that aren't full
+    median_vec = df[feature].map(len).median()
+    empty = len(df[df[feature].map(len)!=median_vec])
+    print(f"Dropping {empty} rows with empty/semi-full vectors")
+    df = df[df[feature].map(len)==median_vec].copy()
 
     # aligning vector arrays for sklearn
-    df[feature]=df[feature].apply(lambda x: x[0])
+    # df[feature]=df[feature].apply(lambda x: x[0])
 
     # split the data to train/test/validate split
     # and get X and y for splits
     # change string 'wordvec' to string 'features' once moutaz fixes code
     train, val, test = split_data(df,0.60)
 
-    X_train = np.stack(train['wordvec'],axis=0)
+    X_train = np.stack(train['features'],axis=0)
     y_train = list(train['class_label'])
 
-    X_test = np.stack(test['wordvec'],axis=0)
+    X_test = np.stack(test['features'],axis=0)
     y_test = list(test['class_label'])
 
-    X_val = np.stack(val['wordvec'],axis=0)
+    X_val = np.stack(val['features'],axis=0)
     y_val = list(val['class_label'])
 
     # if scale is True, we will fit and transform all X
