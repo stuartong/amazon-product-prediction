@@ -8,15 +8,15 @@ import string
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords, wordnet
 
-# def clean_review_column(df):
-#     """
-#     clean_review_text_column function takes in a dataframe, dropping any reviewText duplicates
+def clean_review_column(df):
+    """
+    clean_review_text_column function takes in a dataframe, dropping any reviewText duplicates
     
-#     Args:
-#         df (data_frame): review data_frame 
-#     Returns:
-#         df: cleaned version of the dataframe
-#     """
+    Args:
+        df (data_frame): review data_frame 
+    Returns:
+        df: cleaned version of the dataframe
+    """
     
 #     #dropping any duplicates
 #     print('Dropping any duplicates in the reviewText column')
@@ -25,7 +25,11 @@ from nltk.corpus import stopwords, wordnet
 #     #filtering any unverified reviews out
 #     # print('Let us filter the unverified reviews out')
 #     # df = df[df['verified']==True]
-#     return df
+    
+    #1. Get rid of the NaN 
+    #2. Make sure all dtype are str
+    df = df.fillna(' ').astype(str)
+    return df
 
 def clean_review(sent):
     """
