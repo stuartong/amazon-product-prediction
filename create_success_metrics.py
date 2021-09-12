@@ -3,13 +3,13 @@ import numpy as np
 from create_success_metric_module import create_success_metric, check_score_rank
 import os
 
-def create_success_metrics(path):
+def create_success_metrics(product_path, review_path):
     import yaml
     with open("params.yaml", "r") as file:
         params= yaml.safe_load(file)
     cutoff= params["success_metrics"]["cutoff"]
     #importing product_df, review_df
-    product_df, review_df= [pd.read_pickle(path + file) for file in ["/products.pkl",  "/reviews.pkl"]]
+    product_df, review_df= [pd.read_pickle(file) for file in [product_path + "/products.pkl",  review_path + "/reviews.pkl"]]
     product_df= create_success_metric(product_df, review_df, cutoff= cutoff)
     check_score_rank(product_df)
     return product_df

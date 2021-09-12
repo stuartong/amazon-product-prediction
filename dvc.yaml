@@ -16,38 +16,39 @@ stages:
     params:
     - preprocess_products
     outs:
-    - data/features
+    - data/products
   preprocess_reviews:
-    cmd: python preprocess_review.py data/prepared
+    cmd: python preprocess_reviews.py data/prepared
     deps:
     - preprocess_reviews.py
     - data/prepared
     outs:
-    - data/features
+    - data/reviews
   success_metrics:
-    cmd: python create_success_metrics.py data/features
+    cmd: python create_success_metrics.py data/products data/reviews
     deps:
     - create_success_metrics.py 
-    - data/features
+    - data/products
+    - data/reviews
     params:
     - success_metrics.cutoff
     outs:
     - data/metrics
   supervised_model:
-  cmd: python model_supervised.py 
-  deps:
-  - model_supervised.py
-  - data/metrics
-  params:
-  - supervised_model.model_type
-  - supervised_model.params     
-  - supervised_model.scale
-  - supvervised_model.oversample
-  - supervised_model.gscv
-  - supervised_model.param_dict
-  - supervised_model.n_jobs
-  - supervised_model.return_train_score
-  - supervised_model.split
-  outs:
-  - data/model.pkl
+    cmd: python model_supervised.py 
+    deps:
+    - model_supervised.py
+    - data/metrics
+    params:
+    - supervised_model.model_type
+    - supervised_model.params     
+    - supervised_model.scale
+    - supvervised_model.oversample
+    - supervised_model.gscv
+    - supervised_model.param_dict
+    - supervised_model.n_jobs
+    - supervised_model.return_train_score
+    - supervised_model.split
+    outs:
+    - model/model.pkl
   

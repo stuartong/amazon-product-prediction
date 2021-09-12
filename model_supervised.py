@@ -138,6 +138,32 @@ def run_model(df):
 
     return clf,X_train,X_test,X_val,y_train,y_test,y_val
 
-
+if __name__ == "__main__":
+    import argparse
+    import os
+    parser= argparse.ArgumentParser()
+    parser.add_argument("df", help= "target dataframe")
+    args= parser.parse_args()
+    
+    clf,X_train,X_test,X_val,y_train,y_test,y_val = run_model(args.df)
+    
+    if os.path.isdir("model"):
+        clf.to_pickle('model/model.pkl')
+        X_train.to_pickle("model/X_train.pkl")
+        X_test.to_pickle("model/X_test.pkl")
+        X_val.to_pickle("model/X_val.pkl")
+        y_train.to_pickle("model/y_train.pkl")
+        y_test.to_pickle("model/y_test.pkl")
+        y_val.to_pickle("model/y_val.pkl")
+        
+    else:
+        os.makedirs("model")
+        clf.to_pickle('model/model.pkl')
+        X_train.to_pickle("model/X_train.pkl")
+        X_test.to_pickle("model/X_test.pkl")
+        X_val.to_pickle("model/X_val.pkl")
+        y_train.to_pickle("model/y_train.pkl")
+        y_test.to_pickle("model/y_test.pkl")
+        y_val.to_pickle("model/y_val.pkl")
 
 

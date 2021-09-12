@@ -61,20 +61,20 @@ if __name__ == "__main__":
     df= preprocess_products(args.product_df_path)
     
     if os.path.isdir("data"):
-        if os.path.isdir("data/features"):
-            df.to_pickle('data/features/products.pkl')
+        if os.path.isdir("data/products"):
+            df.to_pickle('data/products/products.pkl')
         else:
             parent_dir= "data"
-            directory= "features"
+            directory= "products"
             path= os.path.join(parent_dir, directory)
             os.makedirs(path, exist_ok= True)
-            df.to_pickle('data/features/products.pkl')
+            df.to_pickle('data/products/products.pkl')
     else:
         parent_dir= os.mkdir("data")
-        directory= "features"
+        directory= "products"
         path= os.path.join(parent_dir, directory)
         os.makedirs(path)
-        df.to_pickle('data/features/products.pkl')   
+        df.to_pickle('data/products/products.pkl')   
     
     
     

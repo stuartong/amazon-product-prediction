@@ -29,17 +29,17 @@ if __name__ == "__main__":
     args= parser.parse_args()
     review_df= preprocess_reviews(args.review_df_path)
     if os.path.isdir("data"):
-        if os.path.isdir("data/features"):
-            review_df.to_pickle('data/features/reviews.pkl')
+        if os.path.isdir("data/reviews"):
+            review_df.to_pickle('data/reviews/reviews.pkl')
         else:
             parent_dir= "data"
-            directory= "features"
+            directory= "reviews"
             path= os.path.join(parent_dir, directory)
             os.makedirs(path, exist_ok= True)
-            review_df.to_pickle('data/features/reviews.pkl')
+            review_df.to_pickle('data/reviews/reviews.pkl')
     else:
         parent_dir= os.mkdir("data")
-        directory= "features"
+        directory= "reviews"
         path= os.path.join(parent_dir, directory)
         os.makedirs(path)
-        review_df.to_pickle('data/features/reviews.pkl') 
+        review_df.to_pickle('data/reviews/reviews.pkl') 
