@@ -70,13 +70,13 @@ def generate_dense_features(tokenized_text, model= None, use_mean= True):
                     return np.array(np.mean([model[word] for word in words] , axis= 0))
                     
                 except:
-                    pass
+                    return np.zeros(model.vector_size)
             else:
                 try:
                     #just append the full word2vec
                     return np.array([model[word] for word in words])
                 except:
-                    pass
+                    return np.zeros(model.vector_size)
         else:
             #just append zeros with the same vector dimension
             return np.zeros(model.vector_size)
