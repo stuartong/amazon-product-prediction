@@ -19,7 +19,7 @@ def preprocess_reviews(review_df_path):
         
     ###NOTE_TO_SELF: NEED TO FIX THIS PART BELOW-- CHECK DATA TYPES TO CONCAT###
     #Step3 : merging 'reviewText', 'summary' columns into 1 and extracting alphanumeric values only
-    # review_df = create_full_feature_review(review_df)
+    review_df = create_full_feature_review(review_df)
     return review_df
 
 if __name__ == "__main__":

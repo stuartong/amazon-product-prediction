@@ -168,6 +168,6 @@ def create_full_feature_review(df):
     """
     df["reviewText"]= df["reviewText"].apply(lambda row: row if isinstance(row, list) else [])
     df["summary"]= df["summary"].apply(lambda row: row if isinstance(row, list) else [])
-    df['full_review_features']= (df['reviewText']+ df['summary']).map(pd.unique)
+    df['features']= (df['reviewText']+ df['summary']).map(pd.unique)
     df.drop(columns= ['reviewText', 'summary'], inplace= True)
     return df
