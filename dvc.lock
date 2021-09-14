@@ -5,16 +5,16 @@ stages:
       http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
     deps:
     - path: http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
-      checksum: '"5d9e86fd-42730f5"'
+      etag: '"5d9e86fd-42730f5"'
       size: 69677301
     - path: http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
-      checksum: '"60a1a28f-391c4f4"'
+      etag: '"60a1a28f-391c4f4"'
       size: 59884788
     - path: load_data.py
       md5: 51595efa901379c11f93cb0c5d00f99c
       size: 4736
     outs:
     - path: data/prepared
-      md5: 9e02c915488d6e04ca96222543aaa5af.dir
-      size: 835032164
+      md5: e337c68fe01165cf9a17c0c386e6dd29.dir
+      size: 835032391
       nfiles: 2
