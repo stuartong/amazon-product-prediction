@@ -5,8 +5,13 @@ from sklearn.model_selection import GridSearchCV
 from split_data import split_data
 from imblearn.over_sampling import SVMSMOTE
 from collections import Counter
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
+import pickle
 
-def run_model(df):
+def run_model(df_path):
     '''
     Function to run classifier model on data
     
@@ -37,11 +42,21 @@ def run_model(df):
     Input: Cleaned df with metrics and classes in place
     Output: Model, split and transformed data for scoring function
     '''
+     # import models 
+
+
+    model_dict= dict(
+        LogisticRegression= LogisticRegression,
+        SVC= SVC,
+        GradientBoostingClassifier= GradientBoostingClassifier,
+        MLPClassifier= MLPClassifier
+        )
+    
     import yaml
     with open("params.yaml", "r") as file:
         param_file= yaml.safe_load(file)
         
-    model_type= param_file["supervised_model"]["model_type"]
+    model_type= model_dict[param_file["supervised_model"]["model_type"]]
     params= param_file["supervised_model"]["params"] 
     scale= param_file["supervised_model"]["scale"]
     oversample= param_file["supervised_model"]["oversample"]
@@ -50,16 +65,14 @@ def run_model(df):
     n_jobs= param_file["supervised_model"]["n_jobs"]
     return_train_score= param_file["supervised_model"]["return_train_score"]
     split= param_file["supervised_model"]["split"]
-    # import models 
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.svm import SVC
-    from sklearn.ensemble import GradientBoostingClassifier
-    from sklearn.neural_network import MLPClassifier
-
-    feature = 'wordvec'
+   
+    #import data
+    df= pd.read_pickle(df_path+ "/products.pkl") 
+    
+    feature = 'features'
 
     # list of models where feature scaling is recommended
-    scaling_recommended = [LogisticRegression,SVC]
+    scaling_recommended = ["LogisticRegression","SVC"]
 
     # check and drop empty vectors
     empty = len(df[df[feature].map(len)==0])
@@ -74,13 +87,13 @@ def run_model(df):
     # change string 'wordvec' to string 'features' once moutaz fixes code
     train, val, test = split_data(df,split)
 
-    X_train = np.stack(train['wordvec'],axis=0)
+    X_train = np.stack(train[feature],axis=0).reshape(-1,1)
     y_train = list(train['class_label'])
 
-    X_test = np.stack(test['wordvec'],axis=0)
+    X_test = np.stack(test[feature],axis=0).reshape(-1,1)
     y_test = list(test['class_label'])
 
-    X_val = np.stack(val['wordvec'],axis=0)
+    X_val = np.stack(val[feature],axis=0).reshape(-1,1)
     y_val = list(val['class_label'])
 
     # if scale is True, we will fit and transform all X
@@ -97,7 +110,7 @@ def run_model(df):
     # if oversample is True, we will use SMOTEEN to oversample
     # minority class only on the training data
     # oversampling generally for less data - considering undersampling but risks overfitting
-
+   
     if oversample==True:
         print('Oversampling Data')
         print('Origianl dataset shape:', Counter(y_train))
@@ -148,22 +161,22 @@ if __name__ == "__main__":
     clf,X_train,X_test,X_val,y_train,y_test,y_val = run_model(args.df)
     
     if os.path.isdir("model"):
-        clf.to_pickle('model/model.pkl')
-        X_train.to_pickle("model/X_train.pkl")
-        X_test.to_pickle("model/X_test.pkl")
-        X_val.to_pickle("model/X_val.pkl")
-        y_train.to_pickle("model/y_train.pkl")
-        y_test.to_pickle("model/y_test.pkl")
-        y_val.to_pickle("model/y_val.pkl")
+        pickle.dump(clf, open("model/model.sav", "wb"))
+        np.save("model/X_train.npy", X_train)
+        np.save("model/X_test.npy", X_test)
+        np.save("model/X_val.npy", X_val)
+        np.save("model/y_train.npy", y_train)
+        np.save("model/y_test.npy", y_test)
+        np.save("model/y_val.npy", y_val)
         
     else:
         os.makedirs("model")
-        clf.to_pickle('model/model.pkl')
-        X_train.to_pickle("model/X_train.pkl")
-        X_test.to_pickle("model/X_test.pkl")
-        X_val.to_pickle("model/X_val.pkl")
-        y_train.to_pickle("model/y_train.pkl")
-        y_test.to_pickle("model/y_test.pkl")
-        y_val.to_pickle("model/y_val.pkl")
+        pickle.dump(clf, open("model/model.sav", "wb"))
+        np.save("model/X_train.npy", X_train)
+        np.save("model/X_test.npy", X_test)
+        np.save("model/X_val.npy", X_val)
+        np.save("model/y_train.npy", y_train)
+        np.save("model/y_test.npy", y_test)
+        np.save("model/y_val.npy", y_val)
 
 

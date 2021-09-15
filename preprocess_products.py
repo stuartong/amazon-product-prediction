@@ -18,8 +18,7 @@ def preprocess_products(product_df_path):
     #import df
     print("reading {} file".format(product_df_path.split('/')[-1]))
     df= pd.read_pickle(product_df_path+ "/products.pkl")    
-    # fill NaN with 0 in df - i.e. no reviews
-    df[['tot_stars','tot_reviews','avg_stars']] = df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
+    
     #Step1: removing duplicate products based on "asin" column
     df.drop_duplicates(subset= "asin", inplace= True)
     #Step2: downsampling the categories that only appear 500 times in column

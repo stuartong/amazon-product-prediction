@@ -56,15 +56,15 @@ def load_data(cat_meta_url,cat_review_url):
     f.close()
     
     # save meta_data to dataframe
-    meta_df = pd.DataFrame.from_dict(data)
+    products_df = pd.DataFrame.from_dict(data)
     print("Metadata Converted")
 
     # clean meta_data as recommended
      
     # fill NA with blanks
-    meta_df.fillna('',inplace=True)
+    products_df.fillna('',inplace=True)
     # remove unformatted rows
-    meta_df = meta_df[~meta_df.title.str.contains('getTime')]
+    products_df = products_df[~products_df.title.str.contains('getTime')]
 
     # open gzip of review_data and get json data
     print("Reading Review Data...")
@@ -79,28 +79,14 @@ def load_data(cat_meta_url,cat_review_url):
     
     print("Review Data Converted")
    
-    # --------------------------------------------------------------------------------------------------------------------------- #
-
-    # get success metrics - target variables
-    # ONLY KEEP ONE FOR training models 
-    # DO NOT USE UNUSED VARIABLE FOR TRAINING - DATA LEAK
-
-    ### let us futher process the metadata
-    summary_df = review_df.groupby('asin').agg(
-        tot_stars = ('overall','sum'),
-        tot_reviews = ('overall','count'),
-        avg_stars = ('overall','mean')
-    )
     
-    # join summary with meta_data
-    combined_df = meta_df.join(summary_df,on='asin')
 
     # Clean Up - delete downloaded gzip files
     print("Cleaning up temp files...")
     os.remove(meta_filename)
     os.remove(review_filename)
 
-    return combined_df, review_df, meta_filename, review_filename
+    return products_df, review_df, meta_filename, review_filename
 
 if __name__ == '__main__':
     import argparse

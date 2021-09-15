@@ -35,7 +35,7 @@ stages:
     outs:
     - data/metrics
   supervised_model:
-    cmd: python model_supervised.py 
+    cmd: python model_supervised.py data/metrics
     deps:
     - model_supervised.py
     - data/metrics
@@ -43,12 +43,18 @@ stages:
     - supervised_model.model_type
     - supervised_model.params     
     - supervised_model.scale
-    - supvervised_model.oversample
+    - supervised_model.oversample
     - supervised_model.gscv
     - supervised_model.param_dict
     - supervised_model.n_jobs
     - supervised_model.return_train_score
     - supervised_model.split
     outs:
-    - model/model.pkl
+    - model/model.sav
+    - model/X_train.npy
+    - model/X_test.npy
+    - model/X_val.npy
+    - model/y_train.npy
+    - model/y_test.npy
+    - model/y_val.npy
   

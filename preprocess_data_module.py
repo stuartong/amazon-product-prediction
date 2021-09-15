@@ -142,7 +142,7 @@ def clean_review(sent):
     stop_words= stopwords.words('english')
     lemmatizer= WordNetLemmatizer()
 
-    if type(sent) == list:
+    if (type(sent) == list):
         text= ' '.join(sent)
         extracted_words=  re.findall(r'(\w+|\d\'\d)', string=text)
         filtered_words= [word.lower() for word in extracted_words if (word not in stop_words) & (len(word)>1)]
