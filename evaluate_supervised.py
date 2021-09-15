@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.metrics import plot_precision_recall_curve, f1_score, confusion_matrix, classification_report,plot_confusion_matrix,recall_score,plot_roc_curve, roc_curve, roc_auc_score, accuracy_score
+from sklearn.metrics import plot_precision_recall_curve, f1_score, matthews_corrcoef,confusion_matrix, classification_report,plot_confusion_matrix,recall_score,plot_roc_curve, roc_curve, roc_auc_score, accuracy_score
 from sklearn.dummy import DummyClassifier
 import matplotlib.pyplot as plt
 
@@ -29,32 +29,41 @@ def evaluate_model(clf,X_train,X_test,X_val,y_train,y_test,y_val):
     print('\n')
     f1_avg = 'weighted'
     print(f'F1 Scores - {f1_avg}')
-    print('\n')
     test_f1 = f1_score(y_test,y_pred,average=f1_avg)
     dummy_mf_f1 = f1_score(y_test,mf_dev_preds,average=f1_avg)
     dummy_uni_f1 = f1_score(y_test,rand_dev_preds,average=f1_avg)
     print(f'Test F1: {test_f1}')
     print(f'Dummy Most Frequent F1: {dummy_mf_f1}')
     print(f'Dummy Uniform F1: {dummy_uni_f1}')
-
+    print('\n')
+    print('Matthews Correlation Coefficient - MCC')
+    test_mcc = matthews_corrcoef(y_test,y_pred)
+    # dummy_mf_mcc = matthews_corrcoef(y_test,mf_dev_preds)
+    dummy_uni_mcc = matthews_corrcoef(y_test,rand_dev_preds)
+    print(f'Test MCC: {test_mcc}')
+    # print(f'Dummy Most Frequent MCC: {dummy_mf_mcc}')
+    print(f'Dummy Uniform MCC: {dummy_uni_mcc}')
 
     # get classification report 
     print('\nClassification Report - Test Set')
     print(classification_report(y_test,y_pred))
 
-    # get confusion matrix
-    plot_confusion_matrix(clf,X_test,y_test)
-    plt.show()
+    #display plots
+    fig , axes = plt.subplots(1,3,figsize=(24,8))
+    axes[0].title.set_text('Confusion Matrix')
+    axes[1].title.set_text('ROC Curve')
+    axes[2].title.set_text('Precision-Recall Curve')
 
-    # get ROC Curve
-    plot_roc_curve(clf,X_test,y_test)    
-    plt.show()
+    cm = plot_confusion_matrix(clf,X_test,y_test,ax=axes[0]);
+    roc_curve = plot_roc_curve(clf,X_test,y_test,ax=axes[1]);
+    pr_curve = plot_precision_recall_curve(clf,X_test,y_test,ax=axes[2]);
 
-    # get precision-recall curve
-    plot_precision_recall_curve(clf,X_test,y_test)
-    plt.show()
+    # cm.plot(ax=axes[0]);
+    # roc_curve.plot(ax=axes[1]); 
+    # pr_curve.plot(ax=axes[2]);
 
-    return 
+
+    return test_f1,test_mcc,test_acc
 
 
 
