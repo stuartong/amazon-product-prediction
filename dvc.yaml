@@ -1,0 +1,60 @@
+stages:
+  load_data:
+    cmd: python load_data.py http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
+      http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
+    deps:
+    - load_data.py
+    - http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
+    - http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
+    outs:
+    - data/prepared
+  preprocess_products:
+    cmd: python preprocess_products.py data/prepared
+    deps:
+    - preprocess_products.py
+    - data/prepared
+    params:
+    - preprocess_products
+    outs:
+    - data/products
+  preprocess_reviews:
+    cmd: python preprocess_reviews.py data/prepared
+    deps:
+    - preprocess_reviews.py
+    - data/prepared
+    outs:
+    - data/reviews
+  success_metrics:
+    cmd: python create_success_metrics.py data/products data/reviews
+    deps:
+    - create_success_metrics.py 
+    - data/products
+    - data/reviews
+    params:
+    - success_metrics.cutoff
+    outs:
+    - data/metrics
+  supervised_model:
+    cmd: python model_supervised.py data/metrics
+    deps:
+    - model_supervised.py
+    - data/metrics
+    params:
+    - supervised_model.model_type
+    - supervised_model.params     
+    - supervised_model.scale
+    - supervised_model.oversample
+    - supervised_model.gscv
+    - supervised_model.param_dict
+    - supervised_model.n_jobs
+    - supervised_model.return_train_score
+    - supervised_model.split
+    outs:
+    - model/model.sav
+    - model/X_train.npy
+    - model/X_test.npy
+    - model/X_val.npy
+    - model/y_train.npy
+    - model/y_test.npy
+    - model/y_val.npy
+  
