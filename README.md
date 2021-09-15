@@ -26,16 +26,16 @@ Output: product_df, review_df , meta_filename, review_filename
 ### 2. preprocess_data_module.py
 A .py file acting as a library to feed in during the preprocess stage of the pipeline. It covers all the needed functions to run on both the product and review dataframes to clean, extract, and prepare the data for the Machine Learning stage. It includes the below functions:
 
-    #### <b> clean_category_columns: </b>
-    - It  takes in a dataframe and return the categories per item that occur 500 or more times in the full product space. It starts by generating a total category list of all categories tagged to every product then it counts the occurrence of every cat in the list and extracts only the list with 500 occurrences or more. Finally it updates the category column to only include these categories per product to help with feature selection/ generation.
-    
-    Input: data_frame
+#### <b> clean_category_columns: </b>
+- It  takes in a dataframe and return the categories per item that occur 500 or more times in the full product space. It starts by generating a total category list of all categories tagged to every product then it counts the occurrence of every cat in the list and extracts only the list with 500 occurrences or more. Finally it updates the category column to only include these categories per product to help with feature selection/ generation.
 
-    Args:
-        df (data_frame): data_frame that includes "category" labelled column
+Input: data_frame
 
-    Returns:
-        df: same data_frame with the category column updated
+Args:
+    df (data_frame): data_frame that includes "category" labelled column
+
+Returns:
+    df: same data_frame with the category column updated
 
 
 ### 3. vectorize_XXX.py
