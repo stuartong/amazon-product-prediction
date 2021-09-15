@@ -61,7 +61,7 @@ def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_
     # split the data to train/test/validate split
     # and get X and y for splits
     # change string 'wordvec' to string 'features' once moutaz fixes code
-    train, val, test = split_data(df,0.60)
+    train, val, test = split_data(df,0.80)
 
     X_train = np.stack(train['features'],axis=0)
     y_train = list(train['class_label'])
@@ -81,7 +81,7 @@ def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_
         X_test = scaler.transform(X_test)
         X_val = scaler.transform(X_val)
     else:
-        pass
+        print('No scaling done')
 
     # if oversample is True, we will use SMOTEEN to oversample
     # minority class only on the training data
@@ -89,11 +89,11 @@ def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_
 
     if oversample==True:
         print('Oversampling Data')
-        print('Origianl dataset shape:', Counter(y_train))
+        print('Original dataset shape:', Counter(y_train))
         
         smote = SVMSMOTE(random_state=0)
         X_train, y_train = smote.fit_resample(X_train,y_train)
-        print('Resampple dataset shape:', Counter(y_train))
+        print('Resample dataset shape:', Counter(y_train))
     else:
         print('No oversampling done')
         print('Current Class Balance:', Counter(y_train))
@@ -109,7 +109,7 @@ def run_model(df,model_type,params,scale=True,oversample=False,gscv=False,param_
         model=model_type()
         CV_clf = GridSearchCV(model_type(),
                               param_dict,
-                              scoring='f1_weighted',
+                              scoring='accuracy',
                               return_train_score=return_train_score,
                               n_jobs=n_jobs,
                               verbose=3
