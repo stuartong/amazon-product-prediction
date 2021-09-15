@@ -15,30 +15,28 @@ We plan to accomplish 3 main things:
 
 ## Pipeline
 
-### 1. get_product_success.py
-For a specific category, summarize reviews to create product success metric and join on category metadata table to form the full dataset for that category, include:
+### 1. load_data.py
+For a specific category, loads product metadata and reviews metadata from respective urls and return products_df and reviews_df
 
-1. Data Exploration
-2. Sanity checks - duplicates/NANs etc
-3. Data Summary
+Input: product metadata url path, review metadata url path
 
-Input: review_df, metadata_df
-
-Output: combined_df
+Output: product_df, review_df , meta_filename, review_filename
 
 
-### 2. clean_text.py
-Clean and tokenize product reviews and descriptions. Split string on spaces and carries out the following steps:
+### 2. preprocess_data_module.py
+A .py file acting as a library to feed in during the preprocess stage of the pipeline. It covers all the needed functions to run on both the product and review dataframes to clean, extract, and prepare the data for the Machine Learning stage. It includes the below functions:
 
-1. punctuation removal
-2. lowercase all words
-3. Tokenize 
-4. Lemmatize 
-5. Remove stopwords
+    #### <b> clean_category_columns: </b>
+    - It  takes in a dataframe and return the categories per item that occur 500 or more times in the full product space. It starts by generating a total category list of all categories tagged to every product then it counts the occurrence of every cat in the list and extracts only the list with 500 occurrences or more. Finally it updates the category column to only include these categories per product to help with feature selection/ generation.
+    
+    Input: data_frame
 
-Input: Product description/review string
+    Args:
+        df (data_frame): data_frame that includes "category" labelled column
 
-Output: List of tokens 
+    Returns:
+        df: same data_frame with the category column updated
+
 
 ### 3. vectorize_XXX.py
 Convert tokens to vectorzied format using method XXX. Note might need multiple vectorizing functions for different purposes.
