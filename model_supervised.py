@@ -106,7 +106,7 @@ def run_model(df_path):
         X_test = scaler.transform(X_test)
         X_val = scaler.transform(X_val)
     else:
-        pass
+        print('No scaling done')
 
     # if oversample is True, we will use SMOTEEN to oversample
     # minority class only on the training data
@@ -114,7 +114,7 @@ def run_model(df_path):
    
     if oversample==True:
         print('Oversampling Data')
-        print('Origianl dataset shape:', Counter(y_train))
+        print('Original dataset shape:', Counter(y_train))
         
         smote = SVMSMOTE(random_state=0)
         X_train, y_train = smote.fit_resample(X_train,y_train)
@@ -135,7 +135,7 @@ def run_model(df_path):
         model=model_type()
         CV_clf = GridSearchCV(model,
                               param_dict,
-                              scoring='f1_weighted',
+                              scoring='accuracy',
                               return_train_score=return_train_score,
                               n_jobs=n_jobs,
                               verbose=3
