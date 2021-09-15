@@ -1,0 +1,126 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python load_data.py http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
+      http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
+    deps:
+    - path: http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
+      checksum: '"5d9e86fd-42730f5"'
+      size: 69677301
+    - path: http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
+      checksum: '"60a1a28f-391c4f4"'
+      size: 59884788
+    - path: load_data.py
+      md5: 0fc79111c8aa338b0a716a0e1f3407b2
+      size: 4159
+    outs:
+    - path: data/prepared
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
+      nfiles: 2
+  preprocess_products:
+    cmd: python preprocess_products.py data/prepared
+    deps:
+    - path: data/prepared
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
+      nfiles: 2
+    - path: preprocess_products.py
+      md5: 161880bfa4949ab6ea8d191bd1061f87
+      size: 4637
+    params:
+      params.yaml:
+        preprocess_products:
+          word2vec_features: true
+          handpicked_features: true
+          word2vec_model_name: glove-wiki-gigaword-300
+          pca: true
+    outs:
+    - path: data/products
+      md5: b71a3ad7ee108adb66bb784ccc7776cc.dir
+      size: 671265475
+      nfiles: 1
+  preprocess_reviews:
+    cmd: python preprocess_reviews.py data/prepared
+    deps:
+    - path: data/prepared
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
+      nfiles: 2
+    - path: preprocess_reviews.py
+      md5: 0c778d4227afa4c18417bc332a2507cd
+      size: 1849
+    outs:
+    - path: data/reviews
+      md5: e0866fe512426dbf79e2bd5ee359096b.dir
+      size: 158450968
+      nfiles: 1
+  success_metrics:
+    cmd: python create_success_metrics.py data/products data/reviews
+    deps:
+    - path: create_success_metrics.py
+      md5: 52fad55e66a58f46424dbc465aca45d9
+      size: 1920
+    - path: data/products
+      md5: b71a3ad7ee108adb66bb784ccc7776cc.dir
+      size: 671265475
+      nfiles: 1
+    - path: data/reviews
+      md5: e0866fe512426dbf79e2bd5ee359096b.dir
+      size: 158450968
+      nfiles: 1
+    params:
+      params.yaml:
+        success_metrics.cutoff: 10
+    outs:
+    - path: data/metrics
+      md5: b9af4c8371d3d4b2e3a8d685a694a0ba.dir
+      size: 674017434
+      nfiles: 1
+  supervised_model:
+    cmd: python model_supervised.py data/metrics
+    deps:
+    - path: data/metrics
+      md5: b9af4c8371d3d4b2e3a8d685a694a0ba.dir
+      size: 674017434
+      nfiles: 1
+    - path: model_supervised.py
+      md5: a299e0b6b3a28320f08f67a5ffe824ec
+      size: 6936
+    params:
+      params.yaml:
+        supervised_model.gscv: false
+        supervised_model.model_type: LogisticRegression
+        supervised_model.n_jobs: 1
+        supervised_model.oversample: false
+        supervised_model.param_dict: None
+        supervised_model.params:
+          random_state: 42
+          max_iter: 5000
+          solver: saga
+          class_weight: balanced
+        supervised_model.return_train_score: false
+        supervised_model.scale: true
+        supervised_model.split: 0.6
+    outs:
+    - path: model/X_test.npy
+      md5: 4e05f52bb7e2eef82bccdcf92441fcb2
+      size: 1209728
+    - path: model/X_train.npy
+      md5: a983937a39eeee6d68971f095650f5f9
+      size: 3628728
+    - path: model/X_val.npy
+      md5: 4eb65cb22cc01c718327ddbac3d74cf6
+      size: 1209728
+    - path: model/model.sav
+      md5: 7d2f0ca159be0dc5ada7a6a5425ab61e
+      size: 878
+    - path: model/y_test.npy
+      md5: 4e12d5f754ba8f3be58df75bcce1c1ed
+      size: 24320
+    - path: model/y_train.npy
+      md5: 1f678d00b23d3e315101469c75024db7
+      size: 72700
+    - path: model/y_val.npy
+      md5: b66703284a13923a256b51144eb77586
+      size: 24320

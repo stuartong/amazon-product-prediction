@@ -3,29 +3,29 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def create_success_metric(review_df,meta_df,cutoff):
+def create_success_metric(products_df, reviews_df,cutoff):
     '''
-    This function uses the review_df to calculate success metrics for a product
-    and appends the results to the meta_df 
+    This function uses the reviews_df to calculate success metrics for a product
+    and appends the results to the products_df 
     
 
     Inputs:
-    1. review_df: per category review data
-    2. meta_df: per category meta data (uses 'asin' and 'rank' column)
+    1. reviews_df: per category review data
+    2. products_df: per category meta data (uses 'asin' and 'rank' column)
 
     Outputs:
-    1. combined_df: meta_df + success_metric
+    1. combined_df: products_df + success_metric
     '''
     
     # get per product total stars, reviews and average stars 
-    summary_df = review_df.groupby('asin').agg(
+    summary_df = reviews_df.groupby('asin').agg(
         tot_stars = ('overall','sum'),
         tot_reviews = ('overall','count'),
         avg_stars = ('overall','mean')
     )
 
     # get per product no of reviews by star count
-    count_df = review_df.groupby(['asin','overall']).size().unstack(fill_value=0)
+    count_df = reviews_df.groupby(['asin','overall']).size().unstack(fill_value=0)
 
     # score each product
     count_df['score'] = ((count_df[1.0] * (-2)) +
@@ -35,8 +35,8 @@ def create_success_metric(review_df,meta_df,cutoff):
                          (count_df[5.0] * (2))
                          )
     
-    # updated meta_df with summary and counts
-    combined_df = meta_df.join(summary_df,on='asin')
+    # updated products_df with summary and counts
+    combined_df = products_df.join(summary_df,on='asin')
     combined_df = combined_df.join(count_df,on='asin')
 
     # get rank
@@ -72,7 +72,7 @@ def create_success_metric(review_df,meta_df,cutoff):
     plt.savefig('charts/class_balance.png')
     
     # Check scores and ranks
-    check_score_rank(combined_df)
+    # check_score_rank(combined_df)
 
     return combined_df
 
