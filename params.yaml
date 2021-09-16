@@ -5,17 +5,21 @@ preprocess_products:
     pca: True
     
 success_metrics:
-    cutoff: 10
+    cutoff: 2
 
 supervised_model:
-    model_type: LogisticRegression
-    scale: True
+    model_type: GradientBoostingClassifier
+    scale: False
     oversample: False
-    gscv: False
-    param_dict: None
+    gscv: True
+    param_dict: 
+        max_depth : [5,10,12]
+        learning_rate : [0.005,0.01]
+        n_estimators : [2000,3000]
+        random_state : [42] 
     n_jobs: 1
     return_train_score: False
-    split: 0.6
+    split: 0.8
     params: 
         random_state : 42
         max_iter : 5000
