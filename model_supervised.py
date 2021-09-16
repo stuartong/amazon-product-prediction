@@ -7,7 +7,8 @@ from imblearn.over_sampling import SVMSMOTE
 from collections import Counter
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import GradientBoostingClassifier,AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 import pickle
 
@@ -49,7 +50,8 @@ def run_model(df_path):
         LogisticRegression= LogisticRegression,
         SVC= SVC,
         GradientBoostingClassifier= GradientBoostingClassifier,
-        MLPClassifier= MLPClassifier
+        MLPClassifier= MLPClassifier,
+        AdaBoostClassifier=AdaBoostClassifier
         )
     
     import yaml
