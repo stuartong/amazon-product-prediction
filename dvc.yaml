@@ -27,7 +27,7 @@ stages:
   success_metrics:
     cmd: python create_success_metrics.py data/products data/reviews
     deps:
-    - create_success_metrics.py 
+    - create_success_metrics.py
     - data/products
     - data/reviews
     params:
@@ -41,7 +41,7 @@ stages:
     - data/metrics
     params:
     - supervised_model.model_type
-    - supervised_model.params     
+    - supervised_model.params
     - supervised_model.scale
     - supervised_model.oversample
     - supervised_model.gscv
@@ -50,11 +50,20 @@ stages:
     - supervised_model.return_train_score
     - supervised_model.split
     outs:
-    - model/model.sav
+    - model/model.pkl
     - model/X_train.npy
     - model/X_test.npy
     - model/X_val.npy
     - model/y_train.npy
     - model/y_test.npy
     - model/y_val.npy
-  
+  evaluate_supervised:
+    cmd: python evaluate_supervised_copy.py scores.json
+    deps:
+      - evaluate_supervised_copy.py
+      - model/
+    metrics:
+      - scores.json:
+          cache: False
+    
+

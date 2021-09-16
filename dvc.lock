@@ -85,8 +85,8 @@ stages:
       size: 674652428
       nfiles: 1
     - path: model_supervised.py
-      md5: d69cefed5bf0f222ed5f7b2fe50b1fb5
-      size: 6769
+      md5: 5aa7690f8db30d41aafb06cb4a033fff
+      size: 6953
     params:
       params.yaml:
         supervised_model.gscv: true
@@ -122,11 +122,11 @@ stages:
       md5: 52252df851702d44f75e8249f05d7bc1
       size: 4838328
     - path: model/X_val.npy
-      md5: ca6350285b36689e0cea714b967b9739
-      size: 604928
-    - path: model/model.sav
-      md5: 8a086093fd02280eb8cc220173b05d15
-      size: 7286153
+      md5: 4eb65cb22cc01c718327ddbac3d74cf6
+      size: 1209728
+    - path: model/model.pkl
+      md5: 7d2f0ca159be0dc5ada7a6a5425ab61e
+      size: 878
     - path: model/y_test.npy
       md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
@@ -136,3 +136,17 @@ stages:
     - path: model/y_val.npy
       md5: a886d9229d034eec02353ee92f9dbbe2
       size: 24320
+  evaluate_supervised:
+    cmd: python evaluate_supervised_copy.py scores.json
+    deps:
+    - path: evaluate_supervised_copy.py
+      md5: e0dd5105b1ad3cd9365e872f68bb424a
+      size: 4120
+    - path: model/
+      md5: f0bb28ff2570b90a7fc3c0f1171155dc.dir
+      size: 6170492
+      nfiles: 8
+    outs:
+    - path: scores.json
+      md5: a475a14b2ae8a5b46123aa425d676240
+      size: 461

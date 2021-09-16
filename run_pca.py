@@ -4,13 +4,13 @@ import pandas as pd
 import numpy as np
 
 def run_pca(df):
-    df= df[df["features"].map(len)> 50]
-    target_arr= np.hstack(df["features"].values).reshape(-1,304)
     import yaml
     with  open("params.yaml", "r") as file:
         params= yaml.safe_load(file)
         n_components= params["run_pca"]["n_components"]
-    
+    df= df[df["features"].map(len)> n_components]
+    array_len= max(df["features"].map(len))
+    target_arr= np.hstack(df["features"].values).reshape(-1,array_len)
     #initializing StandardScaler
     scaler= StandardScaler()
     #scaling the array
