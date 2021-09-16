@@ -21,7 +21,16 @@ supervised_model:
         max_iter : 5000
         solver: saga
         class_weight : balanced 
-   
+
+evaluate_supervised:
+    clf: model/model.sav
+    X_test: model/X_test.npy
+    X_train: model/X_train.npy
+    X_val: model/X_val.npy
+    y_test: model/y_test.npy
+    y_train: model/y_train.npy
+    y_val: model/y_val.npy
+    f1_avg: "weighted"
 
 run_pca:
     n_components: 25
