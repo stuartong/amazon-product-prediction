@@ -7,15 +7,21 @@ preprocess_products:
 success_metrics:
     cutoff: 2
 
+# base_model/base_iter is only for AdaBoostClassifier
+
 supervised_model:
     model_type: AdaBoostClassifier
     scale: False
     oversample: False
     gscv: True
-    param_dict: 
-        learning_rate : [0.005,0.01,1]
-        n_estimators : [100,2000,3000]
-        random_state : [42] 
+    ada_base_model: DecisionTreeClassifier
+    ada_base_iter: [2,6,9]
+    param_dict: {
+        learning_rate : [0.005,0.01,1],
+        n_estimators : [100,2000,3000],
+        random_state : [42]
+    } 
+
     n_jobs: 1
     return_train_score: False
     split: 0.8
