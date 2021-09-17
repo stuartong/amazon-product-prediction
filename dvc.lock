@@ -26,8 +26,8 @@ stages:
       size: 834301394
       nfiles: 2
     - path: preprocess_products.py
-      md5: 161880bfa4949ab6ea8d191bd1061f87
-      size: 4540
+      md5: 45409078008787187b9e31603ce1c5fc
+      size: 3257
     params:
       params.yaml:
         preprocess_products:
@@ -39,8 +39,8 @@ stages:
           occurrence_threshold: 500
     outs:
     - path: data/products
-      md5: d51e38bd3479d18fd5595f8a1f540ae6.dir
-      size: 671900457
+      md5: 26a72bc0b0c9899cc29cbd4445cd0da9.dir
+      size: 715611213
       nfiles: 1
   preprocess_reviews:
     cmd: python preprocess_reviews.py data/prepared
@@ -64,8 +64,8 @@ stages:
       md5: 52fad55e66a58f46424dbc465aca45d9
       size: 1879
     - path: data/products
-      md5: d51e38bd3479d18fd5595f8a1f540ae6.dir
-      size: 671900457
+      md5: 26a72bc0b0c9899cc29cbd4445cd0da9.dir
+      size: 715611213
       nfiles: 1
     - path: data/reviews
       md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
@@ -76,22 +76,22 @@ stages:
         success_metrics.cutoff: 2
     outs:
     - path: data/metrics
-      md5: 5d25bcda10c12a2fe0f97f3c7e150775.dir
-      size: 674652428
+      md5: d0d53cbe34781a2ef7df8aed2f8bd4ed.dir
+      size: 718363193
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
-      md5: 5d25bcda10c12a2fe0f97f3c7e150775.dir
-      size: 674652428
+      md5: d0d53cbe34781a2ef7df8aed2f8bd4ed.dir
+      size: 718363193
       nfiles: 1
     - path: model_supervised.py
-      md5: 67d2574d7182cf971f353200b6173c2a
-      size: 7223
+      md5: b3430d7821babdb25a8fcc710ad475ac
+      size: 7377
     params:
       params.yaml:
-        supervised_model.gscv: true
+        supervised_model.gscv: false
         supervised_model.model_type: AdaBoostClassifier
         supervised_model.n_jobs: 1
         supervised_model.oversample: false
@@ -106,44 +106,24 @@ stages:
           - 42
         supervised_model.params:
           random_state: 42
-          max_iter: 5000
-          solver: saga
-          class_weight: balanced
+          learning_rate: 0.005
+          n_estimators: 3000
         supervised_model.return_train_score: false
         supervised_model.scale: false
         supervised_model.split: 0.8
     outs:
     - path: model/X_test.npy
-<<<<<<< HEAD
-      md5: 6806222cdbf9944b80d96f4a68528338
-      size: 1209728
-    - path: model/X_train.npy
-      md5: 0adea1a2d6719be10c6ba38a4cfeb466
-      size: 3628728
-    - path: model/X_val.npy
-      md5: 089378fab53e51bea109d1a95740c789
-      size: 1209728
-    - path: model/model.pkl
-      md5: 3d22e6aa485bcb98306d56b9ce6fba8b
-      size: 878
-=======
-      md5: 860c493f173310b56dc5a711e6d4e693
+      md5: f782702ec2be03c367eb93d7b4acd029
       size: 604928
     - path: model/X_train.npy
-      md5: 52252df851702d44f75e8249f05d7bc1
+      md5: 0550b35b301f6e16996701d48e5980cf
       size: 4838328
     - path: model/X_val.npy
-      md5: ca6350285b36689e0cea714b967b9739
+      md5: f6593a28b0afe15344d1a282c66d982c
       size: 604928
     - path: model/model.pkl
-<<<<<<< HEAD
-      md5: 9cb4b179bd90c9d77ef02e79cda06b3f
-      size: 4545641
-=======
-      md5: 9f72fd9de8790599e68027a04a95cba4
-      size: 1986969
->>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
->>>>>>> f657831be6c2547fd0d8ce7fe221c10c8e3d8909
+      md5: bee21e54536cb095c7d696dc94f062c6
+      size: 4529513
     - path: model/y_test.npy
       md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
@@ -157,26 +137,13 @@ stages:
     cmd: python evaluate_supervised_copy.py scores.json
     deps:
     - path: evaluate_supervised_copy.py
-<<<<<<< HEAD
       md5: 3b7efb47790630c440caf82ac3c8f10e
-      size: 3751
+      size: 3653
     - path: model/
-      md5: 01ca16d82048d7ef2dadc411e82b6218.dir
-      size: 6170492
-      nfiles: 8
-    outs:
-    - path: scores.json
-      md5: 3ec9b602d7f06c4a4c56128f3e4dc0dc
-      size: 460
-=======
-      md5: e0dd5105b1ad3cd9365e872f68bb424a
-      size: 4013
-    - path: model/
-      md5: d9b81ac2ac9dea0ab68347e3c0e83c15.dir
-      size: 12823184
+      md5: ce2a976c31fce0a6d10581097b2a40cd.dir
+      size: 12807056
       nfiles: 9
     outs:
     - path: scores.json
-      md5: 6587b1e41fb1c2f54bec68ce2f07db3a
-      size: 439
->>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
+      md5: 2ad03c2522428e9d6bdb3fcbe3d7844c
+      size: 438

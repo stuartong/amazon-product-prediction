@@ -70,9 +70,11 @@ def run_model(df_path):
     n_jobs= param_file["supervised_model"]["n_jobs"]
     return_train_score= param_file["supervised_model"]["return_train_score"]
     split= param_file["supervised_model"]["split"]
+    ada_max_depth = param_file["supervised_model"]["ada_max_depth"]
 
     if model_type == AdaBoostClassifier:
         param_dict["base_estimator"]= [model_dict[ada_base_model](max_depth= i) for i in ada_base_iter]
+        params["base_estimator"]= model_dict[ada_base_model](max_depth=ada_max_depth)
 
    
     #import data

@@ -15,7 +15,7 @@ supervised_model:
     model_type: AdaBoostClassifier
     scale: False
     oversample: False
-    gscv: True
+    gscv: False
     ada_base_model: DecisionTreeClassifier
     ada_base_iter: [3,9,15]
     param_dict: {
@@ -23,15 +23,14 @@ supervised_model:
         n_estimators : [100,3000],
         random_state : [42]
     } 
-
+    ada_max_depth : 3 #for non-grid search AdaBoost base model
     n_jobs: 1
     return_train_score: False
     split: 0.8
     params: 
         random_state : 42
-        max_iter : 5000
-        solver: saga
-        class_weight : balanced 
+        learning_rate : 0.005
+        n_estimators : 3000 
 
 evaluate_supervised:
     clf: model/model.pkl
