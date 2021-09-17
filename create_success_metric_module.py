@@ -80,6 +80,8 @@ def check_score_rank(combined_df):
     '''
     Function to sanity check scores vs rank
     '''
+    import warnings
+    warnings.simplefilter("ignore")
 
     # create copy of dataframe for required fields
     scatter=combined_df[['main_cat','new_rank','avg_stars','tot_stars','score']].copy()
