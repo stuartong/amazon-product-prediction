@@ -7,22 +7,26 @@ preprocess_products:
     occurrence_threshold: 500 #threshold of occurrence of a category to be extracted by the vectorizer 
     
 success_metrics:
-    cutoff: 10
+    cutoff: 2
+
+# base_model/base_iter is only for AdaBoostClassifier
 
 supervised_model:
-    model_type: LogisticRegression
-    scale: True
+    model_type: AdaBoostClassifier
+    scale: False
     oversample: False
-    gscv: False
+    gscv: True
+    ada_base_model: DecisionTreeClassifier
+    ada_base_iter: [2,6,9]
     param_dict: {
-        "bas_estimator": [DecisionTreeClassifier(max_depth=5), DecisionTreeClassifier(max_depth=8), DecisionTreeClassifier(max_depth=12)],
-        "learning_rate": [0.005, 0.01, 1],
-        "n_estimators": [100, 2000, 3000],
-        "random_sate" : [42] 
-    }
+        learning_rate : [0.005,0.01,1],
+        n_estimators : [100,2000,3000],
+        random_state : [42]
+    } 
+
     n_jobs: 1
     return_train_score: False
-    split: 0.6
+    split: 0.8
     params: 
         random_state : 42
         max_iter : 5000
@@ -30,7 +34,7 @@ supervised_model:
         class_weight : balanced 
 
 evaluate_supervised:
-    clf: model/model.sav
+    clf: model/model.pkl
     X_test: model/X_test.npy
     X_train: model/X_train.npy
     X_val: model/X_val.npy

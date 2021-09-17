@@ -7,7 +7,8 @@ from imblearn.over_sampling import SVMSMOTE
 from collections import Counter
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import GradientBoostingClassifier,AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 import pickle
 
@@ -49,7 +50,9 @@ def run_model(df_path):
         LogisticRegression= LogisticRegression,
         SVC= SVC,
         GradientBoostingClassifier= GradientBoostingClassifier,
-        MLPClassifier= MLPClassifier
+        MLPClassifier= MLPClassifier,
+        AdaBoostClassifier=AdaBoostClassifier,
+        DecisionTreeClassifier=DecisionTreeClassifier
         )
     
     import yaml
@@ -57,6 +60,8 @@ def run_model(df_path):
         param_file= yaml.safe_load(file)
         
     model_type= model_dict[param_file["supervised_model"]["model_type"]]
+    ada_base_model = param_file["supervised_model"]['ada_base_model']
+    ada_base_iter = param_file["supervised_model"]['ada_base_iter']
     params= param_file["supervised_model"]["params"] 
     scale= param_file["supervised_model"]["scale"]
     oversample= param_file["supervised_model"]["oversample"]
@@ -65,6 +70,10 @@ def run_model(df_path):
     n_jobs= param_file["supervised_model"]["n_jobs"]
     return_train_score= param_file["supervised_model"]["return_train_score"]
     split= param_file["supervised_model"]["split"]
+
+    if model_type == AdaBoostClassifier:
+        param_dict["base_estimator"]= [model_dict[ada_base_model](max_depth= i) for i in ada_base_iter]
+
    
     #import data
     df= pd.read_pickle(df_path+ "/products.pkl") 
@@ -163,7 +172,7 @@ if __name__ == "__main__":
     clf,X_train,X_test,X_val,y_train,y_test,y_val = run_model(args.df_path)
     
     if os.path.isdir("model"):
-        pickle.dump(clf, open("model/model.sav", "wb"))
+        pickle.dump(clf, open("model/model.pkl", "wb"))
         np.save("model/X_train.npy", X_train)
         np.save("model/X_test.npy", X_test)
         np.save("model/X_val.npy", X_val)
@@ -173,7 +182,7 @@ if __name__ == "__main__":
         
     else:
         os.makedirs("model")
-        pickle.dump(clf, open("model/model.sav", "wb"))
+        pickle.dump(clf, open("model/model.pkl", "wb"))
         np.save("model/X_train.npy", X_train)
         np.save("model/X_test.npy", X_test)
         np.save("model/X_val.npy", X_val)

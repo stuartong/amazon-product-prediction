@@ -5,29 +5,29 @@ stages:
       http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
     deps:
     - path: http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
-      checksum: '"5d9e86fd-42730f5"'
+      etag: '"5d9e86fd-42730f5"'
       size: 69677301
     - path: http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
-      checksum: '"60a1a28f-391c4f4"'
+      etag: '"60a1a28f-391c4f4"'
       size: 59884788
     - path: load_data.py
       md5: 0fc79111c8aa338b0a716a0e1f3407b2
-      size: 4159
+      size: 4031
     outs:
     - path: data/prepared
-      md5: 7870636af441f6a2358ac2b71ac57a47.dir
-      size: 834301147
+      md5: a6419922457dee8567ce676381347c47.dir
+      size: 834301394
       nfiles: 2
   preprocess_products:
     cmd: python preprocess_products.py data/prepared
     deps:
     - path: data/prepared
-      md5: 7870636af441f6a2358ac2b71ac57a47.dir
-      size: 834301147
+      md5: a6419922457dee8567ce676381347c47.dir
+      size: 834301394
       nfiles: 2
     - path: preprocess_products.py
-      md5: 45409078008787187b9e31603ce1c5fc
-      size: 3340
+      md5: 161880bfa4949ab6ea8d191bd1061f87
+      size: 4540
     params:
       params.yaml:
         preprocess_products:
@@ -39,67 +39,90 @@ stages:
           occurrence_threshold: 500
     outs:
     - path: data/products
+<<<<<<< HEAD
       md5: 84a3a1917ba5f95f1fc6980e2acd536e.dir
       size: 714734328
+=======
+      md5: d51e38bd3479d18fd5595f8a1f540ae6.dir
+      size: 671900457
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
       nfiles: 1
   preprocess_reviews:
     cmd: python preprocess_reviews.py data/prepared
     deps:
     - path: data/prepared
-      md5: 7870636af441f6a2358ac2b71ac57a47.dir
-      size: 834301147
+      md5: a6419922457dee8567ce676381347c47.dir
+      size: 834301394
       nfiles: 2
     - path: preprocess_reviews.py
       md5: 0c778d4227afa4c18417bc332a2507cd
-      size: 1849
+      size: 1805
     outs:
     - path: data/reviews
-      md5: e0866fe512426dbf79e2bd5ee359096b.dir
-      size: 158450968
+      md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
+      size: 158451260
       nfiles: 1
   success_metrics:
     cmd: python create_success_metrics.py data/products data/reviews
     deps:
     - path: create_success_metrics.py
       md5: 52fad55e66a58f46424dbc465aca45d9
-      size: 1920
+      size: 1879
     - path: data/products
+<<<<<<< HEAD
       md5: 84a3a1917ba5f95f1fc6980e2acd536e.dir
       size: 714734328
+=======
+      md5: d51e38bd3479d18fd5595f8a1f540ae6.dir
+      size: 671900457
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
       nfiles: 1
     - path: data/reviews
-      md5: e0866fe512426dbf79e2bd5ee359096b.dir
-      size: 158450968
+      md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
+      size: 158451260
       nfiles: 1
     params:
       params.yaml:
-        success_metrics.cutoff: 10
+        success_metrics.cutoff: 2
     outs:
     - path: data/metrics
+<<<<<<< HEAD
       md5: 8593279e66e99f56bcbe3cad82c9f69c.dir
       size: 717486287
+=======
+      md5: 5d25bcda10c12a2fe0f97f3c7e150775.dir
+      size: 674652428
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
+<<<<<<< HEAD
       md5: 8593279e66e99f56bcbe3cad82c9f69c.dir
       size: 717486287
+=======
+      md5: 5d25bcda10c12a2fe0f97f3c7e150775.dir
+      size: 674652428
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
       nfiles: 1
     - path: model_supervised.py
-      md5: 5aa7690f8db30d41aafb06cb4a033fff
-      size: 6953
+      md5: f066d021a8bea015a0cfe237d2655db0
+      size: 6883
     params:
       params.yaml:
-        supervised_model.gscv: false
-        supervised_model.model_type: LogisticRegression
+        supervised_model.gscv: true
+        supervised_model.model_type: AdaBoostClassifier
         supervised_model.n_jobs: 1
         supervised_model.oversample: false
         supervised_model.param_dict:
+<<<<<<< HEAD
           bas_estimator:
           - DecisionTreeClassifier(max_depth=5)
           - DecisionTreeClassifier(max_depth=8)
           - DecisionTreeClassifier(max_depth=12)
+=======
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
           learning_rate:
           - 0.005
           - 0.01
@@ -108,7 +131,11 @@ stages:
           - 100
           - 2000
           - 3000
+<<<<<<< HEAD
           random_sate:
+=======
+          random_state:
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
           - 42
         supervised_model.params:
           random_state: 42
@@ -116,10 +143,11 @@ stages:
           solver: saga
           class_weight: balanced
         supervised_model.return_train_score: false
-        supervised_model.scale: true
-        supervised_model.split: 0.6
+        supervised_model.scale: false
+        supervised_model.split: 0.8
     outs:
     - path: model/X_test.npy
+<<<<<<< HEAD
       md5: 6806222cdbf9944b80d96f4a68528338
       size: 1209728
     - path: model/X_train.npy
@@ -131,19 +159,33 @@ stages:
     - path: model/model.pkl
       md5: 3d22e6aa485bcb98306d56b9ce6fba8b
       size: 878
+=======
+      md5: 860c493f173310b56dc5a711e6d4e693
+      size: 604928
+    - path: model/X_train.npy
+      md5: 52252df851702d44f75e8249f05d7bc1
+      size: 4838328
+    - path: model/X_val.npy
+      md5: ca6350285b36689e0cea714b967b9739
+      size: 604928
+    - path: model/model.pkl
+      md5: 9f72fd9de8790599e68027a04a95cba4
+      size: 1986969
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
     - path: model/y_test.npy
-      md5: 4e12d5f754ba8f3be58df75bcce1c1ed
+      md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
     - path: model/y_train.npy
-      md5: 1f678d00b23d3e315101469c75024db7
-      size: 72700
+      md5: fbb49c05d6ebb5710ece9994ca265e48
+      size: 193656
     - path: model/y_val.npy
-      md5: b66703284a13923a256b51144eb77586
+      md5: a886d9229d034eec02353ee92f9dbbe2
       size: 24320
   evaluate_supervised:
     cmd: python evaluate_supervised_copy.py scores.json
     deps:
     - path: evaluate_supervised_copy.py
+<<<<<<< HEAD
       md5: 3b7efb47790630c440caf82ac3c8f10e
       size: 3751
     - path: model/
@@ -154,3 +196,15 @@ stages:
     - path: scores.json
       md5: 3ec9b602d7f06c4a4c56128f3e4dc0dc
       size: 460
+=======
+      md5: e0dd5105b1ad3cd9365e872f68bb424a
+      size: 4013
+    - path: model/
+      md5: 9caa3631c70f88275b258dd06f5ef37c.dir
+      size: 10264512
+      nfiles: 9
+    outs:
+    - path: scores.json
+      md5: 3e7759c3b38e401fdf928280bea216fa
+      size: 439
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
