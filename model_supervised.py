@@ -165,7 +165,7 @@ if __name__ == "__main__":
     clf,X_train,X_test,X_val,y_train,y_test,y_val = run_model(args.df_path)
     
     if os.path.isdir("model"):
-        pickle.dump(clf, open("model/model.sav", "wb"))
+        pickle.dump(clf, open("model/model.pkl", "wb"))
         np.save("model/X_train.npy", X_train)
         np.save("model/X_test.npy", X_test)
         np.save("model/X_val.npy", X_val)
@@ -175,7 +175,7 @@ if __name__ == "__main__":
         
     else:
         os.makedirs("model")
-        pickle.dump(clf, open("model/model.sav", "wb"))
+        pickle.dump(clf, open("model/model.pkl", "wb"))
         np.save("model/X_train.npy", X_train)
         np.save("model/X_test.npy", X_test)
         np.save("model/X_val.npy", X_val)

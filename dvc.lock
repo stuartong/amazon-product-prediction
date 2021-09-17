@@ -85,23 +85,21 @@ stages:
       size: 674652428
       nfiles: 1
     - path: model_supervised.py
-      md5: 5aa7690f8db30d41aafb06cb4a033fff
-      size: 6953
+      md5: f066d021a8bea015a0cfe237d2655db0
+      size: 6883
     params:
       params.yaml:
         supervised_model.gscv: true
-        supervised_model.model_type: GradientBoostingClassifier
+        supervised_model.model_type: AdaBoostClassifier
         supervised_model.n_jobs: 1
         supervised_model.oversample: false
         supervised_model.param_dict:
-          max_depth:
-          - 5
-          - 10
-          - 12
           learning_rate:
           - 0.005
           - 0.01
+          - 1
           n_estimators:
+          - 100
           - 2000
           - 3000
           random_state:
@@ -122,11 +120,11 @@ stages:
       md5: 52252df851702d44f75e8249f05d7bc1
       size: 4838328
     - path: model/X_val.npy
-      md5: 4eb65cb22cc01c718327ddbac3d74cf6
-      size: 1209728
+      md5: ca6350285b36689e0cea714b967b9739
+      size: 604928
     - path: model/model.pkl
-      md5: 7d2f0ca159be0dc5ada7a6a5425ab61e
-      size: 878
+      md5: 9f72fd9de8790599e68027a04a95cba4
+      size: 1986969
     - path: model/y_test.npy
       md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
@@ -141,12 +139,12 @@ stages:
     deps:
     - path: evaluate_supervised_copy.py
       md5: e0dd5105b1ad3cd9365e872f68bb424a
-      size: 4120
+      size: 4013
     - path: model/
-      md5: f0bb28ff2570b90a7fc3c0f1171155dc.dir
-      size: 6170492
-      nfiles: 8
+      md5: 9caa3631c70f88275b258dd06f5ef37c.dir
+      size: 10264512
+      nfiles: 9
     outs:
     - path: scores.json
-      md5: a475a14b2ae8a5b46123aa425d676240
-      size: 461
+      md5: 3e7759c3b38e401fdf928280bea216fa
+      size: 439
