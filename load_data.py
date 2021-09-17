@@ -8,7 +8,7 @@ from tqdm import tqdm
 from urllib.request import urlopen
 
 
-def load_data(cat_meta_url,cat_review_url):
+def load_data():
     '''
     This function takes the meta data and review URL for a category
     and parses, cleans and converts data to Pandas dataframes.
@@ -25,11 +25,14 @@ def load_data(cat_meta_url,cat_review_url):
     1. combined_df - Meta data joined with success metrics from review_df
     2. review_df - Raw reviews in a dataframe
     '''
-    
+    import yaml
+    with open("params.yaml", "r") as file:
+        params= yaml.safe_load(file)
+    cat_meta_url= params["load_data"]["cat_meta_url"]
+    cat_review_url= params["load_data"]["cat_review_url"]
     # get .gz filenames to read to df
     meta_filename = cat_meta_url.split('/')[-1]
     review_filename = cat_review_url.split('/')[-1]
-    
     # get meta_data and save it to file
     print("Downloading Metadata...")
     with open(meta_filename,"wb") as f:
@@ -89,18 +92,8 @@ def load_data(cat_meta_url,cat_review_url):
     return products_df, review_df, meta_filename, review_filename
 
 if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        'meta_url', help='URL of Per-category Metadata (string)'
-    )
-    parser.add_argument(
-        'review_url', help='URL of Per-category reviews (string)'
-    )
-    args = parser.parse_args()
-
-    product_df, review_df, meta_filename, review_filename = load_data(args.meta_url , args.review_url)
+    
+    product_df, review_df, meta_filename, review_filename = load_data()
     if os.path.isdir("data"):
         if os.path.isdir("data/prepared"):
             product_df.to_pickle('data/prepared/products.pkl')

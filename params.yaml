@@ -1,3 +1,6 @@
+load_data:
+    cat_meta_url: http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
+    cat_review_url: http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
 preprocess_products:
     word2vec_features: True
     handpicked_features: True
