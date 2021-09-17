@@ -58,7 +58,8 @@ def evaluate_model():
     test_mcc = matthews_corrcoef(y_test,y_pred)
     val_mcc = matthews_corrcoef(y_val,y_val_pred)
     dummy_uni_mcc = matthews_corrcoef(y_test,rand_dev_preds)
-    clf_report= classification_report(y_test,y_pred,output_dict=True)
+    test_clf_report= classification_report(y_test,y_pred,output_dict=True)
+    val_clf_report= classification_report(y_val,y_val_pred,output_dict=True)
     #saving scores to file to be added to dvc metrics
     acc_scores= {"training accuracy": train_acc, 
                     "Test accuracy": test_acc,
@@ -72,7 +73,8 @@ def evaluate_model():
                     "Test Matthews Corrcoef": test_mcc,
                     "Validation Matthews Corrcoef": val_mcc,
                     "Dummy Unified Mathews Corrcoef": dummy_uni_mcc,
-                    "Classification Report": clf_report
+                    "Classification Report - Test": test_clf_report,
+                    "Classification Report - Validation": val_clf_report
                     }
     
     print('calculating metrics complete!')
