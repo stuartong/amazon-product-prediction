@@ -1,11 +1,11 @@
 {
-    "training accuracy": 0.6828985986523913,
-    "Test accuracy": 0.6087962962962963,
+    "training accuracy": 0.6468934727791328,
+    "Test accuracy": 0.6147486772486772,
     "Dummy most frequent accuracy": 0.5634920634920635,
     "Dummy uniform accuracy": 0.5,
-    "Test F1-score": 0.5961238581212286,
+    "Test F1-score": 0.5714698039931685,
     "Dummy most frequent F1-Score": 0.40617194424301023,
     "Dummy Unified F1-score": 0.5020142515935813,
-    "Test Mathews Corrcoef": 0.18507972826221727,
+    "Test Mathews Corrcoef": 0.19418857841054846,
     "Dummy Unified Mathews Corrcoef": -0.0011854256769998402
 }

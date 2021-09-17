@@ -15,10 +15,10 @@ supervised_model:
     oversample: False
     gscv: True
     ada_base_model: DecisionTreeClassifier
-    ada_base_iter: [2,6,9]
+    ada_base_iter: [3,9,15]
     param_dict: {
-        learning_rate : [0.005,0.01,1],
-        n_estimators : [100,2000,3000],
+        learning_rate : [0.005,1],
+        n_estimators : [100,3000],
         random_state : [42]
     } 
 
