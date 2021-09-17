@@ -84,7 +84,7 @@ stages:
       size: 7377
     params:
       params.yaml:
-        supervised_model.gscv: false
+        supervised_model.gscv: true
         supervised_model.model_type: SVC
         supervised_model.n_jobs: 1
         supervised_model.oversample: false
@@ -124,8 +124,8 @@ stages:
       md5: 24a9f6bce3c2a93a2a35a03192db2abd
       size: 604928
     - path: model/model.pkl
-      md5: bcfaeb6a1b52b7a9660a1ff34c273aa3
-      size: 4297301
+      md5: c01ccd707b32925c8fb827854e8774c3
+      size: 4026481
     - path: model/y_test.npy
       md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
@@ -142,10 +142,10 @@ stages:
       md5: b22393c48d110d871d0e152061774d33
       size: 4179
     - path: model/
-      md5: 6cf1b9122de9638e0ffa43d6fbd428b9.dir
-      size: 12574844
+      md5: b10c30f5ce060089da62296f8686b955.dir
+      size: 12304024
       nfiles: 9
     outs:
     - path: scores.json
-      md5: ffb473b261790cfc0fb3489692148176
-      size: 2283
+      md5: d39c4286355158bfb284dba01a6dd101
+      size: 2280

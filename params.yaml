@@ -18,7 +18,7 @@ supervised_model:
     model_type: SVC
     scale: True
     oversample: False
-    gscv: False
+    gscv: True
     ada_base_model: DecisionTreeClassifier
     ada_base_iter: [3,9,15]
     param_dict: {
