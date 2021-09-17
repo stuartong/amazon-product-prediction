@@ -1,33 +1,26 @@
 schema: '2.0'
 stages:
   load_data:
-    cmd: python load_data.py http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
-      http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
+    cmd: python load_data.py
     deps:
-    - path: http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Appliances.json.gz
-      etag: '"5d9e86fd-42730f5"'
-      size: 69677301
-    - path: http://deepyeti.ucsd.edu/jianmo/amazon/metaFiles2/meta_Appliances.json.gz
-      etag: '"60a1a28f-391c4f4"'
-      size: 59884788
     - path: load_data.py
-      md5: 0fc79111c8aa338b0a716a0e1f3407b2
-      size: 4031
+      md5: 1082ba52b665af6435f4948994c2af2d
+      size: 4012
     outs:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
   preprocess_products:
     cmd: python preprocess_products.py data/prepared
     deps:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
     - path: preprocess_products.py
       md5: 45409078008787187b9e31603ce1c5fc
-      size: 3257
+      size: 3340
     params:
       params.yaml:
         preprocess_products:
@@ -39,52 +32,52 @@ stages:
           occurrence_threshold: 500
     outs:
     - path: data/products
-      md5: 26a72bc0b0c9899cc29cbd4445cd0da9.dir
-      size: 715611213
+      md5: 84a3a1917ba5f95f1fc6980e2acd536e.dir
+      size: 714734328
       nfiles: 1
   preprocess_reviews:
     cmd: python preprocess_reviews.py data/prepared
     deps:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
     - path: preprocess_reviews.py
       md5: 0c778d4227afa4c18417bc332a2507cd
-      size: 1805
+      size: 1849
     outs:
     - path: data/reviews
-      md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
-      size: 158451260
+      md5: e0866fe512426dbf79e2bd5ee359096b.dir
+      size: 158450968
       nfiles: 1
   success_metrics:
     cmd: python create_success_metrics.py data/products data/reviews
     deps:
     - path: create_success_metrics.py
       md5: 52fad55e66a58f46424dbc465aca45d9
-      size: 1879
+      size: 1920
     - path: data/products
-      md5: 26a72bc0b0c9899cc29cbd4445cd0da9.dir
-      size: 715611213
+      md5: 84a3a1917ba5f95f1fc6980e2acd536e.dir
+      size: 714734328
       nfiles: 1
     - path: data/reviews
-      md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
-      size: 158451260
+      md5: e0866fe512426dbf79e2bd5ee359096b.dir
+      size: 158450968
       nfiles: 1
     params:
       params.yaml:
         success_metrics.cutoff: 2
     outs:
     - path: data/metrics
-      md5: d0d53cbe34781a2ef7df8aed2f8bd4ed.dir
-      size: 718363193
+      md5: 8c904c12d1aa98a09b4ab17fca0944ec.dir
+      size: 717486287
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
-      md5: d0d53cbe34781a2ef7df8aed2f8bd4ed.dir
-      size: 718363193
+      md5: 5d25bcda10c12a2fe0f97f3c7e150775.dir
+      size: 674652428
       nfiles: 1
     - path: model_supervised.py
       md5: b3430d7821babdb25a8fcc710ad475ac
@@ -113,7 +106,7 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model/X_test.npy
-      md5: f782702ec2be03c367eb93d7b4acd029
+      md5: 860c493f173310b56dc5a711e6d4e693
       size: 604928
     - path: model/X_train.npy
       md5: 0550b35b301f6e16996701d48e5980cf
@@ -122,8 +115,8 @@ stages:
       md5: f6593a28b0afe15344d1a282c66d982c
       size: 604928
     - path: model/model.pkl
-      md5: bee21e54536cb095c7d696dc94f062c6
-      size: 4529513
+      md5: 9f72fd9de8790599e68027a04a95cba4
+      size: 1986969
     - path: model/y_test.npy
       md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
@@ -137,13 +130,13 @@ stages:
     cmd: python evaluate_supervised_copy.py scores.json
     deps:
     - path: evaluate_supervised_copy.py
-      md5: 3b7efb47790630c440caf82ac3c8f10e
-      size: 3653
+      md5: e0dd5105b1ad3cd9365e872f68bb424a
+      size: 4013
     - path: model/
       md5: ce2a976c31fce0a6d10581097b2a40cd.dir
       size: 12807056
       nfiles: 9
     outs:
     - path: scores.json
-      md5: 2ad03c2522428e9d6bdb3fcbe3d7844c
-      size: 438
+      md5: 3e7759c3b38e401fdf928280bea216fa
+      size: 439
