@@ -85,8 +85,8 @@ stages:
       size: 674652428
       nfiles: 1
     - path: model_supervised.py
-      md5: f066d021a8bea015a0cfe237d2655db0
-      size: 6883
+      md5: 67d2574d7182cf971f353200b6173c2a
+      size: 7223
     params:
       params.yaml:
         supervised_model.gscv: true
@@ -96,11 +96,9 @@ stages:
         supervised_model.param_dict:
           learning_rate:
           - 0.005
-          - 0.01
           - 1
           n_estimators:
           - 100
-          - 2000
           - 3000
           random_state:
           - 42
@@ -123,8 +121,8 @@ stages:
       md5: ca6350285b36689e0cea714b967b9739
       size: 604928
     - path: model/model.pkl
-      md5: 9f72fd9de8790599e68027a04a95cba4
-      size: 1986969
+      md5: 9cb4b179bd90c9d77ef02e79cda06b3f
+      size: 4545641
     - path: model/y_test.npy
       md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
@@ -141,10 +139,10 @@ stages:
       md5: e0dd5105b1ad3cd9365e872f68bb424a
       size: 4013
     - path: model/
-      md5: 9caa3631c70f88275b258dd06f5ef37c.dir
-      size: 10264512
+      md5: d9b81ac2ac9dea0ab68347e3c0e83c15.dir
+      size: 12823184
       nfiles: 9
     outs:
     - path: scores.json
-      md5: 3e7759c3b38e401fdf928280bea216fa
+      md5: 6587b1e41fb1c2f54bec68ce2f07db3a
       size: 439
