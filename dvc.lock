@@ -27,13 +27,13 @@ stages:
           word2vec_features: true
           handpicked_features: true
           word2vec_model_name: glove-wiki-gigaword-300
-          pca: true
+          pca: false
           tfidf: true
           occurrence_threshold: 500
     outs:
     - path: data/products
-      md5: 26a72bc0b0c9899cc29cbd4445cd0da9.dir
-      size: 715611213
+      md5: 29fe9c8a91cc997a909954e1b37eb797.dir
+      size: 810453374
       nfiles: 1
   preprocess_reviews:
     cmd: python preprocess_reviews.py data/prepared
@@ -57,8 +57,8 @@ stages:
       md5: 52fad55e66a58f46424dbc465aca45d9
       size: 1879
     - path: data/products
-      md5: 26a72bc0b0c9899cc29cbd4445cd0da9.dir
-      size: 715611213
+      md5: 29fe9c8a91cc997a909954e1b37eb797.dir
+      size: 810453374
       nfiles: 1
     - path: data/reviews
       md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
@@ -69,22 +69,22 @@ stages:
         success_metrics.cutoff: 2
     outs:
     - path: data/metrics
-      md5: d0d53cbe34781a2ef7df8aed2f8bd4ed.dir
-      size: 718363193
+      md5: 1d9fd1bfc3a3d31947d053d86c75aacc.dir
+      size: 813205390
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
-      md5: d0d53cbe34781a2ef7df8aed2f8bd4ed.dir
-      size: 718363193
+      md5: 1d9fd1bfc3a3d31947d053d86c75aacc.dir
+      size: 813205390
       nfiles: 1
     - path: model_supervised.py
       md5: b3430d7821babdb25a8fcc710ad475ac
       size: 7377
     params:
       params.yaml:
-        supervised_model.gscv: true
+        supervised_model.gscv: false
         supervised_model.model_type: SVC
         supervised_model.n_jobs: 1
         supervised_model.oversample: false
@@ -107,7 +107,7 @@ stages:
           - 42
         supervised_model.params:
           random_state: 42
-          C: 1
+          C: 100
           gamma: 1
           kernel: rbf
         supervised_model.return_train_score: false
@@ -115,17 +115,17 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model/X_test.npy
-      md5: 4d71f564c7dbd5c695ae83873a1ff9b5
-      size: 604928
+      md5: 7a2fc5ce622eab9df406d86fd76fd7ba
+      size: 10064000
     - path: model/X_train.npy
-      md5: 4ff78341a0720a72eed7b7b6eb00af23
-      size: 4838328
+      md5: 684eeef8d8d76052881e57ae4e1d76d7
+      size: 80507776
     - path: model/X_val.npy
-      md5: 24a9f6bce3c2a93a2a35a03192db2abd
-      size: 604928
+      md5: b2896450d020c10028118e5b986a0203
+      size: 10064000
     - path: model/model.pkl
-      md5: c01ccd707b32925c8fb827854e8774c3
-      size: 4026481
+      md5: f358704cbfa7c1f2086c65860065e83c
+      size: 68293868
     - path: model/y_test.npy
       md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
@@ -142,10 +142,10 @@ stages:
       md5: b22393c48d110d871d0e152061774d33
       size: 4179
     - path: model/
-      md5: b10c30f5ce060089da62296f8686b955.dir
-      size: 12304024
+      md5: 48ab192fce89702275eca3abb156e723.dir
+      size: 171159003
       nfiles: 9
     outs:
     - path: scores.json
-      md5: d39c4286355158bfb284dba01a6dd101
-      size: 2280
+      md5: 41e9c9a1d6019df7fbf70465b54cee9c
+      size: 2278
