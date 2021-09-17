@@ -26,8 +26,8 @@ stages:
       size: 834301147
       nfiles: 2
     - path: preprocess_products.py
-      md5: 161880bfa4949ab6ea8d191bd1061f87
-      size: 4637
+      md5: 45409078008787187b9e31603ce1c5fc
+      size: 3340
     params:
       params.yaml:
         preprocess_products:
@@ -35,10 +35,12 @@ stages:
           handpicked_features: true
           word2vec_model_name: glove-wiki-gigaword-300
           pca: true
+          tfidf: true
+          occurrence_threshold: 500
     outs:
     - path: data/products
-      md5: b71a3ad7ee108adb66bb784ccc7776cc.dir
-      size: 671265475
+      md5: 84a3a1917ba5f95f1fc6980e2acd536e.dir
+      size: 714734328
       nfiles: 1
   preprocess_reviews:
     cmd: python preprocess_reviews.py data/prepared
@@ -62,8 +64,8 @@ stages:
       md5: 52fad55e66a58f46424dbc465aca45d9
       size: 1920
     - path: data/products
-      md5: b71a3ad7ee108adb66bb784ccc7776cc.dir
-      size: 671265475
+      md5: 84a3a1917ba5f95f1fc6980e2acd536e.dir
+      size: 714734328
       nfiles: 1
     - path: data/reviews
       md5: e0866fe512426dbf79e2bd5ee359096b.dir
@@ -74,15 +76,15 @@ stages:
         success_metrics.cutoff: 10
     outs:
     - path: data/metrics
-      md5: b9af4c8371d3d4b2e3a8d685a694a0ba.dir
-      size: 674017434
+      md5: 8593279e66e99f56bcbe3cad82c9f69c.dir
+      size: 717486287
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
-      md5: b9af4c8371d3d4b2e3a8d685a694a0ba.dir
-      size: 674017434
+      md5: 8593279e66e99f56bcbe3cad82c9f69c.dir
+      size: 717486287
       nfiles: 1
     - path: model_supervised.py
       md5: 5aa7690f8db30d41aafb06cb4a033fff
@@ -93,7 +95,21 @@ stages:
         supervised_model.model_type: LogisticRegression
         supervised_model.n_jobs: 1
         supervised_model.oversample: false
-        supervised_model.param_dict: None
+        supervised_model.param_dict:
+          bas_estimator:
+          - DecisionTreeClassifier(max_depth=5)
+          - DecisionTreeClassifier(max_depth=8)
+          - DecisionTreeClassifier(max_depth=12)
+          learning_rate:
+          - 0.005
+          - 0.01
+          - 1
+          n_estimators:
+          - 100
+          - 2000
+          - 3000
+          random_sate:
+          - 42
         supervised_model.params:
           random_state: 42
           max_iter: 5000
@@ -104,16 +120,16 @@ stages:
         supervised_model.split: 0.6
     outs:
     - path: model/X_test.npy
-      md5: 4e05f52bb7e2eef82bccdcf92441fcb2
+      md5: 6806222cdbf9944b80d96f4a68528338
       size: 1209728
     - path: model/X_train.npy
-      md5: a983937a39eeee6d68971f095650f5f9
+      md5: 0adea1a2d6719be10c6ba38a4cfeb466
       size: 3628728
     - path: model/X_val.npy
-      md5: 4eb65cb22cc01c718327ddbac3d74cf6
+      md5: 089378fab53e51bea109d1a95740c789
       size: 1209728
     - path: model/model.pkl
-      md5: 7d2f0ca159be0dc5ada7a6a5425ab61e
+      md5: 3d22e6aa485bcb98306d56b9ce6fba8b
       size: 878
     - path: model/y_test.npy
       md5: 4e12d5f754ba8f3be58df75bcce1c1ed
@@ -128,13 +144,13 @@ stages:
     cmd: python evaluate_supervised_copy.py scores.json
     deps:
     - path: evaluate_supervised_copy.py
-      md5: e0dd5105b1ad3cd9365e872f68bb424a
-      size: 4120
+      md5: 3b7efb47790630c440caf82ac3c8f10e
+      size: 3751
     - path: model/
-      md5: f0bb28ff2570b90a7fc3c0f1171155dc.dir
+      md5: 01ca16d82048d7ef2dadc411e82b6218.dir
       size: 6170492
       nfiles: 8
     outs:
     - path: scores.json
-      md5: a475a14b2ae8a5b46123aa425d676240
-      size: 461
+      md5: 3ec9b602d7f06c4a4c56128f3e4dc0dc
+      size: 460

@@ -70,16 +70,7 @@ def evaluate_model():
     
     print('calculating metrics complete!')
     
-    # avg_prec= metrics.average_precision_score(y_train, y_pred) 
-    # roc_auc= metrics.roc_auc_score(y_train, y_pred)
-    # acc_scores= dict(
-    #     avg_prec= avg_prec,
-    #     roc_auc= roc_auc)
-    #create scores file 
-    # score_file= "scores.json"
-    # path=  .path.join("eval_metrics", score_file)
-    # print("path")
-    # os.makedirs(sys.argv[1])    
+     
     with open(sys.argv[1], "w") as fd:
         json.dump(acc_scores, fd, indent=4)
 

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from preprocess_data_module import clean_categories_column, clean_text, quantify_features, consolidate_text_columns
-from word2vec import get_pretrained_model, generate_dense_features
+from preprocess_data_module import clean_categories_column, clean_text,  consolidate_text_columns, tfidf_vectorizer, wordvec_features_creator, handpicked_features_creator
+from tqdm import tqdm
 from run_pca import run_pca
 import os
 
@@ -11,9 +11,6 @@ def preprocess_products(product_df_path):
     import yaml
     with open("params.yaml", "r") as file:
         params= yaml.safe_load(file)
-    word2vec_features= params["preprocess_products"]["word2vec_features"]
-    handpicked_features= params["preprocess_products"]["handpicked_features"]
-    word2vec_model_name= params["preprocess_products"]["word2vec_model_name"]
     pca= params["preprocess_products"]["pca"]
     #import df
     print("reading {} file".format(product_df_path.split('/')[-1]))
@@ -27,43 +24,32 @@ def preprocess_products(product_df_path):
     print("extracting, filtering, and lemmatizing process initiated")
     for col in ["description", "title", "feature"]:
         df[col]= df[col].apply(lambda row: clean_text(row))
-    #if else to either generat
-    if handpicked_features & word2vec_features & pca:
-        #quantify the number of tech1, tech2, images and length of description text for every product
-        df= quantify_features(df)
-        #merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
-        df= consolidate_text_columns(df)
-        #Get and initialize pretrained word2vec model
-        word2vec_model= get_pretrained_model(word2vec_model_name)
-        #creating wordvec columns to the df
-        df["wordvec"]= df["consolidated_text_column"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
-        df["features"]= df.apply(lambda row : np.append(row["wordvec"], row["quantified_features_array"]), axis=1)
-        #turn features column into pca vectors
-        df= run_pca(df)
-        return df
-    elif handpicked_features:
-        #quantify the number of tech1, tech2, images and length of description text for every product
-        df= quantify_features(df)
-        df.rename(columns= {"quantified_features_array": "features"}, inplace= True)
-        return df
-    elif word2vec_features & pca:
-        #merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
-        df= consolidate_text_columns(df)
-        #Get and initialize pretrained word2vec model
-        word2vec_model= get_pretrained_model(word2vec_model_name)
-        #creating wordvec columns to the df
-        df["features"]= df["consolidated_text_column"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
-        #turn features column into pca vectors
-        df= run_pca(df)
-        return df
-    else:
-        #merging category, description, brand, feature columns into 1 and extracting alphanumeric values only
-        df= consolidate_text_columns(df)
-        #Get and initialize pretrained word2vec model
-        word2vec_model= get_pretrained_model(word2vec_model_name)
-        #creating wordvec columns to the df
-        df["features"]= df["consolidated_text_column"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
-        return df
+    #quantify the number of tech1, tech2, images and length of description text for every product
+    df= consolidate_text_columns(df)
+
+    #creating a dictionary with the possible feature_creator functions
+    feature_creator= dict(
+    word2vec_features= wordvec_features_creator,
+    handpicked_features= handpicked_features_creator,
+    tfidf= tfidf_vectorizer)   
+    #getting the params with True value except pca
+    active_features= [key for key, val in params["preprocess_products"].items() if (val == True) & (key != "pca")]
+    print("selected feature_creators: ", active_features)
+    #running the selected models
+    for model_type in tqdm(active_features):
+        print("creating {}".format(model_type))
+        if feature_creator.get(model_type) == None:
+            continue
+        else:
+            df= feature_creator.get(model_type)(df)
+    #concatenating arrays from every selected feature into one
+    print("creating a concatenated features column...")
+    df["features"]= [(np.array([vec for lst in df[active_features].values[i].flatten("C") for vec in lst])) for i in tqdm(range(len(df))) ]
+    print("features column created!")
+    if pca:
+       df= run_pca(df) 
+
+    return df
 
 if __name__ == "__main__":
     import argparse

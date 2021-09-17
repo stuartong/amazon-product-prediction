@@ -3,6 +3,8 @@ preprocess_products:
     handpicked_features: True
     word2vec_model_name: 'glove-wiki-gigaword-300'
     pca: True
+    tfidf: True
+    occurrence_threshold: 500 #threshold of occurrence of a category to be extracted by the vectorizer 
     
 success_metrics:
     cutoff: 10
@@ -12,7 +14,12 @@ supervised_model:
     scale: True
     oversample: False
     gscv: False
-    param_dict: None
+    param_dict: {
+        "bas_estimator": [DecisionTreeClassifier(max_depth=5), DecisionTreeClassifier(max_depth=8), DecisionTreeClassifier(max_depth=12)],
+        "learning_rate": [0.005, 0.01, 1],
+        "n_estimators": [100, 2000, 3000],
+        "random_sate" : [42] 
+    }
     n_jobs: 1
     return_train_score: False
     split: 0.6
@@ -34,6 +41,10 @@ evaluate_supervised:
 
 run_pca:
     n_components: 25
+
+tfidf:
+    min_df: 0.05
+    max_df: 0.7
     
     
     
