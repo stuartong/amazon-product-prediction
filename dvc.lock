@@ -35,6 +35,8 @@ stages:
           handpicked_features: true
           word2vec_model_name: glove-wiki-gigaword-300
           pca: true
+          tfidf: true
+          occurrence_threshold: 500
     outs:
     - path: data/products
       md5: d51e38bd3479d18fd5595f8a1f540ae6.dir
@@ -112,6 +114,19 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model/X_test.npy
+<<<<<<< HEAD
+      md5: 6806222cdbf9944b80d96f4a68528338
+      size: 1209728
+    - path: model/X_train.npy
+      md5: 0adea1a2d6719be10c6ba38a4cfeb466
+      size: 3628728
+    - path: model/X_val.npy
+      md5: 089378fab53e51bea109d1a95740c789
+      size: 1209728
+    - path: model/model.pkl
+      md5: 3d22e6aa485bcb98306d56b9ce6fba8b
+      size: 878
+=======
       md5: 860c493f173310b56dc5a711e6d4e693
       size: 604928
     - path: model/X_train.npy
@@ -121,8 +136,14 @@ stages:
       md5: ca6350285b36689e0cea714b967b9739
       size: 604928
     - path: model/model.pkl
+<<<<<<< HEAD
       md5: 9cb4b179bd90c9d77ef02e79cda06b3f
       size: 4545641
+=======
+      md5: 9f72fd9de8790599e68027a04a95cba4
+      size: 1986969
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16
+>>>>>>> f657831be6c2547fd0d8ce7fe221c10c8e3d8909
     - path: model/y_test.npy
       md5: dc194cb32e8ffec3672a787f2329d30c
       size: 24320
@@ -136,6 +157,18 @@ stages:
     cmd: python evaluate_supervised_copy.py scores.json
     deps:
     - path: evaluate_supervised_copy.py
+<<<<<<< HEAD
+      md5: 3b7efb47790630c440caf82ac3c8f10e
+      size: 3751
+    - path: model/
+      md5: 01ca16d82048d7ef2dadc411e82b6218.dir
+      size: 6170492
+      nfiles: 8
+    outs:
+    - path: scores.json
+      md5: 3ec9b602d7f06c4a4c56128f3e4dc0dc
+      size: 460
+=======
       md5: e0dd5105b1ad3cd9365e872f68bb424a
       size: 4013
     - path: model/
@@ -146,3 +179,4 @@ stages:
     - path: scores.json
       md5: 6587b1e41fb1c2f54bec68ce2f07db3a
       size: 439
+>>>>>>> cb67543f7e134512218268b0eea96d6cb8a99b16

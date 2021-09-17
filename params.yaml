@@ -3,6 +3,8 @@ preprocess_products:
     handpicked_features: True
     word2vec_model_name: 'glove-wiki-gigaword-300'
     pca: True
+    tfidf: True
+    occurrence_threshold: 500 #threshold of occurrence of a category to be extracted by the vectorizer 
     
 success_metrics:
     cutoff: 2
@@ -43,6 +45,10 @@ evaluate_supervised:
 
 run_pca:
     n_components: 25
+
+tfidf:
+    min_df: 0.05
+    max_df: 0.7
     
     
     
