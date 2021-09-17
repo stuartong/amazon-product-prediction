@@ -34,6 +34,7 @@ def evaluate_model():
     
     # get predictions for test set
     y_pred = clf.predict(X_test)
+    y_val_pred = clf.predict(X_val)
 
     # create & fit dummy classifiers for comparison
     dummy_uniform = DummyClassifier(strategy='uniform',random_state=42).fit(X_train,y_train)
@@ -47,25 +48,31 @@ def evaluate_model():
     print('calculating metrics..')
     train_acc = clf.score(X_train,y_train)
     test_acc = clf.score(X_test,y_test)
+    val_acc = clf.score(X_val,y_val)
     dummy_mf_acc = dummy_mf.score(X_test,y_test)
     dummy_uni_acc = dummy_uniform.score(X_test,y_test)
     test_f1 = f1_score(y_test,y_pred,average=f1_avg)
+    val_f1 = f1_score(y_val,y_val_pred,average=f1_avg)
     dummy_mf_f1 = f1_score(y_test,mf_dev_preds,average=f1_avg)
     dummy_uni_f1 = f1_score(y_test,rand_dev_preds,average=f1_avg)
     test_mcc = matthews_corrcoef(y_test,y_pred)
+    val_mcc = matthews_corrcoef(y_val,y_val_pred)
     dummy_uni_mcc = matthews_corrcoef(y_test,rand_dev_preds)
-    clf_report= classification_report(y_test,y_pred)
+    clf_report= classification_report(y_test,y_pred,output_dict=True)
     #saving scores to file to be added to dvc metrics
     acc_scores= {"training accuracy": train_acc, 
                     "Test accuracy": test_acc,
+                    "Validation accuracy": val_acc,
                     "Dummy most frequent accuracy": dummy_mf_acc,
                     "Dummy uniform accuracy": dummy_uni_acc,
                     "Test F1-score": test_f1,
+                    "Validation F1-score": val_f1,
                     "Dummy most frequent F1-Score": dummy_mf_f1,
                     "Dummy Unified F1-score": dummy_uni_f1,
-                    "Test Mathews Corrcoef": test_mcc,
+                    "Test Matthews Corrcoef": test_mcc,
+                    "Validation Matthews Corrcoef": val_mcc,
                     "Dummy Unified Mathews Corrcoef": dummy_uni_mcc,
-                    # "Classification Report": clf_report
+                    "Classification Report": clf_report
                     }
     
     print('calculating metrics complete!')
