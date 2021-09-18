@@ -1,6 +1,6 @@
 stages:
   load_data:
-    cmd: python load_data.py 
+    cmd: python load_data.py
     deps:
     - load_data.py
     outs:
@@ -57,10 +57,17 @@ stages:
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
-      - evaluate_supervised.py
-      - model/
+    - evaluate_supervised.py
+    - model/
     metrics:
-      - prdct_supervised_report.json:
-          cache: False
-    
+    - prdct_supervised_report.json:
+        cache: false
 
+
+  prepare_fake_labeled_model:
+    cmd: python .\load_prepare_fake_labeled_data.py
+    deps:
+    - data/fake/labeled_data/amazon_reviews_labeled.txt
+    - load_prepare_fake_labeled_data.py
+    outs:
+    - data/fake/training

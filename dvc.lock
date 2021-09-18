@@ -189,5 +189,19 @@ stages:
       nfiles: 9
     outs:
     - path: prdct_supervised_report.json
-      md5: 955560106493167d2668d508569d3cf1
-      size: 3230
+      md5: 97c60d730be6f1c02fc967b800a9b501
+      size: 3326
+  prepare_fake_labeled_model:
+    cmd: python .\load_prepare_fake_labeled_data.py
+    deps:
+    - path: data/fake/labeled_data/amazon_reviews_labeled.txt
+      md5: ec3f2c1ef9598b56c38fbc00c0ac90de
+      size: 8404357
+    - path: load_prepare_fake_labeled_data.py
+      md5: 8102f957c21d95ec50ef2c48e41c9d72
+      size: 2244
+    outs:
+    - path: data/fake/training
+      md5: eefbc6951b4e00dfaf8936f6688967bb.dir
+      size: 83484335
+      nfiles: 1
