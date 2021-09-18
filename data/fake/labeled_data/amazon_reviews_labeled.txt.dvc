@@ -1,0 +1,4 @@
+outs:
+- md5: ec3f2c1ef9598b56c38fbc00c0ac90de
+  size: 8404357
+  path: amazon_reviews_labeled.txt
