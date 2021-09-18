@@ -78,3 +78,11 @@ stages:
     - fake_detection_model.py
     outs:
     - model\fake\model\
+  fd_evaluate_supervised:
+    cmd: python .\fd_evaluate_supervised.py fd_supervised_report.json
+    deps:
+    - .\fd_evaluate_supervised.py
+    - model\fake\model
+    metrics:
+    - fd_supervised_report.json:
+        cache: false

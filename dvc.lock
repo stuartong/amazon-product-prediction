@@ -218,3 +218,17 @@ stages:
       md5: 145efc8347064efbd6eefa8a18e1e4fd.dir
       size: 12772978
       nfiles: 7
+  fd_evaluate_supervised:
+    cmd: python .\fd_evaluate_supervised.py fd_supervised_report.json
+    deps:
+    - path: .\fd_evaluate_supervised.py
+      md5: a532c8e0f784144d8957e7c0fe863eba
+      size: 7022
+    - path: model\fake\model
+      md5: 145efc8347064efbd6eefa8a18e1e4fd.dir
+      size: 12772978
+      nfiles: 7
+    outs:
+    - path: fd_supervised_report.json
+      md5: ce7735be30295c40fa75b1300aa0f5fe
+      size: 3236
