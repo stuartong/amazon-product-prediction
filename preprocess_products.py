@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from preprocess_data_module import clean_categories_column, clean_text,  consolidate_text_columns, tfidf_vectorizer, wordvec_features_creator, handpicked_features_creator
+from preprocess_data_module import clean_categories_column, clean_text,  consolidate_text_columns, wordvec_features_creator, handpicked_features_creator
 from tqdm import tqdm
 from run_pca import run_pca
 import os
@@ -30,10 +30,10 @@ def preprocess_products(product_df_path):
     #creating a dictionary with the possible feature_creator functions
     feature_creator= dict(
     word2vec_features= wordvec_features_creator,
-    handpicked_features= handpicked_features_creator,
-    tfidf= tfidf_vectorizer)   
+    handpicked_features= handpicked_features_creator
+    )   
     #getting the params with True value except pca
-    active_features= [key for key, val in params["preprocess_products"].items() if (val == True) & (key != "pca")]
+    active_features= [key for key, val in params["preprocess_products"].items() if (val == True) & (key != "pca") & (key!= "tfidf")]
     print("selected feature_creators: ", active_features)
     #running the selected models
     for model_type in tqdm(active_features):
