@@ -211,7 +211,7 @@ if __name__ == "__main__":
     
     clf,X_train,X_test,X_val,y_train,y_test,y_val = fake_detection_model(args.df_path)
     
-    if os.path.isdir("model"):
+    if os.path.isdir(r"model\fake\model"):
         pickle.dump(clf, open(r"model\fake\model\model.pkl", "wb"))
         np.save(r"model\fake\model\X_train.npy", X_train)
         np.save(r"model\fake\model\X_test.npy", X_test)

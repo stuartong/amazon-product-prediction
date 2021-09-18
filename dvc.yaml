@@ -47,18 +47,13 @@ stages:
     - supervised_model.return_train_score
     - supervised_model.split
     outs:
-    - model/model.pkl
-    - model/X_train.npy
-    - model/X_test.npy
-    - model/X_val.npy
-    - model/y_train.npy
-    - model/y_test.npy
-    - model/y_val.npy
+    - model\product_success\
+    
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
     - evaluate_supervised.py
-    - model/
+    - model\product_success\
     metrics:
     - prdct_supervised_report.json:
         cache: false

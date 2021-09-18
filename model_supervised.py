@@ -217,23 +217,23 @@ if __name__ == "__main__":
     
     clf,X_train,X_test,X_val,y_train,y_test,y_val = run_model(args.df_path)
     
-    if os.path.isdir("model"):
-        pickle.dump(clf, open("model/model.pkl", "wb"))
-        np.save("model/X_train.npy", X_train)
-        np.save("model/X_test.npy", X_test)
-        np.save("model/X_val.npy", X_val)
-        np.save("model/y_train.npy", y_train)
-        np.save("model/y_test.npy", y_test)
-        np.save("model/y_val.npy", y_val)
+    if os.path.isdir(r"model\product_success"):
+        pickle.dump(clf, open(r"model\product_success\model.pkl", "wb"))
+        np.save(r"model\product_success\X_train.npy", X_train)
+        np.save(r"model\product_success\X_test.npy", X_test)
+        np.save(r"model\product_success\X_val.npy", X_val)
+        np.save(r"model\product_success\y_train.npy", y_train)
+        np.save(r"model\product_success\y_test.npy", y_test)
+        np.save(r"model\product_success\y_val.npy", y_val)
         
     else:
-        os.makedirs("model")
-        pickle.dump(clf, open("model/model.pkl", "wb"))
-        np.save("model/X_train.npy", X_train)
-        np.save("model/X_test.npy", X_test)
-        np.save("model/X_val.npy", X_val)
-        np.save("model/y_train.npy", y_train)
-        np.save("model/y_test.npy", y_test)
-        np.save("model/y_val.npy", y_val)
+        os.makedirs(r"model\product_success")
+        pickle.dump(clf, open(r"model\product_success\model.pkl", "wb"))
+        np.save(r"model\product_success\X_train.npy", X_train)
+        np.save(r"model\product_success\X_test.npy", X_test)
+        np.save(r"model\product_success\X_val.npy", X_val)
+        np.save(r"model\product_success\y_train.npy", y_train)
+        np.save(r"model\product_success\y_test.npy", y_test)
+        np.save(r"model\product_success\y_val.npy", y_val)
 
 
