@@ -71,7 +71,7 @@ def evaluate_model():
     wordvec= params["preprocess_products"]["word2vec_features"]
     handpicked= params["preprocess_products"]["handpicked_features"]
     wordvec_model= params["preprocess_products"]["word2vec_model_name"]
-    pca= params["preprocess_products"]["pca"]
+    pca= params["supervised_model"]["pca"]
     pca_comp= params["supervised_model"]["pca_n_components"]
     tfidf= params["preprocess_products"]["tfidf"]
     category_thresh= params["preprocess_products"]["occurrence_threshold"]
