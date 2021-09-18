@@ -73,7 +73,7 @@ def evaluate_model():
     wordvec_model= params["preprocess_products"]["word2vec_model_name"]
     pca= params["supervised_model"]["pca"]
     pca_comp= params["supervised_model"]["pca_n_components"]
-    tfidf= params["preprocess_products"]["tfidf"]
+    tfidf= params["supervised_model"]["tfidf"]
     category_thresh= params["preprocess_products"]["occurrence_threshold"]
     #creating an if\else statement to update subparamters only if their parent parameter is True
     features_dict= dict(
