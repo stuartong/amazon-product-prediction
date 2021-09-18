@@ -18,8 +18,11 @@ supervised_model:
     scale: True
     oversample: False
     gscv: True
+    tfidf: True
+    pca: True
+    pca_n_components : 55
     ada_base_model: DecisionTreeClassifier
-    ada_base_iter: [3,9,15]
+    ada_base_iter: [2,8,10]
     param_dict: {
         C : [1.00000000e-04, 1.45634848e-04, 2.12095089e-04, 3.08884360e-04,
         4.49843267e-04, 6.55128557e-04, 9.54095476e-04, 1.38949549e-03,
@@ -47,9 +50,7 @@ supervised_model:
         C : 100
         gamma : 1
         kernel : 'rbf' 
-    tfidf: True
-    pca: True
-    pca_n_components: 25
+
 
 evaluate_supervised:
     clf: model/model.pkl
