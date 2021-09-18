@@ -50,6 +50,8 @@ supervised_model:
         gamma : 1
         kernel : 'rbf' 
     tfidf: True
+    pca: True
+    pca_n_components: 25
 
 evaluate_supervised:
     clf: model/model.pkl
@@ -61,8 +63,6 @@ evaluate_supervised:
     y_val: model/y_val.npy
     f1_avg: "weighted"
 
-run_pca:
-    n_components: 25
 
 tfidf_product_success:
     min_df: 0.05
