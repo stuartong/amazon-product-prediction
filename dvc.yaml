@@ -64,10 +64,10 @@ stages:
         cache: false
 
 
-  prepare_fake_labeled_model:
-    cmd: python .\load_prepare_fake_labeled_data.py
-    deps:
-    - data/fake/labeled_data/amazon_reviews_labeled.txt
-    - load_prepare_fake_labeled_data.py
-    outs:
-    - data/fake/training
+  # prepare_fake_labeled_model:
+  #   cmd: python .\load_prepare_fake_labeled_data.py
+  #   deps:
+  #   - data/fake/labeled_data/amazon_reviews_labeled.txt
+  #   - load_prepare_fake_labeled_data.py
+  #   outs:
+  #   - data/fake/training
