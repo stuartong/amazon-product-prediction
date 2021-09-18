@@ -202,7 +202,7 @@ def wordvec_features_creator(df):
     df["word2vec_features"]= df["consolidated_text_column"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
     return df
 
-def tfidf_vectorizer(df):
+def tfidf_vectorizer_df(df):
     from sklearn.feature_extraction.text import TfidfVectorizer
     '''
     This function taking in a df and extracts the consolidated_text_column as a corpus that is a list of text (sentences),
@@ -227,3 +227,21 @@ def tfidf_vectorizer(df):
     df["tfidf"]= [np.array(i) for i in zip(*vec.toarray().T)]
     
     return df
+
+def tfidf_vectorizer_arr(arr):
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    import yaml 
+    with open("params.yaml", "r") as file:
+        params= yaml.safe_load(file)
+    max_df= params["tfidf"]["max_df"]
+    min_df= params["tfidf"]["min_df"]
+    
+    corpus= [" ".join(lst) for lst in arr]
+    vectorizer= TfidfVectorizer(max_df=max_df, min_df=min_df)
+    vec= vectorizer.fit_transform(corpus)
+    tfidf_arr= [np.array(i) for i in zip(*vec.toarray().T)][0]
+    tfidf_arr= tfidf_arr[0]
+    return tfidf_arr
+    
+    
+    
