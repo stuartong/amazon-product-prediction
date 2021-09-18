@@ -174,9 +174,7 @@ def run_model(df_path):
 
     if pca:
         print("Generating PCAs to reduce data dimensions...")
-        X_train= run_pca_arr(X_train, n_components= pca_n_components)
-        X_val= run_pca_arr(X_val, n_components= pca_n_components)
-        X_test= run_pca_arr(X_test, n_components= pca_n_components)
+        X_train, X_val, X_test = run_pca_arr(X_train,X_val,X_test,n_components= pca_n_components)
         print("PCA process done!")
         
     
