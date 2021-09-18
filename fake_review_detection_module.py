@@ -33,6 +33,7 @@ def load_labeled_data():
     df= pd.DataFrame(data, columns=["labeltag", "rating", "verified", "category", "review"] )
     df["label"]= np.where(df["labeltag"]== "__label1__", 0, 1)
     df["verified"]= np.where(df["verified"]== "Y", 1, 0)
+    df["category"]= df["category"].astype("category")
     df.drop(["labeltag"], axis=1, inplace= True)
     return df
 
@@ -60,5 +61,37 @@ def stratified_split(file_path):
         y_train, y_test= y[train_index], y[test_index]
     return X_train, X_test, y_train, y_test
 
+def handpicked_features_creator(df):
+    from sklearn.preprocessing import OneHotEncoder
+    # Onehot encoding the category column to return an encoed_cat column
+    enc= OneHotEncoder(handle_unknown= "error", sparse= False)
+    cat= df["category"].to_numpy().reshape(-1,1)
+    enc_cat= enc.fit_transform(cat)
+    df["encoded_cat"]= [np.array([vec for vec in enc_cat[i,:] ]) for i in range(len(enc_cat))]
+    #getting the length of every review
+    df["len_review"]= df["review"].map(len)
+    df["group1"]= [np.array([float(rating), float(verified), float(len_review)])\
+        for rating, verified, len_review in zip(df["rating"], df["verified"], df["len_review"])]
+    df["handpicked_features"]= [np.hstack((df["encoded_cat"][i],df["group1"][i])) for i in range(len(df))]
+    return df
 
+def wordvec_features_creator(df):
+    from word2vec import get_pretrained_model, generate_dense_features
+    """wordvec_features is a helper function that initiated a pretrained wordvec model, runs it on the consolidated_text_column and
+    returns a features column of the either the mean or the full wordvec array for the every product
+
+    Args:
+        df (data frame): target data frame with a consolidated_text_column 
+
+    Returns:
+        data frame: data frame with 
+    """
+    with open("params.yaml", "r") as file:
+        params= yaml.safe_load(file)
+    word2vec_model_name= params["load_prepare_fake"]["word2vec_model_name"]
     
+    #Get and initialize pretrained word2vec model
+    word2vec_model= get_pretrained_model(word2vec_model_name)
+    #creating wordvec columns to the df
+    df["word2vec_features"]= df["vectorized_reviews"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
+    return df  
