@@ -16,19 +16,19 @@ def evaluate_model():
         params= yaml.safe_load(file)
     f1_avg= params["evaluate_supervised"]["f1_avg"]
     #loading model, train, eval, test files
-    with open("model/model.pkl", "rb") as model:
+    with open(r"model\product_success\model.pkl", "rb") as model:
         clf= pickle.load(model)
-    with open("model/X_train.npy", "rb") as  file:
+    with open(r"model\product_success\X_train.npy", "rb") as  file:
         X_train= np.load(file)
-    with open("model/X_test.npy", "rb") as  file:
+    with open(r"model\product_success\X_test.npy", "rb") as  file:
         X_test= np.load(file)
-    with open("model/X_val.npy", "rb") as  file:
+    with open(r"model\product_success\X_val.npy", "rb") as  file:
         X_val= np.load(file)
-    with open("model/y_train.npy", "rb") as  file:
+    with open(r"model\product_success\y_train.npy", "rb") as  file:
         y_train= np.load(file)
-    with open("model/y_test.npy", "rb") as  file:
+    with open(r"model\product_success\y_test.npy", "rb") as  file:
         y_test= np.load(file)
-    with open("model/y_val.npy", "rb") as  file:
+    with open(r"model\product_success\y_val.npy", "rb") as  file:
         y_val= np.load(file)
 
     #importing the model_metrics to include in the report
