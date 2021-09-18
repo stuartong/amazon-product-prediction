@@ -72,7 +72,7 @@ def evaluate_model():
     handpicked= params["preprocess_products"]["handpicked_features"]
     wordvec_model= params["preprocess_products"]["word2vec_model_name"]
     pca= params["preprocess_products"]["pca"]
-    pca_comp= params["run_pca"]["n_components"]
+    pca_comp= params["supervised_model"]["pca_n_components"]
     tfidf= params["preprocess_products"]["tfidf"]
     category_thresh= params["preprocess_products"]["occurrence_threshold"]
     #creating an if\else statement to update subparamters only if their parent parameter is True

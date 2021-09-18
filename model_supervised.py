@@ -97,7 +97,8 @@ def run_model(df_path):
     print(f"Dropping {empty} rows with empty/semi-full vectors")
     #adding the tfidf
     if tfidf:
-        df = df.loc[df[feature].map(len)==median_vec, [feature, "consolidated_text_column"]].copy()
+        
+        df = df.loc[df[feature].map(len)==median_vec].copy()
         # aligning vector arrays for sklearn
         # df[feature]=df[feature].apply(lambda x: x[0])
 
@@ -106,23 +107,24 @@ def run_model(df_path):
         # change string 'wordvec' to string 'features' once moutaz fixes code
         train, val, test = split_data(df,split)
 
-        X_train = np.stack(train[feature],axis=0)
+        X_train = train[[feature, "consolidated_text_column"]]
         y_train = list(train['class_label'])
 
-        X_test = np.stack(test[feature],axis=0)
+        X_test = test[[feature, "consolidated_text_column"]]
         y_test = list(test['class_label'])
 
-        X_val = np.stack(val[feature],axis=0)
+        X_val = val[[feature, "consolidated_text_column"]]
         y_val = list(val['class_label'])
         
         print("Creating Tfidf vectors for train and test data...")
-        X_train = tfidf_vectorizer_arr(X_train, min_df= min_df, max_df= max_df)
-        X_val= tfidf_vectorizer_arr(X_val, min_df= min_df, max_df= max_df)
-        X_test= tfidf_vectorizer_arr(X_test, min_df= min_df, max_df= max_df)
+        X_train.loc[:,"consolidated_text_column"],X_val.loc[:,"consolidated_text_column"], X_test.loc[:,"consolidated_text_column"]= tfidf_vectorizer_arr(X_train= X_train.loc[:,"consolidated_text_column"].values,
+                                                                                                                                                            X_val= X_val.loc[:,"consolidated_text_column"].values,
+                                                                                                                                                            X_test= X_test.loc[:,"consolidated_text_column"].values,\
+                                                                                                                                                            min_df=min_df, max_df= max_df)
         print("tfidf vectors created!")
-        X_train= np.asarray([np.concatenate((X_train[i][0], X_train[i][1])) for i in range(len(X_train))])
-        X_val  = np.asarray([np.concatenate((X_test[i][0], X_test[i][1])) for i in range(len(X_val))])
-        X_test = np.asarray([np.concatenate((X_test[i][0], X_test[i][1])) for i in range(len(X_test))])
+        X_train= np.array([(np.array([vec for lst in X_train.values[i].flatten("C") for vec in lst])) for i in range(len(X_train))])
+        X_val  = np.array([(np.array([vec for lst in X_val.values[i].flatten("C") for vec in lst])) for i in range(len(X_val))])
+        X_test = np.array([(np.array([vec for lst in X_test.values[i].flatten("C") for vec in lst])) for i in range(len(X_test))])
         
     else:        
         df = df[df[feature].map(len)==median_vec].copy()

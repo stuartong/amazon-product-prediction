@@ -5,22 +5,22 @@ stages:
     deps:
     - path: load_data.py
       md5: 1082ba52b665af6435f4948994c2af2d
-      size: 3891
+      size: 4012
     outs:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
   preprocess_products:
     cmd: python preprocess_products.py data/prepared
     deps:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
     - path: preprocess_products.py
-      md5: 45409078008787187b9e31603ce1c5fc
-      size: 3257
+      md5: 0bfab1471eb97b3733f55c55f7597e5e
+      size: 3214
     params:
       params.yaml:
         preprocess_products:
@@ -32,56 +32,56 @@ stages:
           occurrence_threshold: 500
     outs:
     - path: data/products
-      md5: 26a72bc0b0c9899cc29cbd4445cd0da9.dir
-      size: 715611213
+      md5: ec94c6cf85277e9b56ca7124893f1c91.dir
+      size: 754292159
       nfiles: 1
   preprocess_reviews:
     cmd: python preprocess_reviews.py data/prepared
     deps:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
     - path: preprocess_reviews.py
       md5: 0c778d4227afa4c18417bc332a2507cd
-      size: 1805
+      size: 1849
     outs:
     - path: data/reviews
-      md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
-      size: 158451260
+      md5: e0866fe512426dbf79e2bd5ee359096b.dir
+      size: 158450968
       nfiles: 1
   success_metrics:
     cmd: python create_success_metrics.py data/products data/reviews
     deps:
     - path: create_success_metrics.py
       md5: 52fad55e66a58f46424dbc465aca45d9
-      size: 1879
+      size: 1920
     - path: data/products
-      md5: 26a72bc0b0c9899cc29cbd4445cd0da9.dir
-      size: 715611213
+      md5: ec94c6cf85277e9b56ca7124893f1c91.dir
+      size: 754292159
       nfiles: 1
     - path: data/reviews
-      md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
-      size: 158451260
+      md5: e0866fe512426dbf79e2bd5ee359096b.dir
+      size: 158450968
       nfiles: 1
     params:
       params.yaml:
         success_metrics.cutoff: 2
     outs:
     - path: data/metrics
-      md5: d0d53cbe34781a2ef7df8aed2f8bd4ed.dir
-      size: 718363193
+      md5: 04ea029670425bcc5e9359be3ec965bd.dir
+      size: 757044146
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
-      md5: d0d53cbe34781a2ef7df8aed2f8bd4ed.dir
-      size: 718363193
+      md5: 04ea029670425bcc5e9359be3ec965bd.dir
+      size: 757044146
       nfiles: 1
     - path: model_supervised.py
-      md5: b3430d7821babdb25a8fcc710ad475ac
-      size: 7377
+      md5: 1b212cbab4b741f5268baff4304f7540
+      size: 10468
     params:
       params.yaml:
         supervised_model.gscv: true
@@ -157,37 +157,37 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model/X_test.npy
-      md5: 4d71f564c7dbd5c695ae83873a1ff9b5
+      md5: 0badc31e9ead6993519cfa39bac13087
       size: 604928
     - path: model/X_train.npy
-      md5: 4ff78341a0720a72eed7b7b6eb00af23
+      md5: 5bac2c12d97a71a1ddd6f69a71b2bed3
       size: 4838328
     - path: model/X_val.npy
-      md5: 24a9f6bce3c2a93a2a35a03192db2abd
+      md5: dbd4172a8a144aca49307fc54fcdc834
       size: 604928
     - path: model/model.pkl
-      md5: d68b06573f6b9a7499d586259db6d8b8
-      size: 1046
+      md5: 9fb8bdca5665c473a07839ade5bb62d6
+      size: 867
     - path: model/y_test.npy
-      md5: dc194cb32e8ffec3672a787f2329d30c
-      size: 24320
+      md5: 1904ae6bb31dc9abd611dae8adb6e5ac
+      size: 12224
     - path: model/y_train.npy
-      md5: fbb49c05d6ebb5710ece9994ca265e48
-      size: 193656
+      md5: 93f4e0ee3fec57f9d0938f0d1a3b798a
+      size: 96892
     - path: model/y_val.npy
-      md5: a886d9229d034eec02353ee92f9dbbe2
-      size: 24320
+      md5: e30acb8ce8b20af1197c760f6aed8ee6
+      size: 12224
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
     - path: evaluate_supervised.py
-      md5: c6bb6c672894feec62ee04bdaa09b767
-      size: 6972
+      md5: fe2a7f5dae55e936d678666556c454a4
+      size: 6985
     - path: model/
-      md5: e2162b9333432236dde6acce83d2a7d5.dir
-      size: 8278589
-      nfiles: 9
+      md5: f2c2d13afefbb9897e24156195392b21.dir
+      size: 6170481
+      nfiles: 8
     outs:
     - path: prdct_supervised_report.json
-      md5: 3715c25824a895cb021cf219dc2d6708
-      size: 3281
+      md5: 97c60d730be6f1c02fc967b800a9b501
+      size: 3326

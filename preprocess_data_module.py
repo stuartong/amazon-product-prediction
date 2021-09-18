@@ -228,15 +228,21 @@ def tfidf_vectorizer_df(df):
     
     return df
 
-def tfidf_vectorizer_arr(arr, min_df, max_df):
+def tfidf_vectorizer_arr(X_train, X_val, X_test, min_df, max_df):
     from sklearn.feature_extraction.text import TfidfVectorizer
         
-    corpus= [" ".join(lst) for lst in arr]
+    train_corpus= [" ".join(lst) for lst in X_train]
+    val_corpus= [" ".join(lst) for lst in X_val]
+    test_corpus= [" ".join(lst) for lst in X_test]
     vectorizer= TfidfVectorizer(max_df=max_df, min_df=min_df)
-    vec= vectorizer.fit_transform(corpus)
-    tfidf_arr= [np.array(i) for i in zip(*vec.toarray().T)][0]
-    tfidf_arr= tfidf_arr[0]
-    return tfidf_arr
+    #create vecs from trained vectorizer on train coprus
+    train_vec= vectorizer.fit_transform(train_corpus)
+    val_vec= vectorizer.transform(val_corpus)
+    test_vec= vectorizer.transform(test_corpus)
+    train_arr= [np.array(i) for i in zip(*train_vec.toarray().T)]
+    val_arr= [np.array(i) for i in zip(*val_vec.toarray().T)]
+    test_arr= [np.array(i) for i in zip(*test_vec.toarray().T)]
+    return train_arr, val_arr, test_arr
     
     
     

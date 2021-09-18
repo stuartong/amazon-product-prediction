@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from preprocess_data_module import clean_categories_column, clean_text,  consolidate_text_columns, wordvec_features_creator, handpicked_features_creator
 from tqdm import tqdm
-from run_pca import run_pca
 import os
 
 
