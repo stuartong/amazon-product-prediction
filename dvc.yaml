@@ -55,12 +55,12 @@ stages:
     - model/y_test.npy
     - model/y_val.npy
   evaluate_supervised:
-    cmd: python evaluate_supervised_copy.py scores.json
+    cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
-      - evaluate_supervised_copy.py
+      - evaluate_supervised.py
       - model/
     metrics:
-      - scores.json:
+      - prdct_supervised_report.json:
           cache: False
     
 

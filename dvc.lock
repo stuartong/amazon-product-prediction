@@ -136,16 +136,16 @@ stages:
       md5: e30acb8ce8b20af1197c760f6aed8ee6
       size: 12224
   evaluate_supervised:
-    cmd: python evaluate_supervised_copy.py scores.json
+    cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
-    - path: evaluate_supervised_copy.py
-      md5: b22393c48d110d871d0e152061774d33
-      size: 4286
+    - path: evaluate_supervised.py
+      md5: c6bb6c672894feec62ee04bdaa09b767
+      size: 6972
     - path: model/
       md5: fa1a41a0c2982ecb880a8b576ca3f081.dir
       size: 10467122
       nfiles: 8
     outs:
-    - path: scores.json
-      md5: 603d31f4a3b9fc6ebb7d8676ec59038d
-      size: 2348
+    - path: prdct_supervised_report.json
+      md5: 3715c25824a895cb021cf219dc2d6708
+      size: 3281
