@@ -228,14 +228,9 @@ def tfidf_vectorizer_df(df):
     
     return df
 
-def tfidf_vectorizer_arr(arr):
+def tfidf_vectorizer_arr(arr, min_df, max_df):
     from sklearn.feature_extraction.text import TfidfVectorizer
-    import yaml 
-    with open("params.yaml", "r") as file:
-        params= yaml.safe_load(file)
-    max_df= params["tfidf"]["max_df"]
-    min_df= params["tfidf"]["min_df"]
-    
+        
     corpus= [" ".join(lst) for lst in arr]
     vectorizer= TfidfVectorizer(max_df=max_df, min_df=min_df)
     vec= vectorizer.fit_transform(corpus)

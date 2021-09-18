@@ -12,6 +12,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 import pickle
 from preprocess_data_module import tfidf_vectorizer_arr
+from run_pca import run_pca_arr
 
 def run_model(df_path):
     '''
@@ -75,6 +76,8 @@ def run_model(df_path):
     tfidf= param_file["supervised_model"]["tfidf"]
     min_df= param_file["tfidf_product_success"]["min_df"]
     max_df= param_file["tfidf_product_success"]["max_df"]
+    pca= param_file["supervised_model"]["pca"]
+    pca_n_components= param_file["supervised_model"]["pca_n_components"]
     if model_type == AdaBoostClassifier:
         param_dict["base_estimator"]= [model_dict[ada_base_model](max_depth= i) for i in ada_base_iter]
         params["base_estimator"]= model_dict[ada_base_model](max_depth=ada_max_depth)
@@ -92,24 +95,54 @@ def run_model(df_path):
     median_vec = df[feature].map(len).median()
     empty = len(df[df[feature].map(len)!=median_vec])
     print(f"Dropping {empty} rows with empty/semi-full vectors")
-    df = df[df[feature].map(len)==median_vec].copy()
+    #adding the tfidf
+    if tfidf:
+        df = df.loc[df[feature].map(len)==median_vec, [feature, "consolidated_text_column"]].copy()
+        # aligning vector arrays for sklearn
+        # df[feature]=df[feature].apply(lambda x: x[0])
 
-    # aligning vector arrays for sklearn
-    # df[feature]=df[feature].apply(lambda x: x[0])
+        # split the data to train/test/validate split
+        # and get X and y for splits
+        # change string 'wordvec' to string 'features' once moutaz fixes code
+        train, val, test = split_data(df,split)
 
-    # split the data to train/test/validate split
-    # and get X and y for splits
-    # change string 'wordvec' to string 'features' once moutaz fixes code
-    train, val, test = split_data(df,split)
+        X_train = np.stack(train[feature],axis=0)
+        y_train = list(train['class_label'])
 
-    X_train = np.stack(train[feature],axis=0)
-    y_train = list(train['class_label'])
+        X_test = np.stack(test[feature],axis=0)
+        y_test = list(test['class_label'])
 
-    X_test = np.stack(test[feature],axis=0)
-    y_test = list(test['class_label'])
+        X_val = np.stack(val[feature],axis=0)
+        y_val = list(val['class_label'])
+        
+        print("Creating Tfidf vectors for train and test data...")
+        X_train = tfidf_vectorizer_arr(X_train, min_df= min_df, max_df= max_df)
+        X_val= tfidf_vectorizer_arr(X_val, min_df= min_df, max_df= max_df)
+        X_test= tfidf_vectorizer_arr(X_test, min_df= min_df, max_df= max_df)
+        print("tfidf vectors created!")
+        X_train= np.asarray([np.concatenate((X_train[i][0], X_train[i][1])) for i in range(len(X_train))])
+        X_val  = np.asarray([np.concatenate((X_test[i][0], X_test[i][1])) for i in range(len(X_val))])
+        X_test = np.asarray([np.concatenate((X_test[i][0], X_test[i][1])) for i in range(len(X_test))])
+        
+    else:        
+        df = df[df[feature].map(len)==median_vec].copy()
 
-    X_val = np.stack(val[feature],axis=0)
-    y_val = list(val['class_label'])
+        # aligning vector arrays for sklearn
+        # df[feature]=df[feature].apply(lambda x: x[0])
+
+        # split the data to train/test/validate split
+        # and get X and y for splits
+        # change string 'wordvec' to string 'features' once moutaz fixes code
+        train, val, test = split_data(df,split)
+
+        X_train = np.stack(train[feature],axis=0)
+        y_train = list(train['class_label'])
+
+        X_test = np.stack(test[feature],axis=0)
+        y_test = list(test['class_label'])
+
+        X_val = np.stack(val[feature],axis=0)
+        y_val = list(val['class_label'])
 
     # if scale is True, we will fit and transform all X
     # with a MinMaxScaler
@@ -137,12 +170,13 @@ def run_model(df_path):
         print('No oversampling done')
         print('Current Class Balance:', Counter(y_train))
 
-    #adding the tfidf
-    if tfidf:
-        print("Creating Tfidf vectors for train and test data...")
-        X_train = tfidf_vectorizer_arr(X_train)
-        X_test= tfidf_vectorizer_arr(X_test)
-        print("tfidf vectors created!")
+    if pca:
+        print("Generating PCAs to reduce data dimensions...")
+        X_train= run_pca_arr(X_train, n_components= pca_n_components)
+        X_val= run_pca_arr(X_val, n_components= pca_n_components)
+        X_test= run_pca_arr(X_test, n_components= pca_n_components)
+        print("PCA process done!")
+        
     
     # gridsearch/fit classifier
     

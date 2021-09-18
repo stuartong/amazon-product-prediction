@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import numpy as np
 
-def run_pca(df):
+def run_pca_df(df):
     import yaml
     with  open("params.yaml", "r") as file:
         params= yaml.safe_load(file)
@@ -26,3 +26,17 @@ def run_pca(df):
     print("total explained variance from {} PCAs = ".format(n_components), np.sum(explained_variance_ratio))
     #returning an array of concatenated components 
     return df
+
+def run_pca_arr(arr, n_components):
+        
+    #initializing StandardScaler
+    scaler= StandardScaler()
+    #scaling the array
+    target_arr= scaler.fit_transform(arr)
+    #initializing pca and generating components
+    pca_= PCA(n_components= int(n_components))
+    principal_components= pca_.fit_transform(target_arr)
+    explained_variance_ratio= pca_.explained_variance_ratio_
+    print("total explained variance from {} PCAs = ".format(n_components), np.sum(explained_variance_ratio))
+    #returning an array of concatenated components 
+    return principal_components

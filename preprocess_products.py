@@ -11,7 +11,7 @@ def preprocess_products(product_df_path):
     import yaml
     with open("params.yaml", "r") as file:
         params= yaml.safe_load(file)
-    pca= params["preprocess_products"]["pca"]
+    
     #import df
     print("reading {} file".format(product_df_path.split('/')[-1]))
     df= pd.read_pickle(product_df_path+ "/products.pkl")    
@@ -46,8 +46,7 @@ def preprocess_products(product_df_path):
     print("creating a concatenated features column...")
     df["features"]= [(np.array([vec for lst in df[active_features].values[i].flatten("C") for vec in lst])) for i in tqdm(range(len(df))) ]
     print("features column created!")
-    if pca:
-       df= run_pca(df) 
+    
 
     return df
 
