@@ -203,3 +203,18 @@ stages:
       md5: eefbc6951b4e00dfaf8936f6688967bb.dir
       size: 83484335
       nfiles: 1
+  fd_supervised_model:
+    cmd: python .\fake_detection_model.py data\fake\training\
+    deps:
+    - path: data\fake\training\
+      md5: eefbc6951b4e00dfaf8936f6688967bb.dir
+      size: 83484335
+      nfiles: 1
+    - path: fake_detection_model.py
+      md5: 5faef8186b5c7d290d0f25a74765b4c5
+      size: 10225
+    outs:
+    - path: model\fake\model\
+      md5: 145efc8347064efbd6eefa8a18e1e4fd.dir
+      size: 12772978
+      nfiles: 7

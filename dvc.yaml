@@ -71,3 +71,10 @@ stages:
     - load_prepare_fake_labeled_data.py
     outs:
     - data/fake/training
+  fd_supervised_model:
+    cmd: python .\fake_detection_model.py data\fake\training\
+    deps:
+    - data\fake\training\
+    - fake_detection_model.py
+    outs:
+    - model\fake\model\
