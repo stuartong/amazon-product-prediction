@@ -5,22 +5,22 @@ stages:
     deps:
     - path: load_data.py
       md5: 1082ba52b665af6435f4948994c2af2d
-      size: 3891
+      size: 4012
     outs:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
   preprocess_products:
     cmd: python preprocess_products.py data/prepared
     deps:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
     - path: preprocess_products.py
       md5: 45409078008787187b9e31603ce1c5fc
-      size: 3257
+      size: 3340
     params:
       params.yaml:
         preprocess_products:
@@ -32,56 +32,56 @@ stages:
           occurrence_threshold: 500
     outs:
     - path: data/products
-      md5: 29fe9c8a91cc997a909954e1b37eb797.dir
-      size: 810453374
+      md5: 84a3a1917ba5f95f1fc6980e2acd536e.dir
+      size: 714734328
       nfiles: 1
   preprocess_reviews:
     cmd: python preprocess_reviews.py data/prepared
     deps:
     - path: data/prepared
-      md5: a6419922457dee8567ce676381347c47.dir
-      size: 834301394
+      md5: 7870636af441f6a2358ac2b71ac57a47.dir
+      size: 834301147
       nfiles: 2
     - path: preprocess_reviews.py
       md5: 0c778d4227afa4c18417bc332a2507cd
-      size: 1805
+      size: 1849
     outs:
     - path: data/reviews
-      md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
-      size: 158451260
+      md5: e0866fe512426dbf79e2bd5ee359096b.dir
+      size: 158450968
       nfiles: 1
   success_metrics:
     cmd: python create_success_metrics.py data/products data/reviews
     deps:
     - path: create_success_metrics.py
       md5: 52fad55e66a58f46424dbc465aca45d9
-      size: 1879
+      size: 1920
     - path: data/products
-      md5: 29fe9c8a91cc997a909954e1b37eb797.dir
-      size: 810453374
+      md5: 84a3a1917ba5f95f1fc6980e2acd536e.dir
+      size: 714734328
       nfiles: 1
     - path: data/reviews
-      md5: 0c9d1a4b01741591f4277bfd2a9a2f28.dir
-      size: 158451260
+      md5: e0866fe512426dbf79e2bd5ee359096b.dir
+      size: 158450968
       nfiles: 1
     params:
       params.yaml:
         success_metrics.cutoff: 2
     outs:
     - path: data/metrics
-      md5: 1d9fd1bfc3a3d31947d053d86c75aacc.dir
-      size: 813205390
+      md5: 8c904c12d1aa98a09b4ab17fca0944ec.dir
+      size: 717486287
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
-      md5: 1d9fd1bfc3a3d31947d053d86c75aacc.dir
-      size: 813205390
+      md5: 8c904c12d1aa98a09b4ab17fca0944ec.dir
+      size: 717486287
       nfiles: 1
     - path: model_supervised.py
       md5: b3430d7821babdb25a8fcc710ad475ac
-      size: 7377
+      size: 7572
     params:
       params.yaml:
         supervised_model.gscv: false
@@ -115,37 +115,37 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model/X_test.npy
-      md5: 7a2fc5ce622eab9df406d86fd76fd7ba
-      size: 10064000
+      md5: ed763f4a2e14d743a54fa6cb66a82489
+      size: 604928
     - path: model/X_train.npy
-      md5: 684eeef8d8d76052881e57ae4e1d76d7
-      size: 80507776
+      md5: 1b82225ba8db8c307c9db7f03035a78b
+      size: 4838328
     - path: model/X_val.npy
-      md5: b2896450d020c10028118e5b986a0203
-      size: 10064000
+      md5: 962c8982221df18db13d13b394ed13b1
+      size: 604928
     - path: model/model.pkl
-      md5: f358704cbfa7c1f2086c65860065e83c
-      size: 68293868
+      md5: 3b85ef9eb619ee97eff24a914fc9a57c
+      size: 4297508
     - path: model/y_test.npy
-      md5: dc194cb32e8ffec3672a787f2329d30c
-      size: 24320
+      md5: 1904ae6bb31dc9abd611dae8adb6e5ac
+      size: 12224
     - path: model/y_train.npy
-      md5: fbb49c05d6ebb5710ece9994ca265e48
-      size: 193656
+      md5: 93f4e0ee3fec57f9d0938f0d1a3b798a
+      size: 96892
     - path: model/y_val.npy
-      md5: a886d9229d034eec02353ee92f9dbbe2
-      size: 24320
+      md5: e30acb8ce8b20af1197c760f6aed8ee6
+      size: 12224
   evaluate_supervised:
     cmd: python evaluate_supervised_copy.py scores.json
     deps:
     - path: evaluate_supervised_copy.py
       md5: b22393c48d110d871d0e152061774d33
-      size: 4179
+      size: 4286
     - path: model/
-      md5: 48ab192fce89702275eca3abb156e723.dir
-      size: 171159003
-      nfiles: 9
+      md5: fa1a41a0c2982ecb880a8b576ca3f081.dir
+      size: 10467122
+      nfiles: 8
     outs:
     - path: scores.json
-      md5: 41e9c9a1d6019df7fbf70465b54cee9c
-      size: 2278
+      md5: 603d31f4a3b9fc6ebb7d8676ec59038d
+      size: 2348
