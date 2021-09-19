@@ -1,1 +1,8 @@
+/model/model.pkl
+/model/X_test.npy
+/model/X_train.npy
+/model/X_val.npy
+/model/y_train.npy
+/model/y_val.npy
+/model/y_test.npy
 /model
