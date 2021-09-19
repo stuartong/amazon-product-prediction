@@ -26,7 +26,7 @@ supervised_model:
     param_dict:  {
         C : [0.1,1, 10, 100],
         gamma : [1,0.1,0.01,0.001],
-        kernel : [‘rbf’, ‘poly’, ‘sigmoid’],
+        kernel : ['rbf', 'poly', 'sigmoid'],
         random_state : [42]
     }
     ada_max_depth : 3 #for non-grid search AdaBoost base model
