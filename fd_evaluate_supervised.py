@@ -16,19 +16,19 @@ def fd_evaluate_model():
         params= yaml.safe_load(file)
     f1_avg= params["fd_evaluate_supervised"]["f1_avg"]
     #loading model, train, eval, test files
-    with open(r"model\fake\model\model.pkl", "rb") as model:
+    with open("model/fake/model/model.pkl", "rb") as model:
         clf= pickle.load(model)
-    with open(r"model\fake\model\X_train.npy", "rb") as  file:
+    with open("model/fake/model/X_train.npy", "rb") as  file:
         X_train= np.load(file)
-    with open(r"model\fake\model\X_test.npy", "rb") as  file:
+    with open("model/fake/model/X_test.npy", "rb") as  file:
         X_test= np.load(file)
-    with open(r"model\fake\model\X_val.npy", "rb") as  file:
+    with open("model/fake/model/X_val.npy", "rb") as  file:
         X_val= np.load(file)
-    with open(r"model\fake\model\y_train.npy", "rb") as  file:
+    with open("model/fake/model/y_train.npy", "rb") as  file:
         y_train= np.load(file)
-    with open(r"model\fake\model\y_test.npy", "rb") as  file:
+    with open("model/fake/model/y_test.npy", "rb") as  file:
         y_test= np.load(file)
-    with open(r"model\fake\model\y_val.npy", "rb") as  file:
+    with open("model/fake/model/y_val.npy", "rb") as  file:
         y_val= np.load(file)
 
     #importing the model_metrics to include in the report

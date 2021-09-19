@@ -227,7 +227,10 @@ if __name__ == "__main__":
         np.save(r"model/product_success/y_val.npy", y_val)
         
     else:
-        os.makedirs(r"model/product_success")
+        parentdir= "model"
+        subdir= "product_success"
+        path= os.path.join(parentdir, subdir)
+        os.makedirs(path)
         pickle.dump(clf, open(r"model/product_success/model.pkl", "wb"))
         np.save(r"model/product_success/X_train.npy", X_train)
         np.save(r"model/product_success/X_test.npy", X_test)
@@ -235,5 +238,6 @@ if __name__ == "__main__":
         np.save(r"model/product_success/y_train.npy", y_train)
         np.save(r"model/product_success/y_test.npy", y_test)
         np.save(r"model/product_success/y_val.npy", y_val)
+        
 
 

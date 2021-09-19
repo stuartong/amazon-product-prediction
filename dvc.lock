@@ -44,7 +44,7 @@ stages:
       md5: 0c778d4227afa4c18417bc332a2507cd
       size: 1849
     outs:
-    - path: data/reviews
+    - path: data\reviews
       md5: e0866fe512426dbf79e2bd5ee359096b.dir
       size: 158450968
       nfiles: 1
@@ -78,31 +78,73 @@ stages:
       size: 757044146
       nfiles: 1
     - path: model_supervised.py
-      md5: e6dd1ab81a877be4cad072183717caa7
-      size: 10632
+      md5: 40a4c13de90bfc6f830a77ce76a1d249
+      size: 10732
     params:
       params.yaml:
         supervised_model.gscv: true
-        supervised_model.model_type: SVC
+        supervised_model.model_type: LogisticRegression
         supervised_model.n_jobs: -1
         supervised_model.oversample: false
         supervised_model.param_dict:
           C:
-          - 0.1
-          - 1
-          - 10
-          - 100
-          gamma:
-          - 1
-          - 0.1
-          - 0.01
-          - 0.001
-          kernel:
-          - rbf
-          - poly
-          - sigmoid
+          - 0.0001
+          - 0.000145634848
+          - 0.000212095089
+          - 0.00030888436
+          - 0.000449843267
+          - 0.000655128557
+          - 0.000954095476
+          - 0.00138949549
+          - 0.00202358965
+          - 0.0029470517
+          - 0.00429193426
+          - 0.00625055193
+          - 0.00910298178
+          - 0.0132571137
+          - 0.0193069773
+          - 0.028117687
+          - 0.0409491506
+          - 0.0596362332
+          - 0.0868511374
+          - 0.126485522
+          - 0.184206997
+          - 0.26826958
+          - 0.390693994
+          - 0.568986603
+          - 0.828642773
+          - 1.20679264
+          - 1.75751062
+          - 2.55954792
+          - 3.72759372
+          - 5.42867544
+          - 7.90604321
+          - 11.513954
+          - 16.7683294
+          - 24.4205309
+          - 35.5648031
+          - 51.7947468
+          - 75.4312006
+          - 109.854114
+          - 159.985872
+          - 232.995181
+          - 339.322177
+          - 494.171336
+          - 719.685673
+          - 1048.11313
+          - 1526.41797
+          - 2222.99648
+          - 3237.45754
+          - 4714.86636
+          - 6866.48845
+          - 10000.0
+          penalty:
+          - l1
+          - l2
           random_state:
           - 42
+          solver:
+          - saga
         supervised_model.params:
           random_state: 42
           C: 100
@@ -112,24 +154,24 @@ stages:
         supervised_model.scale: true
         supervised_model.split: 0.8
     outs:
-    - path: model\product_success\
-      md5: 30b41a8a0b00975c814aedbb448dea8e.dir
-      size: 21811066
+    - path: model/product_success/
+      md5: 55278da3cc089c74268c1c62dc328798.dir
+      size: 13427994
       nfiles: 7
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
     - path: evaluate_supervised.py
-      md5: 9102a4ca9a1a839e4c16d7756a37bbc2
+      md5: 6d0970926d9bc0977e2096dee37fdb93
       size: 7098
-    - path: model\product_success\
-      md5: 30b41a8a0b00975c814aedbb448dea8e.dir
-      size: 21811066
+    - path: model/product_success/
+      md5: 55278da3cc089c74268c1c62dc328798.dir
+      size: 13427994
       nfiles: 7
     outs:
     - path: prdct_supervised_report.json
-      md5: 98c2a0be45f339185daa712407518468
-      size: 3303
+      md5: bec70b4c16f5a987bfc4451feccf8792
+      size: 3320
   prepare_fake_labeled_model:
     cmd: python .\load_prepare_fake_labeled_data.py
     deps:

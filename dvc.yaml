@@ -20,7 +20,7 @@ stages:
     - preprocess_reviews.py
     - data/prepared
     outs:
-    - data/reviews
+    - data\reviews
   success_metrics:
     cmd: python create_success_metrics.py data/products data/reviews
     deps:
@@ -47,13 +47,13 @@ stages:
     - supervised_model.return_train_score
     - supervised_model.split
     outs:
-    - model\product_success\
+    - model/product_success/
     
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
     - evaluate_supervised.py
-    - model\product_success\
+    - model/product_success/
     metrics:
     - prdct_supervised_report.json:
         cache: false
@@ -67,17 +67,17 @@ stages:
     outs:
     - data/fake/training/labeled_processed.pkl
   fd_supervised_model:
-    cmd: python .\fake_detection_model.py data\fake\training\
+    cmd: python .\fake_detection_model.py data/fake/training/
     deps:
-    - data\fake\training\labeled_processed.pkl
+    - data/fake/training/labeled_processed.pkl
     - fake_detection_model.py
     outs:
-    - model\fake\model\
+    - model/fake/
   fd_evaluate_supervised:
     cmd: python .\fd_evaluate_supervised.py fd_supervised_report.json
     deps:
     - .\fd_evaluate_supervised.py
-    - model\fake\model
+    - model/fake/
     metrics:
     - fd_supervised_report.json:
         cache: false

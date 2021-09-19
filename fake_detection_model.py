@@ -211,23 +211,26 @@ if __name__ == "__main__":
     
     clf,X_train,X_test,X_val,y_train,y_test,y_val = fake_detection_model(args.df_path)
     
-    if os.path.isdir(r"model\fake\model"):
-        pickle.dump(clf, open(r"model\fake\model\model.pkl", "wb"))
-        np.save(r"model\fake\model\X_train.npy", X_train)
-        np.save(r"model\fake\model\X_test.npy", X_test)
-        np.save(r"model\fake\model\y_train.npy", y_train)
-        np.save(r"model\fake\model\X_val.npy", X_val)
-        np.save(r"model\fake\model\y_test.npy", y_test)
-        np.save(r"model\fake\model\y_val.npy", y_val)
+    if os.path.isdir("model/fake"):
+        pickle.dump(clf, open("model/fake/model.pkl", "wb"))
+        np.save("model/fake/X_test.npy", X_test)
+        np.save("model/fake/X_train.npy", X_train)
+        np.save("model/fake/y_train.npy", y_train)
+        np.save("model/fake/X_val.npy", X_val)
+        np.save("model/fake/y_test.npy", y_test)
+        np.save("model/fake/y_val.npy", y_val)
         
     else:
-        os.makedirs(r"model\fake\model")
-        pickle.dump(clf, open(r"model\fake\model\model.pkl", "wb"))
-        np.save(r"model\fake\model\X_train.npy", X_train)
-        np.save(r"model\fake\model\X_test.npy", X_test)
-        np.save(r"model\fake\model\X_val.npy", X_val)
-        np.save(r"model\fake\model\y_train.npy", y_train)
-        np.save(r"model\fake\model\y_test.npy", y_test)
-        np.save(r"model\fake\model\y_val.npy", y_val)
+        maindir= "model"
+        subdir= "fake"
+        path= os.path.join(maindir, subdir)
+        os.makedirs(path)
+        pickle.dump(clf, open("model/fake/model.pkl", "wb"))
+        np.save("model/fake/X_train.npy", X_train)
+        np.save("model/fake/X_test.npy", X_test)
+        np.save("model/fake/X_val.npy", X_val)
+        np.save("model/fake/y_train.npy", y_train)
+        np.save("model/fake/y_test.npy", y_test)
+        np.save("model/fake/y_val.npy", y_val)
 
 
