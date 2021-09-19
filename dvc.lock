@@ -84,7 +84,7 @@ stages:
       params.yaml:
         supervised_model.gscv: true
         supervised_model.model_type: LogisticRegression
-        supervised_model.n_jobs: 1
+        supervised_model.n_jobs: -1
         supervised_model.oversample: false
         supervised_model.param_dict:
           C:
@@ -155,7 +155,7 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model\product_success\
-      md5: 4f9d885557766653d301639d3a5091f1.dir
+      md5: 402e62fb49553422fd65e7cd46c99f49.dir
       size: 13427994
       nfiles: 7
   evaluate_supervised:
@@ -165,13 +165,13 @@ stages:
       md5: 9102a4ca9a1a839e4c16d7756a37bbc2
       size: 7098
     - path: model\product_success\
-      md5: 4f9d885557766653d301639d3a5091f1.dir
+      md5: 402e62fb49553422fd65e7cd46c99f49.dir
       size: 13427994
       nfiles: 7
     outs:
     - path: prdct_supervised_report.json
-      md5: 43cd71adb0ed324b577df62debdb8f3d
-      size: 3316
+      md5: d607980ed42972874227f932e63892bf
+      size: 3319
   prepare_fake_labeled_model:
     cmd: python .\load_prepare_fake_labeled_data.py
     deps:
