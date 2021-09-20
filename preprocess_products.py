@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from preprocess_data_module import clean_categories_column, clean_text,  consolidate_text_columns, wordvec_features_creator, handpicked_features_creator
 from tqdm import tqdm
-import os
+from pathlib import Path 
 
 
 def preprocess_products(product_df_path):
@@ -13,7 +13,8 @@ def preprocess_products(product_df_path):
     
     #import df
     print("reading {} file".format(product_df_path.split('/')[-1]))
-    df= pd.read_pickle(product_df_path+ "/products.pkl")    
+    product_df_path= Path(product_df_path)
+    df= pd.read_pickle(product_df_path /  "products.pkl")    
     
     #Step1: removing duplicate products based on "asin" column
     df.drop_duplicates(subset= "asin", inplace= True)
@@ -56,26 +57,5 @@ if __name__ == "__main__":
     args= parser.parse_args()
     #running the function
     df= preprocess_products(args.product_df_path)
-    
-    if os.path.isdir("data"):
-        if os.path.isdir("data/products"):
-            df.to_pickle('data/products/products.pkl')
-        else:
-            parent_dir= "data"
-            directory= "products"
-            path= os.path.join(parent_dir, directory)
-            os.makedirs(path, exist_ok= True)
-            df.to_pickle('data/products/products.pkl')
-    else:
-        parent_dir= os.mkdir("data")
-        directory= "products"
-        path= os.path.join(parent_dir, directory)
-        os.makedirs(path)
-        df.to_pickle('data/products/products.pkl')   
-    
-    
-    
-
-
-
-
+    Path("data/products").mkdir(parents=True, exist_ok=True)
+    df.to_pickle('data/products/products.pkl')

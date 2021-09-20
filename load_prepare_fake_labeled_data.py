@@ -3,7 +3,7 @@ import numpy as np
 from fake_review_detection_module import load_labeled_data, wordvec_features_creator, handpicked_features_creator
 from preprocess_data_module import clean_text
 from tqdm import tqdm 
-import os
+from pathlib import Path
 
 def load_prepare_fake_labeled_data():
     import yaml
@@ -37,18 +37,6 @@ def load_prepare_fake_labeled_data():
 
 if __name__ == "__main__":
     df= load_prepare_fake_labeled_data()
-    if os.path.isdir("data"):
-        if os.path.isdir("data/fake/training"):
-            df.to_pickle('data/fake/training/labeled_processed.pkl')
-        else:
-            parent_dir= "data"
-            directory= "fake/training"
-            path= os.path.join(parent_dir, directory)
-            os.makedirs(path, exist_ok= True)
-            df.to_pickle('data/fake/training/labeled_processed.pkl')
-    else:
-        parent_dir= os.mkdir("data")
-        directory= "fake/training"
-        path= os.path.join(parent_dir, directory)
-        os.makedirs(path)
-        df.to_pickle('data/fake/training/labeled_processed.pkl') 
+    Path("data/fake/training").mkdir(parents=True, exist_ok=True)
+    df.to_pickle('data/fake/training/labeled_processed.pkl')
+        

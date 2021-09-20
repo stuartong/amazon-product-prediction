@@ -4,8 +4,8 @@ stages:
     cmd: python load_data.py
     deps:
     - path: load_data.py
-      md5: 1082ba52b665af6435f4948994c2af2d
-      size: 4012
+      md5: 1d8771affb5f14d8f66712367fe680b2
+      size: 3430
     outs:
     - path: data/prepared
       md5: 7870636af441f6a2358ac2b71ac57a47.dir
@@ -19,8 +19,8 @@ stages:
       size: 834301147
       nfiles: 2
     - path: preprocess_products.py
-      md5: 0bfab1471eb97b3733f55c55f7597e5e
-      size: 3214
+      md5: 100aae88a64f90b6a9ab30a3bd1cb35a
+      size: 2767
     params:
       params.yaml:
         preprocess_products:
@@ -41,8 +41,8 @@ stages:
       size: 834301147
       nfiles: 2
     - path: preprocess_reviews.py
-      md5: 0c778d4227afa4c18417bc332a2507cd
-      size: 1805
+      md5: f6d38c329571279b99496f1cc58f0389
+      size: 1428
     outs:
     - path: data/reviews
       md5: e0866fe512426dbf79e2bd5ee359096b.dir
@@ -78,8 +78,8 @@ stages:
       size: 757044146
       nfiles: 1
     - path: model_supervised.py
-      md5: 40a4c13de90bfc6f830a77ce76a1d249
-      size: 10732
+      md5: 6f930a9a81a0e528dbb417c95ca26946
+      size: 10109
     params:
       params.yaml:
         supervised_model.gscv: true
@@ -107,8 +107,8 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model/product_success/
-      md5: e9f97b712d1277b47bc9ac13e7c0ab68.dir
-      size: 21626146
+      md5: b5f16f50992b98215826b55798a4d752.dir
+      size: 21623386
       nfiles: 7
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
@@ -117,13 +117,13 @@ stages:
       md5: 6d0970926d9bc0977e2096dee37fdb93
       size: 7098
     - path: model/product_success/
-      md5: e9f97b712d1277b47bc9ac13e7c0ab68.dir
-      size: 21626146
+      md5: b5f16f50992b98215826b55798a4d752.dir
+      size: 21623386
       nfiles: 7
     outs:
     - path: prdct_supervised_report.json
-      md5: be4b6e26aadd2d4aa73b799a56de871b
-      size: 3297
+      md5: be1caf691fd846cdba7cae804cb44aee
+      size: 3302
   prepare_fake_labeled_model:
     cmd: python load_prepare_fake_labeled_data.py
     deps:
@@ -131,8 +131,8 @@ stages:
       md5: ec3f2c1ef9598b56c38fbc00c0ac90de
       size: 8404357
     - path: load_prepare_fake_labeled_data.py
-      md5: 8102f957c21d95ec50ef2c48e41c9d72
-      size: 2244
+      md5: 27bf5d2e1665a1c3ae06a55f960c3d2d
+      size: 1759
     outs:
     - path: data/fake/training/labeled_processed.pkl
       md5: 33dd0224d3e11a8aa75c12b1310f1b4f

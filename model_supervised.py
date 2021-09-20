@@ -13,6 +13,7 @@ from sklearn.neural_network import MLPClassifier
 import pickle
 from preprocess_data_module import tfidf_vectorizer_arr
 from run_pca import run_pca_arr
+from pathlib import Path
 
 def run_model(df_path):
     '''
@@ -210,34 +211,17 @@ def run_model(df_path):
 
 if __name__ == "__main__":
     import argparse
-    import os
     parser= argparse.ArgumentParser()
     parser.add_argument("df_path", help= "target dataframe path (str)")
     args= parser.parse_args()
     
     clf,X_train,X_test,X_val,y_train,y_test,y_val = run_model(args.df_path)
     
-    if os.path.isdir(r"model/product_success"):
-        pickle.dump(clf, open(r"model/product_success/model.pkl", "wb"))
-        np.save(r"model/product_success/X_train.npy", X_train)
-        np.save(r"model/product_success/X_test.npy", X_test)
-        np.save(r"model/product_success/X_val.npy", X_val)
-        np.save(r"model/product_success/y_train.npy", y_train)
-        np.save(r"model/product_success/y_test.npy", y_test)
-        np.save(r"model/product_success/y_val.npy", y_val)
-        
-    else:
-        parentdir= "model"
-        subdir= "product_success"
-        path= os.path.join(parentdir, subdir)
-        os.makedirs(path)
-        pickle.dump(clf, open(r"model/product_success/model.pkl", "wb"))
-        np.save(r"model/product_success/X_train.npy", X_train)
-        np.save(r"model/product_success/X_test.npy", X_test)
-        np.save(r"model/product_success/X_val.npy", X_val)
-        np.save(r"model/product_success/y_train.npy", y_train)
-        np.save(r"model/product_success/y_test.npy", y_test)
-        np.save(r"model/product_success/y_val.npy", y_val)
-        
-
-
+    Path("model/product_success").mkdir(parents=True, exist_ok=True)
+    pickle.dump(clf, open("model/product_success/model.pkl", "wb"))
+    np.save("model/product_success/X_train.npy", X_train)
+    np.save("model/product_success/X_test.npy", X_test)
+    np.save("model/product_success/X_val.npy", X_val)
+    np.save("model/product_success/y_train.npy", y_train)
+    np.save("model/product_success/y_test.npy", y_test)
+    np.save("model/product_success/y_val.npy", y_val)
