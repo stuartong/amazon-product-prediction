@@ -13,6 +13,7 @@ from sklearn.neural_network import MLPClassifier
 import pickle
 from preprocess_data_module import tfidf_vectorizer_arr
 from run_pca import run_pca_arr
+from run_kmean_features import run_kmean_arr
 
 def run_model(df_path):
     '''
@@ -78,6 +79,8 @@ def run_model(df_path):
     max_df= param_file["tfidf_product_success"]["max_df"]
     pca= param_file["supervised_model"]["pca"]
     pca_n_components= param_file["supervised_model"]["pca_n_components"]
+    cluster_features=param_file["supervised_model"]["cluster_features"]
+    best_k = param_file["supervised_model"]["best_k"]
     if model_type == AdaBoostClassifier:
         param_dict["base_estimator"]= [model_dict[ada_base_model](max_depth= i) for i in ada_base_iter]
         params["base_estimator"]= model_dict[ada_base_model](max_depth=ada_max_depth)
@@ -95,17 +98,21 @@ def run_model(df_path):
     median_vec = df[feature].map(len).median()
     empty = len(df[df[feature].map(len)!=median_vec])
     print(f"Dropping {empty} rows with empty/semi-full vectors")
+
+    # split data
+    df = df.loc[df[feature].map(len)==median_vec].copy()
+    
+    # aligning vector arrays for sklearn
+    # df[feature]=df[feature].apply(lambda x: x[0])
+    # removed as aligned in data_preprocessing
+
+    # split the data to train/test/validate split
+    # and get X and y for splits
+    train, val, test = split_data(df,split)
+
+
     #adding the tfidf
     if tfidf:
-        
-        df = df.loc[df[feature].map(len)==median_vec].copy()
-        # aligning vector arrays for sklearn
-        # df[feature]=df[feature].apply(lambda x: x[0])
-
-        # split the data to train/test/validate split
-        # and get X and y for splits
-        # change string 'wordvec' to string 'features' once moutaz fixes code
-        train, val, test = split_data(df,split)
 
         X_train = train[[feature, "consolidated_text_column"]]
         y_train = list(train['class_label'])
@@ -127,16 +134,6 @@ def run_model(df_path):
         X_test = np.array([(np.array([vec for lst in X_test.values[i].flatten("C") for vec in lst])) for i in range(len(X_test))])
         
     else:        
-        df = df[df[feature].map(len)==median_vec].copy()
-
-        # aligning vector arrays for sklearn
-        # df[feature]=df[feature].apply(lambda x: x[0])
-
-        # split the data to train/test/validate split
-        # and get X and y for splits
-        # change string 'wordvec' to string 'features' once moutaz fixes code
-        train, val, test = split_data(df,split)
-
         X_train = np.stack(train[feature],axis=0)
         y_train = list(train['class_label'])
 
@@ -145,6 +142,15 @@ def run_model(df_path):
 
         X_val = np.stack(val[feature],axis=0)
         y_val = list(val['class_label'])
+
+    #adding in cluster - MUST RUN AFTER TFIDF - needs existing features
+    #adds an addtional cluster label to the feature column
+
+    if cluster_features:
+        print("Adding in Cluster Label as Feature")
+        X_train, X_test, X_val = run_kmean_arr(train,val,test,X_train,X_test,X_val,best_k)
+    else:
+        print("No Cluster Labels added")
 
     # if scale is True, we will fit and transform all X
     # with a MinMaxScaler
