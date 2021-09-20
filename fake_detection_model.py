@@ -211,33 +211,19 @@ if __name__ == "__main__":
     args= parser.parse_args()
     
     clf,X_train,X_test,X_val,y_train,y_test,y_val, tfidf_fitted_model, pca_fitted_model, scaler = fake_detection_model(args.df_path)
-    
-    if os.path.isdir("model/fake"):
-        pickle.dump(clf, open("model/fake/model.pkl", "wb"))
-        pickle.dump(tfidf_fitted_model, open("model/fake/tfidf_fitted_model.pkl", "wb"))
-        pickle.dump(pca_fitted_model, open("model/fake/pca_fitted_model.pkl", "wb"))
-        pickle.dump(scaler, open("model/fake/pca_fitted_model.pkl", "wb"))
-        np.save("model/fake/X_test.npy", X_test)
-        np.save("model/fake/X_train.npy", X_train)
-        np.save("model/fake/y_train.npy", y_train)
-        np.save("model/fake/X_val.npy", X_val)
-        np.save("model/fake/y_test.npy", y_test)
-        np.save("model/fake/y_val.npy", y_val)
+
+    Path("model/fake").mkdir(parents=True, exist_ok=True)
+    pickle.dump(clf, open("model/fake/model.pkl", "wb"))
+    pickle.dump(tfidf_fitted_model, open("model/fake/tfidf_fitted_model.pkl", "wb"))
+    pickle.dump(pca_fitted_model, open("model/fake/pca_fitted_model.pkl", "wb"))
+    pickle.dump(scaler, open("model/fake/pca_fitted_model.pkl", "wb"))
+    np.save("model/fake/X_test.npy", X_test)
+    np.save("model/fake/X_train.npy", X_train)
+    np.save("model/fake/y_train.npy", y_train)
+    np.save("model/fake/X_val.npy", X_val)
+    np.save("model/fake/y_test.npy", y_test)
+    np.save("model/fake/y_val.npy", y_val)
         
-    else:
-        maindir= "model"
-        subdir= "fake"
-        path= os.path.join(maindir, subdir)
-        os.makedirs(path)
-        pickle.dump(clf, open("model/fake/model.pkl", "wb"))
-        pickle.dump(tfidf_fitted_model, open("model/fake/tfidf_fitted_model.pkl", "wb"))
-        pickle.dump(pca_fitted_model, open("model/fake/pca_fitted_model.pkl", "wb"))
-        pickle.dump(scaler, open("model/fake/pca_fitted_model.pkl", "wb"))
-        np.save("model/fake/X_train.npy", X_train)
-        np.save("model/fake/X_test.npy", X_test)
-        np.save("model/fake/X_val.npy", X_val)
-        np.save("model/fake/y_train.npy", y_train)
-        np.save("model/fake/y_test.npy", y_test)
-        np.save("model/fake/y_val.npy", y_val)
+    
 
 

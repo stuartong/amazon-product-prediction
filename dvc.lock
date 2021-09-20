@@ -145,11 +145,11 @@ stages:
       size: 83484335
       nfiles: 1
     - path: fake_detection_model.py
-      md5: 7dfb702e0badf78dd63d0902df0bfbc8
-      size: 10900
+      md5: c541d3b675d98f28e25c965fa0fe7cfe
+      size: 10137
     outs:
     - path: model/fake/
-      md5: 5c03e9756afcc40b55e4a063a35782e7.dir
+      md5: 902a6a2d00455cdeb40cf4cb06f797f1.dir
       size: 13043774
       nfiles: 9
   fd_evaluate_supervised:
@@ -159,10 +159,10 @@ stages:
       md5: 7693a8a803c32a7b3345cd6cb3f15934
       size: 6973
     - path: model/fake/
-      md5: 5c03e9756afcc40b55e4a063a35782e7.dir
+      md5: 902a6a2d00455cdeb40cf4cb06f797f1.dir
       size: 13043774
       nfiles: 9
     outs:
     - path: fd_supervised_report.json
-      md5: faa098e9487d5f0e55d1686581f5a887
-      size: 3298
+      md5: 88b420039a6fff4662f2e60f7a1e32cb
+      size: 3293
