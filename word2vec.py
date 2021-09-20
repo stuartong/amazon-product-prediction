@@ -62,7 +62,7 @@ def generate_dense_features(tokenized_text, model= None, use_mean= True):
         
         
         for item in tokenized_text:
-            words= [word for word in item if model.index_to_key]
+            words= [word for word in item if item in model.index_to_key]
         if len(words) > 0:
             if use_mean == True:
                 try:

@@ -66,7 +66,8 @@ def handpicked_features_creator(df):
     # Onehot encoding the category column to return an encoed_cat column
     enc= OneHotEncoder(handle_unknown= "error", sparse= False)
     cat= df["category"].to_numpy().reshape(-1,1)
-    enc_cat= enc.fit_transform(cat)
+    enc.fit(cat)
+    enc_cat= enc.transform(cat) 
     df["encoded_cat"]= [np.array([vec for vec in enc_cat[i,:] ]) for i in range(len(enc_cat))]
     #getting the length of every review
     df["len_review"]= df["review"].map(len)
