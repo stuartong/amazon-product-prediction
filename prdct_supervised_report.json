@@ -10,7 +10,7 @@
     },
     "model_specs": {
         "model_type": [
-            "SVC"
+            "LogisticRegression"
         ],
         "params": {
             "scale": true,
@@ -51,7 +51,7 @@
                 "f1-score": 0.5584745762711865,
                 "support": 1320
             },
-            "accuracy": 0.6554232804232805,
+            "accuracy": 0.6342592592592593,
             "macro avg": {
                 "precision": 0.6502442617866004,
                 "recall": 0.6378254374733248,
