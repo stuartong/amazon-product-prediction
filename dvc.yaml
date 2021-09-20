@@ -20,7 +20,7 @@ stages:
     - preprocess_reviews.py
     - data/prepared
     outs:
-    - data\reviews
+    - data/reviews
   success_metrics:
     cmd: python create_success_metrics.py data/products data/reviews
     deps:
@@ -60,23 +60,23 @@ stages:
 
 
   prepare_fake_labeled_model:
-    cmd: python .\load_prepare_fake_labeled_data.py
+    cmd: python load_prepare_fake_labeled_data.py
     deps:
     - data/fake/labeled_data/amazon_reviews_labeled.txt
     - load_prepare_fake_labeled_data.py
     outs:
     - data/fake/training/labeled_processed.pkl
   fd_supervised_model:
-    cmd: python .\fake_detection_model.py data\fake\training\
+    cmd: python fake_detection_model.py data/fake/training/
     deps:
     - data\fake\training\
     - fake_detection_model.py
     outs:
     - model\fake\
   fd_evaluate_supervised:
-    cmd: python .\fd_evaluate_supervised.py fd_supervised_report.json
+    cmd: python fd_evaluate_supervised.py fd_supervised_report.json
     deps:
-    - .\fd_evaluate_supervised.py
+    - fd_evaluate_supervised.py
     - model/fake/
     metrics:
     - fd_supervised_report.json:
