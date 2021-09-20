@@ -52,8 +52,8 @@ stages:
     cmd: python create_success_metrics.py data/products data/reviews
     deps:
     - path: create_success_metrics.py
-      md5: 52fad55e66a58f46424dbc465aca45d9
-      size: 1920
+      md5: 28f38d8686da74dbb295639997e7b26e
+      size: 1539
     - path: data/products
       md5: ec94c6cf85277e9b56ca7124893f1c91.dir
       size: 754292159
