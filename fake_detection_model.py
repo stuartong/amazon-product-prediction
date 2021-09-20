@@ -3,7 +3,7 @@ import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import GridSearchCV
 from split_data import split_data
-from imblearn.over_sampling import SVMSMOTE
+# from imblearn.over_sampling import SVMSMOTE
 from collections import Counter
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -12,8 +12,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import MultinomialNB
 import pickle
-from preprocess_data_module import tfidf_vectorizer_arr
-from run_pca import run_pca_arr
+from fake_review_detection_module import fake_tfidf_vectorizer_arr, fake_run_pca_arr
+from pathlib import Path 
+
 
 def fake_detection_model(df_path):
     '''
@@ -85,8 +86,8 @@ def fake_detection_model(df_path):
         params["base_estimator"]= model_dict[ada_base_model](max_depth=ada_max_depth)
 
    
-    #import data
-    df= pd.read_pickle(df_path+ "/labeled_processed.pkl") 
+    path= Path(df_path)
+    df= pd.read_pickle(path / "labeled_processed.pkl")
     
     feature = 'features'
 
@@ -116,7 +117,7 @@ def fake_detection_model(df_path):
         y_val = list(val['label'])
         
         print("Creating Tfidf vectors for train and test data...")
-        X_train.loc[:,"vectorized_reviews"],X_val.loc[:,"vectorized_reviews"], X_test.loc[:,"vectorized_reviews"]= tfidf_vectorizer_arr(X_train= X_train.loc[:,"vectorized_reviews"].values,
+        X_train.loc[:,"vectorized_reviews"],X_val.loc[:,"vectorized_reviews"], X_test.loc[:,"vectorized_reviews"], tfidf_fitted_model= fake_tfidf_vectorizer_arr(X_train= X_train.loc[:,"vectorized_reviews"].values,
                                                                                                                                                             X_val= X_val.loc[:,"vectorized_reviews"].values,
                                                                                                                                                             X_test= X_test.loc[:,"vectorized_reviews"].values,\
                                                                                                                                                             min_df=min_df, max_df= max_df)
@@ -168,7 +169,7 @@ def fake_detection_model(df_path):
 
     if pca:
         print("Generating PCAs to reduce data dimensions...")
-        X_train, X_val, X_test = run_pca_arr(X_train,X_val,X_test,n_components= pca_n_components)
+        X_train, X_val, X_test, pca_fitted_model = fake_run_pca_arr(X_train,X_val,X_test,n_components= pca_n_components)
         print("PCA process done!")
         
     
@@ -200,7 +201,7 @@ def fake_detection_model(df_path):
         else:
             pass
 
-    return clf,X_train,X_test,X_val,y_train,y_test,y_val
+    return clf,X_train,X_test,X_val,y_train,y_test,y_val, tfidf_fitted_model, pca_fitted_model, scaler
 
 if __name__ == "__main__":
     import argparse
@@ -209,10 +210,13 @@ if __name__ == "__main__":
     parser.add_argument("df_path", help= "target dataframe path (str)")
     args= parser.parse_args()
     
-    clf,X_train,X_test,X_val,y_train,y_test,y_val = fake_detection_model(args.df_path)
+    clf,X_train,X_test,X_val,y_train,y_test,y_val, tfidf_fitted_model, pca_fitted_model, scaler = fake_detection_model(args.df_path)
     
     if os.path.isdir("model/fake"):
         pickle.dump(clf, open("model/fake/model.pkl", "wb"))
+        pickle.dump(tfidf_fitted_model, open("model/fake/tfidf_fitted_model.pkl", "wb"))
+        pickle.dump(pca_fitted_model, open("model/fake/pca_fitted_model.pkl", "wb"))
+        pickle.dump(scaler, open("model/fake/pca_fitted_model.pkl", "wb"))
         np.save("model/fake/X_test.npy", X_test)
         np.save("model/fake/X_train.npy", X_train)
         np.save("model/fake/y_train.npy", y_train)
@@ -226,6 +230,9 @@ if __name__ == "__main__":
         path= os.path.join(maindir, subdir)
         os.makedirs(path)
         pickle.dump(clf, open("model/fake/model.pkl", "wb"))
+        pickle.dump(tfidf_fitted_model, open("model/fake/tfidf_fitted_model.pkl", "wb"))
+        pickle.dump(pca_fitted_model, open("model/fake/pca_fitted_model.pkl", "wb"))
+        pickle.dump(scaler, open("model/fake/pca_fitted_model.pkl", "wb"))
         np.save("model/fake/X_train.npy", X_train)
         np.save("model/fake/X_test.npy", X_test)
         np.save("model/fake/X_val.npy", X_val)
