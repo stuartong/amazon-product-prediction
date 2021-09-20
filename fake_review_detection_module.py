@@ -95,3 +95,42 @@ def wordvec_features_creator(df):
     #creating wordvec columns to the df
     df["word2vec_features"]= df["vectorized_reviews"].apply(lambda text: generate_dense_features(tokenized_text= text, model= word2vec_model, use_mean= True))
     return df  
+
+def fake_tfidf_vectorizer_arr(X_train, X_val, X_test, min_df, max_df):
+    from sklearn.feature_extraction.text import TfidfVectorizer
+        
+    train_corpus= [" ".join(lst) for lst in X_train]
+    val_corpus= [" ".join(lst) for lst in X_val]
+    test_corpus= [" ".join(lst) for lst in X_test]
+    vectorizer= TfidfVectorizer(max_df=max_df, min_df=min_df)
+    #create vecs from trained vectorizer on train coprus
+    vectorizer.fit(train_corpus)
+    train_vec= vectorizer.transform(train_corpus)
+    val_vec= vectorizer.transform(val_corpus)
+    test_vec= vectorizer.transform(test_corpus)
+    train_arr= [np.array(i) for i in zip(*train_vec.toarray().T)]
+    val_arr= [np.array(i) for i in zip(*val_vec.toarray().T)]
+    test_arr= [np.array(i) for i in zip(*test_vec.toarray().T)]
+    return train_arr, val_arr, test_arr , vectorizer
+
+def fake_run_pca_arr(X_train,X_val,X_test, n_components):
+    from sklearn.decomposition import PCA
+    from sklearn.preprocessing import StandardScaler
+        
+    #initializing StandardScaler
+    scaler= StandardScaler()
+    #scaling the array
+    X_train_arr = scaler.fit_transform(X_train)
+    X_val_arr = scaler.transform(X_val)
+    X_test_arr = scaler.transform(X_test)
+    #initializing pca and generating components for X_train
+    pca_= PCA(n_components= int(n_components))
+    pca_.fit(X_train_arr)
+    pc_train= pca_.transform(X_train_arr)
+    explained_variance_ratio= pca_.explained_variance_ratio_
+    #apply dimensionality reduction to X_test & X_val
+    pc_val = pca_.transform(X_val_arr)
+    pc_test = pca_.transform(X_test_arr)
+    print("total explained variance from {} PCAs = ".format(n_components), np.sum(explained_variance_ratio))
+    
+    return pc_train, pc_val, pc_test, pca_

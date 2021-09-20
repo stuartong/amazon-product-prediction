@@ -67,12 +67,12 @@ stages:
     outs:
     - data/fake/training/labeled_processed.pkl
   fd_supervised_model:
-    cmd: python .\fake_detection_model.py data/fake/training/
+    cmd: python .\fake_detection_model.py data\fake\training\
     deps:
-    - data/fake/training/labeled_processed.pkl
+    - data\fake\training\
     - fake_detection_model.py
     outs:
-    - model/fake/
+    - model\fake\
   fd_evaluate_supervised:
     cmd: python .\fd_evaluate_supervised.py fd_supervised_report.json
     deps:
