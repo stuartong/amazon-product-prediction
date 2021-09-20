@@ -78,8 +78,8 @@ stages:
       size: 757044146
       nfiles: 1
     - path: model_supervised.py
-      md5: b5b62f275323684bc5c4f012697cfebd
-      size: 10595
+      md5: fdc277fd1e0af829b81f45004794fbb5
+      size: 9989
     params:
       params.yaml:
         supervised_model.gscv: true
@@ -140,6 +140,7 @@ stages:
           - 10000.0
           penalty:
           - l2
+          - l1
           random_state:
           - 42
           solver:
@@ -154,7 +155,7 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model/product_success/
-      md5: b32146bd072484f8478c23dee20d1927.dir
+      md5: d05b9f40d338a5515a3df995d3a014e3.dir
       size: 13548992
       nfiles: 7
   evaluate_supervised:
@@ -162,15 +163,15 @@ stages:
     deps:
     - path: evaluate_supervised.py
       md5: 6d0970926d9bc0977e2096dee37fdb93
-      size: 7098
+      size: 6924
     - path: model/product_success/
-      md5: b32146bd072484f8478c23dee20d1927.dir
+      md5: d05b9f40d338a5515a3df995d3a014e3.dir
       size: 13548992
       nfiles: 7
     outs:
     - path: prdct_supervised_report.json
-      md5: 7594ded2fa3217b9410cff70aebcd456
-      size: 3222
+      md5: 157c34d325dbbfd523d4f335ce192b38
+      size: 3225
   prepare_fake_labeled_model:
     cmd: python load_prepare_fake_labeled_data.py
     deps:
@@ -179,7 +180,7 @@ stages:
       size: 8404357
     - path: load_prepare_fake_labeled_data.py
       md5: 27bf5d2e1665a1c3ae06a55f960c3d2d
-      size: 1759
+      size: 1718
     outs:
     - path: data/fake/training/labeled_processed.pkl
       md5: 33dd0224d3e11a8aa75c12b1310f1b4f
@@ -188,28 +189,28 @@ stages:
     cmd: python fake_detection_model.py data/fake/training/
     deps:
     - path: data/fake/training/
-      md5: eefbc6951b4e00dfaf8936f6688967bb.dir
-      size: 83484335
-      nfiles: 1
+      md5: 8d6cd04ac89280102bb06075d74b002f.dir
+      size: 83484358
+      nfiles: 2
     - path: fake_detection_model.py
       md5: c541d3b675d98f28e25c965fa0fe7cfe
-      size: 10137
+      size: 9908
     outs:
     - path: model/fake/
-      md5: 902a6a2d00455cdeb40cf4cb06f797f1.dir
-      size: 13043774
+      md5: 4148bee329ea726ebb49c32f5655f5cd.dir
+      size: 13107351
       nfiles: 9
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
     deps:
     - path: fd_evaluate_supervised.py
       md5: 7693a8a803c32a7b3345cd6cb3f15934
-      size: 6973
+      size: 6800
     - path: model/fake/
-      md5: 902a6a2d00455cdeb40cf4cb06f797f1.dir
-      size: 13043774
+      md5: 4148bee329ea726ebb49c32f5655f5cd.dir
+      size: 13107351
       nfiles: 9
     outs:
     - path: fd_supervised_report.json
-      md5: 88b420039a6fff4662f2e60f7a1e32cb
-      size: 3293
+      md5: 8f15aa94bc509b84cc4144c79610b668
+      size: 3200
