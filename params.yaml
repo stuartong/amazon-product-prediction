@@ -9,6 +9,7 @@ preprocess_products:
     
 success_metrics:
     cutoff: 2
+    fake_free_data: True #to use the raw dataset or the dataset of fake_free_dataset from the supervised model
 
 random_state: 42
 # base_model/base_iter is only for AdaBoostClassifier

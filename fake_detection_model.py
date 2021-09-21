@@ -216,7 +216,7 @@ if __name__ == "__main__":
     pickle.dump(clf, open("model/fake/model.pkl", "wb"))
     pickle.dump(tfidf_fitted_model, open("model/fake/tfidf_fitted_model.pkl", "wb"))
     pickle.dump(pca_fitted_model, open("model/fake/pca_fitted_model.pkl", "wb"))
-    pickle.dump(scaler, open("model/fake/pca_fitted_model.pkl", "wb"))
+    pickle.dump(scaler, open("model/fake/scaler_fitted_model.pkl", "wb"))
     np.save("model/fake/X_test.npy", X_test)
     np.save("model/fake/X_train.npy", X_train)
     np.save("model/fake/y_train.npy", y_train)

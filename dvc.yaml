@@ -22,11 +22,12 @@ stages:
     outs:
     - data/reviews
   success_metrics:
-    cmd: python create_success_metrics.py data/products data/reviews
+    cmd: python create_success_metrics.py  
     deps:
     - create_success_metrics.py
     - data/products
     - data/reviews
+    - data/fake/fake_free_data
     params:
     - success_metrics.cutoff
     outs:
@@ -48,7 +49,7 @@ stages:
     - supervised_model.split
     outs:
     - model/product_success/
-    
+
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
@@ -81,3 +82,11 @@ stages:
     metrics:
     - fd_supervised_report.json:
         cache: false
+  predicting_fake_reviews:
+    cmd: python fd_test_model.py
+    deps:
+    - fd_test_model.py
+    - data/prepared/
+    - model/fake
+    outs:
+    - data/fake/fake_free_data/

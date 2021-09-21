@@ -4,15 +4,16 @@ from create_success_metric_module import create_success_metric, check_score_rank
 import os
 from pathlib import Path
 
-def create_success_metrics(product_path, review_path):
+def create_success_metrics():
     import yaml
     with open("params.yaml", "r") as file:
         params= yaml.safe_load(file)
     cutoff= params["success_metrics"]["cutoff"]
-    product_path= Path(product_path)
-    review_path= Path(review_path)
+    fake_free_data= params["success_metrics"]["fake_free_data"]
+    product_path= Path("data/products/products.pkl")
+    review_path= Path("data/fake/fake_free_data/fake_free_reviews.pkl") if fake_free_data else Path("data/reviews/reviews.pkl")
     #importing product_df, review_df
-    product_df, review_df= [pd.read_pickle(file) for file in [product_path / "products.pkl",  review_path / "reviews.pkl"]]
+    product_df, review_df= [pd.read_pickle(file) for file in [product_path,  review_path / "reviews.pkl"]]
     product_df= create_success_metric(product_df, review_df, cutoff= cutoff)
     # fill NaN with 0 in df - i.e. no reviews
     product_df[['tot_stars','tot_reviews','avg_stars']] = product_df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)
@@ -20,13 +21,7 @@ def create_success_metrics(product_path, review_path):
     return product_df
 
 if __name__ == "__main__":
-    import argparse
-    parser= argparse.ArgumentParser()
-    parser.add_argument("products_path", help= "path to the target product data frame (str)")
-    parser.add_argument("reviews_path", help= "path to the target review data frame (str)")
-    # parser.add_argument("cutoff", help= "cuttoff mark of number of points to consider a product good or bad")
-    args= parser.parse_args()
-    product_df= create_success_metrics(args.products_path, args.reviews_path)
+    product_df= create_success_metrics()
 
     Path("data/metrics").mkdir(parents= True, exist_ok= True)
     product_df.to_pickle('data/metrics/products.pkl') 
