@@ -108,3 +108,9 @@ fd_supervised_model:
         C : 100
         gamma : 1
         kernel : 'rbf' 
+fd_test_stage:
+    tfidf_path: model/fake/tfidf_fitted_model.pkl
+    pca_fitted_path: model/fake/pca_fitted_model.pkl
+    scaler_fitted_path: model/fake/scaler_fitted_model.pkl
+    model_fitted: model/fake/model.pkl
+    category_name: appliances
