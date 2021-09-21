@@ -13,7 +13,7 @@ def create_success_metrics():
     product_path= Path("data/products/products.pkl")
     review_path= Path("data/fake/fake_free_data/fake_free_reviews.pkl") if fake_free_data else Path("data/reviews/reviews.pkl")
     #importing product_df, review_df
-    product_df, review_df= [pd.read_pickle(file) for file in [product_path,  review_path / "reviews.pkl"]]
+    product_df, review_df= [pd.read_pickle(file) for file in [product_path,  review_path ]]
     product_df= create_success_metric(product_df, review_df, cutoff= cutoff)
     # fill NaN with 0 in df - i.e. no reviews
     product_df[['tot_stars','tot_reviews','avg_stars']] = product_df[['tot_stars','tot_reviews','avg_stars']].fillna(value=0)

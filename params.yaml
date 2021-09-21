@@ -114,4 +114,4 @@ fd_test_stage:
     pca_fitted_path: model/fake/pca_fitted_model.pkl
     scaler_fitted_path: model/fake/scaler_fitted_model.pkl
     model_fitted: model/fake/model.pkl
-    category_name: appliances
+    
