@@ -62,23 +62,25 @@ def generate_dense_features(tokenized_text, model= None, use_mean= True):
         
         
         for item in tokenized_text:
-            words= [word for word in item if item in model.index_to_key]
-        if len(words) > 0:
-            if use_mean == True:
-                try:
-                    #get the mean of the word2vec of every word in tokenized_text
-                    return np.array(np.mean([model[word] for word in words] , axis= 0))
-                    
-                except:
-                    return np.zeros(model.vector_size)
+            if len(item) == 0:
+                return np.zeros(model.vector_size)
+            words= [word for word in item if model.index_to_key]
+            if len(words) > 0:
+                if use_mean == True:
+                    try:
+                        #get the mean of the word2vec of every word in tokenized_text
+                        return np.array(np.mean([model[word] for word in words] , axis= 0))
+                        
+                    except:
+                        return np.zeros(model.vector_size)
+                else:
+                    try:
+                        #just append the full word2vec
+                        return np.array([model[word] for word in words])
+                    except:
+                        return np.zeros(model.vector_size)
             else:
-                try:
-                    #just append the full word2vec
-                    return np.array([model[word] for word in words])
-                except:
-                    return np.zeros(model.vector_size)
-        else:
-            #just append zeros with the same vector dimension
-            return np.zeros(model.vector_size)
-    
+                #just append zeros with the same vector dimension
+                return np.zeros(model.vector_size)
+        
             

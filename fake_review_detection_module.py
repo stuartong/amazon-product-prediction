@@ -62,18 +62,18 @@ def stratified_split(file_path):
     return X_train, X_test, y_train, y_test
 
 def handpicked_features_creator(df):
-    from sklearn.preprocessing import OneHotEncoder
-    # Onehot encoding the category column to return an encoed_cat column
-    enc= OneHotEncoder(handle_unknown= "error", sparse= False)
-    cat= df["category"].to_numpy().reshape(-1,1)
-    enc.fit(cat)
-    enc_cat= enc.transform(cat) 
-    df["encoded_cat"]= [np.array([vec for vec in enc_cat[i,:] ]) for i in range(len(enc_cat))]
+    # from sklearn.preprocessing import OneHotEncoder
+    # # Onehot encoding the category column to return an encoed_cat column
+    # enc= OneHotEncoder(handle_unknown= "error", sparse= False)
+    # cat= df["category"].to_numpy().reshape(-1,1)
+    # enc.fit(cat)
+    # enc_cat= enc.transform(cat) 
+    # df["encoded_cat"]= [np.array([vec for vec in enc_cat[i,:] ]) for i in range(len(enc_cat))]
     #getting the length of every review
     df["len_review"]= df["review"].map(len)
-    df["group1"]= [np.array([float(rating), float(verified), float(len_review)])\
+    df["handpicked_features"]= [np.array([float(rating), float(verified), float(len_review)])\
         for rating, verified, len_review in zip(df["rating"], df["verified"], df["len_review"])]
-    df["handpicked_features"]= [np.hstack((df["encoded_cat"][i],df["group1"][i])) for i in range(len(df))]
+    # df["handpicked_features"]= [np.hstack((df["encoded_cat"][i],df["group1"][i])) for i in range(len(df))]
     return df
 
 def wordvec_features_creator(df):

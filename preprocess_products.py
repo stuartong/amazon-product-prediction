@@ -44,7 +44,7 @@ def preprocess_products(product_df_path):
             df= feature_creator.get(model_type)(df)
     #concatenating arrays from every selected feature into one
     print("creating a concatenated features column...")
-    df["features"]= [(np.array([vec for lst in df[active_features].values[i].flatten("C") for vec in lst])) for i in tqdm(range(len(df))) ]
+    df["features"]= df[active_features].apply(lambda row: [ i for lst in np.array(row) for i in lst], axis=1)
     print("features column created!")
     
 
