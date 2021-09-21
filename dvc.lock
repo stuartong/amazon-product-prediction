@@ -79,72 +79,30 @@ stages:
       nfiles: 1
     - path: model_supervised.py
       md5: fdc277fd1e0af829b81f45004794fbb5
-      size: 10221
+      size: 9989
     params:
       params.yaml:
         supervised_model.gscv: true
-        supervised_model.model_type: LogisticRegression
+        supervised_model.model_type: GradientBoostingClassifier
         supervised_model.n_jobs: -1
         supervised_model.oversample: false
         supervised_model.param_dict:
-          C:
-          - 0.0001
-          - 0.000145634848
-          - 0.000212095089
-          - 0.00030888436
-          - 0.000449843267
-          - 0.000655128557
-          - 0.000954095476
-          - 0.00138949549
-          - 0.00202358965
-          - 0.0029470517
-          - 0.00429193426
-          - 0.00625055193
-          - 0.00910298178
-          - 0.0132571137
-          - 0.0193069773
-          - 0.028117687
-          - 0.0409491506
-          - 0.0596362332
-          - 0.0868511374
-          - 0.126485522
-          - 0.184206997
-          - 0.26826958
-          - 0.390693994
-          - 0.568986603
-          - 0.828642773
-          - 1.20679264
-          - 1.75751062
-          - 2.55954792
-          - 3.72759372
-          - 5.42867544
-          - 7.90604321
-          - 11.513954
-          - 16.7683294
-          - 24.4205309
-          - 35.5648031
-          - 51.7947468
-          - 75.4312006
-          - 109.854114
-          - 159.985872
-          - 232.995181
-          - 339.322177
-          - 494.171336
-          - 719.685673
-          - 1048.11313
-          - 1526.41797
-          - 2222.99648
-          - 3237.45754
-          - 4714.86636
-          - 6866.48845
-          - 10000.0
-          penalty:
-          - l2
-          - l1
-          random_state:
-          - 42
-          solver:
-          - saga
+          learning_rate:
+          - 0.01
+          - 0.05
+          - 0.08
+          subsample:
+          - 0.1
+          - 0.5
+          - 1
+          n_estimators:
+          - 500
+          - 1000
+          - 1500
+          max_depth:
+          - 4
+          - 8
+          - 12
         supervised_model.params:
           random_state: 42
           C: 100
@@ -155,23 +113,23 @@ stages:
         supervised_model.split: 0.8
     outs:
     - path: model/product_success/
-      md5: a5936a15844a95b0e81bcc094fca1e8f.dir
-      size: 13427994
+      md5: dd42f890501fc514acbdc435b13a686f.dir
+      size: 36733334
       nfiles: 7
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
     - path: evaluate_supervised.py
       md5: 6d0970926d9bc0977e2096dee37fdb93
-      size: 7098
+      size: 6924
     - path: model/product_success/
-      md5: a5936a15844a95b0e81bcc094fca1e8f.dir
-      size: 13427994
+      md5: dd42f890501fc514acbdc435b13a686f.dir
+      size: 36733334
       nfiles: 7
     outs:
     - path: prdct_supervised_report.json
-      md5: 990777f33137c77cd723722a1def0832
-      size: 3319
+      md5: 8503b049f54bb4bd9d4b564eeec1318b
+      size: 3228
   prepare_fake_labeled_model:
     cmd: python load_prepare_fake_labeled_data.py
     deps:
@@ -189,28 +147,28 @@ stages:
     cmd: python fake_detection_model.py data/fake/training/
     deps:
     - path: data/fake/training/
-      md5: eefbc6951b4e00dfaf8936f6688967bb.dir
-      size: 83484335
-      nfiles: 1
+      md5: 8d6cd04ac89280102bb06075d74b002f.dir
+      size: 83484358
+      nfiles: 2
     - path: fake_detection_model.py
       md5: c541d3b675d98f28e25c965fa0fe7cfe
-      size: 10137
+      size: 9908
     outs:
     - path: model/fake/
-      md5: 902a6a2d00455cdeb40cf4cb06f797f1.dir
-      size: 13043774
+      md5: 4148bee329ea726ebb49c32f5655f5cd.dir
+      size: 13107351
       nfiles: 9
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
     deps:
     - path: fd_evaluate_supervised.py
       md5: 7693a8a803c32a7b3345cd6cb3f15934
-      size: 6973
+      size: 6800
     - path: model/fake/
-      md5: 902a6a2d00455cdeb40cf4cb06f797f1.dir
-      size: 13043774
+      md5: 4148bee329ea726ebb49c32f5655f5cd.dir
+      size: 13107351
       nfiles: 9
     outs:
     - path: fd_supervised_report.json
-      md5: 88b420039a6fff4662f2e60f7a1e32cb
-      size: 3293
+      md5: 8f15aa94bc509b84cc4144c79610b668
+      size: 3200
