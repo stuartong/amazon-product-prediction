@@ -102,11 +102,16 @@ def detect_fake_reviews():
     print("filtering the fake reviews")
     pred= pd.Series(predictions)
     true_df= df.filter(items= pred[pred==1].index, axis=0)
-    return true_df, pred
+    return true_df, predictions
 
 if __name__ == "__main__":
 
     true_df, pred=  detect_fake_reviews()
     Path("data/fake/fake_free_data").mkdir(parents= True, exist_ok=True)
-    true_df.to_pickle("data/fake/fake_free_data/fake_free_reviews.pkl")
-    pred.to_csv("data/fake/fake_free_data/fake_reviews_predictions.npy", index= False)
+    print('Pickling fake_free_reviews')
+    # pickle.dump(true_df, open("data/fake/fake_free_data/fake_free_reviews.pkl",'wb'))
+    np.save('data/fake/fake_free_data/fake_free_reviews.npy', pred)
+    print('done pickling fake_free_reviews')
+    # true_df.to_pickle("data/fake/fake_free_data/fake_free_reviews.pkl")
+    np.save('data/fake/fake_free_data/fake_reviews_predictions.npy',pred)
+    # pred.to_csv("data/fake/fake_free_data/fake_reviews_predictions.npy", index= False)

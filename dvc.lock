@@ -56,11 +56,11 @@ stages:
     cmd: python create_success_metrics.py
     deps:
     - path: create_success_metrics.py
-      md5: 8bc0fcec5f9cf698362036797bf0c324
-      size: 1227
+      md5: c37424c125e8f06833a1c8c2d34ce07c
+      size: 1623
     - path: data/fake/fake_free_data
-      md5: 0adb4e1c455751ce7c63e50468d9cd5d.dir
-      size: 7917793785
+      md5: 0b8f0e45499f92c0b02492a2fa109968.dir
+      size: 9644688
       nfiles: 2
     - path: data/products
       md5: 1b578030d5f2be4ff6ce39a5676d88f5.dir
@@ -76,47 +76,51 @@ stages:
         success_metrics.fake_free_data: true
     outs:
     - path: data/metrics
-      md5: 4069a4e935c6aa45a632ecbda61d6a4f.dir
+      md5: 63ebc00531851ac5ae0da5a13b03c295.dir
       size: 877417162
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
-      md5: 4069a4e935c6aa45a632ecbda61d6a4f.dir
+      md5: 63ebc00531851ac5ae0da5a13b03c295.dir
       size: 877417162
       nfiles: 1
     - path: model_supervised.py
       md5: fdc277fd1e0af829b81f45004794fbb5
-      size: 10221
+      size: 9989
     params:
       params.yaml:
         supervised_model.ada_base_iter:
-        - 2
+        - 3
         - 8
-        - 10
+        - 12
         supervised_model.ada_base_model: DecisionTreeClassifier
         supervised_model.ada_max_depth: 3
         supervised_model.best_k: 1000
         supervised_model.cluster_features: true
-        supervised_model.gscv: true
-        supervised_model.model_type: AdaBoostClassifier
+        supervised_model.gscv: false
+        supervised_model.model_type: LogisticRegression
         supervised_model.n_jobs: -1
         supervised_model.oversample: false
         supervised_model.param_dict:
-          learning_rate:
-          - 0.005
-          - 1
-          n_estimators:
-          - 100
-          - 3000
+          C:
+          - 15
+          - 25
+          - 35
+          gamma:
+          - 0.001
+          - 0.01
+          - 0.1
+          kernel:
+          - rbf
           random_state:
           - 42
         supervised_model.params:
           random_state: 42
-          C: 100
-          gamma: 1
-          kernel: rbf
+          C: 0.000954095476
+          penalty: l2
+          solver: saga
         supervised_model.pca: true
         supervised_model.pca_n_components: 55
         supervised_model.return_train_score: false
@@ -126,18 +130,18 @@ stages:
         tfidf_product_success.min_df: 0.05
     outs:
     - path: model/product_success/
-      md5: 1e74d4421f41fa3ca00eb99bd07dacac.dir
-      size: 23091676
+      md5: 2e31825849b3f0235dfe85e0287a993f.dir
+      size: 13548992
       nfiles: 7
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
     deps:
     - path: evaluate_supervised.py
       md5: 6d0970926d9bc0977e2096dee37fdb93
-      size: 7098
+      size: 6924
     - path: model/product_success/
-      md5: 1e74d4421f41fa3ca00eb99bd07dacac.dir
-      size: 23091676
+      md5: 2e31825849b3f0235dfe85e0287a993f.dir
+      size: 13548992
       nfiles: 7
     params:
       params.yaml:
@@ -151,8 +155,8 @@ stages:
         evaluate_supervised.y_val: model/product_success/y_val.npy
     outs:
     - path: prdct_supervised_report.json
-      md5: e21948d352a09fde20b9031cb6cbb297
-      size: 3334
+      md5: 7d24582bd961b9b00288cbe9a6b28a02
+      size: 3254
   prepare_fake_labeled_model:
     cmd: python load_prepare_fake_labeled_data.py
     deps:
@@ -177,12 +181,12 @@ stages:
     cmd: python fake_detection_model.py data/fake/training/
     deps:
     - path: data/fake/training/
-      md5: 466b9e866bd31e9406c7890d34ea576a.dir
-      size: 70775394
-      nfiles: 1
+      md5: 2a47d685f308895398780699301dec48.dir
+      size: 70775417
+      nfiles: 2
     - path: fake_detection_model.py
       md5: bef48a2eb7acad7fd329e8fb5b985468
-      size: 10140
+      size: 9911
     params:
       params.yaml:
         fd_supervised_model.ada_base_iter:
@@ -269,26 +273,26 @@ stages:
         tfidf_fake_review.min_df: 0.05
     outs:
     - path: model/fake/
-      md5: 622ffeeba69d9c2a24cc3009047d7469.dir
-      size: 13359192
+      md5: 9522e8f8b2749e77ce79cd2dbeb10b71.dir
+      size: 13422769
       nfiles: 10
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
     deps:
     - path: fd_evaluate_supervised.py
       md5: 7693a8a803c32a7b3345cd6cb3f15934
-      size: 6973
+      size: 6800
     - path: model/fake/
-      md5: 622ffeeba69d9c2a24cc3009047d7469.dir
-      size: 13359192
+      md5: 9522e8f8b2749e77ce79cd2dbeb10b71.dir
+      size: 13422769
       nfiles: 10
     params:
       params.yaml:
         fd_evaluate_supervised.f1_avg: weighted
     outs:
     - path: fd_supervised_report.json
-      md5: 65661f1329d8934b2f023d5e11ffa125
-      size: 3294
+      md5: 85c63da9be7a21ef286a13cf76d2f05b
+      size: 3187
   predicting_fake_reviews:
     cmd: python fd_test_model.py
     deps:
@@ -297,11 +301,11 @@ stages:
       size: 834301147
       nfiles: 2
     - path: fd_test_model.py
-      md5: 8c00c71620291366c4d1eac05caaf502
-      size: 5536
+      md5: 1c2f8bb8360b501cc99177bc605493d4
+      size: 5751
     - path: model/fake
-      md5: 622ffeeba69d9c2a24cc3009047d7469.dir
-      size: 13359192
+      md5: 9522e8f8b2749e77ce79cd2dbeb10b71.dir
+      size: 13422769
       nfiles: 10
     params:
       params.yaml:
@@ -312,6 +316,6 @@ stages:
           model_fitted: model/fake/model.pkl
     outs:
     - path: data/fake/fake_free_data/
-      md5: 0adb4e1c455751ce7c63e50468d9cd5d.dir
-      size: 7917793785
+      md5: 0b8f0e45499f92c0b02492a2fa109968.dir
+      size: 9644688
       nfiles: 2
