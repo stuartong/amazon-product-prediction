@@ -15,7 +15,7 @@ random_state: 42
 # base_model/base_iter is only for AdaBoostClassifier
 
 supervised_model:
-    model_type: GradientBoostingClassifier
+    model_type: AdaBoostClassifier
     scale: True
     oversample: False
     gscv: True
@@ -25,14 +25,13 @@ supervised_model:
     cluster_features : True
     best_k : 1000           # put 'search' if you want to iterate takes awhile otherwise put in best_k for faster run
     ada_base_model: DecisionTreeClassifier
-    ada_base_iter: [2,8,10]
+    ada_base_iter: [3,8,12]
     param_dict: {
-        learning_rate : [0.01,0.05,0.08],
-        subsample : [0.1,0.5,1],
-        n_estimators : [500,1000,1500],
-        max_depth : [4,8,12]
-        }
-    ada_max_depth : 3 #for non-grid search AdaBoost base model
+        learning_rate : [0.005,1],
+        n_estimators : [100,3000],
+        random_state : [42]
+    } 
+    ada_max_depth : 3   #for non-grid search AdaBoost base model
     n_jobs: -1
     return_train_score: False
     split: 0.8
