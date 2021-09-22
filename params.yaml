@@ -9,27 +9,26 @@ preprocess_products:
     
 success_metrics:
     cutoff: 2
-    fake_free_data: True #to use the raw dataset or the dataset of fake_free_dataset from the supervised model
+    fake_free_data: False #to use the raw dataset or the dataset of fake_free_dataset from the supervised model
 
 random_state: 42
 # base_model/base_iter is only for AdaBoostClassifier
 
 supervised_model:
-    model_type: LogisticRegression
+    model_type: AdaBoostClassifier
     scale: True
     oversample: False
-    gscv: False
+    gscv: True
     tfidf: True
     pca: True
     pca_n_components : 55
     cluster_features : True
     best_k : 1000           # put 'search' if you want to iterate takes awhile otherwise put in best_k for faster run
     ada_base_model: DecisionTreeClassifier
-    ada_base_iter: [3,8,12]
+    ada_base_iter: [1,3,5]
     param_dict: {
-        C : [15,25,35],
-        gamma : [0.001,0.01,0.1],
-        kernel : ['rbf'],
+        learning_rate : [0.001,0.005,0.01],
+        n_estimators : [1000,2000,3000],
         random_state : [42]
     } 
     ada_max_depth : 3   #for non-grid search AdaBoost base model

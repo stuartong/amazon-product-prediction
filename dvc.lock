@@ -73,17 +73,17 @@ stages:
     params:
       params.yaml:
         success_metrics.cutoff: 2
-        success_metrics.fake_free_data: true
+        success_metrics.fake_free_data: false
     outs:
     - path: data/metrics
-      md5: 63ebc00531851ac5ae0da5a13b03c295.dir
+      md5: 1914681ee5f4661bf767999e031e4453.dir
       size: 877417162
       nfiles: 1
   supervised_model:
     cmd: python model_supervised.py data/metrics
     deps:
     - path: data/metrics
-      md5: 63ebc00531851ac5ae0da5a13b03c295.dir
+      md5: 1914681ee5f4661bf767999e031e4453.dir
       size: 877417162
       nfiles: 1
     - path: model_supervised.py
@@ -92,28 +92,26 @@ stages:
     params:
       params.yaml:
         supervised_model.ada_base_iter:
+        - 1
         - 3
-        - 8
-        - 12
+        - 5
         supervised_model.ada_base_model: DecisionTreeClassifier
         supervised_model.ada_max_depth: 3
         supervised_model.best_k: 1000
         supervised_model.cluster_features: true
-        supervised_model.gscv: false
-        supervised_model.model_type: LogisticRegression
+        supervised_model.gscv: true
+        supervised_model.model_type: AdaBoostClassifier
         supervised_model.n_jobs: -1
         supervised_model.oversample: false
         supervised_model.param_dict:
-          C:
-          - 15
-          - 25
-          - 35
-          gamma:
+          learning_rate:
           - 0.001
+          - 0.005
           - 0.01
-          - 0.1
-          kernel:
-          - rbf
+          n_estimators:
+          - 1000
+          - 2000
+          - 3000
           random_state:
           - 42
         supervised_model.params:
@@ -130,8 +128,8 @@ stages:
         tfidf_product_success.min_df: 0.05
     outs:
     - path: model/product_success/
-      md5: 2e31825849b3f0235dfe85e0287a993f.dir
-      size: 13548992
+      md5: 0e2386c3d316773131ee187f47093954.dir
+      size: 18289302
       nfiles: 7
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
@@ -140,8 +138,8 @@ stages:
       md5: 6d0970926d9bc0977e2096dee37fdb93
       size: 6924
     - path: model/product_success/
-      md5: 2e31825849b3f0235dfe85e0287a993f.dir
-      size: 13548992
+      md5: 0e2386c3d316773131ee187f47093954.dir
+      size: 18289302
       nfiles: 7
     params:
       params.yaml:
@@ -155,8 +153,8 @@ stages:
         evaluate_supervised.y_val: model/product_success/y_val.npy
     outs:
     - path: prdct_supervised_report.json
-      md5: 7d24582bd961b9b00288cbe9a6b28a02
-      size: 3254
+      md5: 02651a3ac3ec1cf868194abd073b6b3e
+      size: 3240
   prepare_fake_labeled_model:
     cmd: python load_prepare_fake_labeled_data.py
     deps:
