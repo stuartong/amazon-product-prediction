@@ -114,4 +114,19 @@ fd_test_stage:
     pca_fitted_path: model/fake/pca_fitted_model.pkl
     scaler_fitted_path: model/fake/scaler_fitted_model.pkl
     model_fitted: model/fake/model.pkl
+clustering_model:
+    data_source: fake_free  #options: raw, preprocessed, fake_free
+    model_type: KMeans #options: KMeans, MiniBatchKMeans, DBSCAN
+    params: None 
+    raw_data_params:
+        tfidf_params:
+            min_df: 0.05,
+            max_df: 0.7, 
+            stop_words: "english"
+            ngram_range: (1,2)
+        scale: True
+        reducer:
+            name: PCA  #options: LSA, NMF (PCA is default)
+            n_components: 50
+   
     
