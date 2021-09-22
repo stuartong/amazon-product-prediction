@@ -137,3 +137,12 @@ stages:
     - fd_test_stage
     outs:
     - data/fake/fake_free_data/
+  clustering_reviews:
+    cmd: python clustering_reviews.py
+    deps: 
+    - clustering_reviews.py
+    - data/prepared/reviews.pkl
+    - data/reviews/reviews.pkl
+    - data/fake/fake_free_data/fake_free_reviews.pkl
+    params:
+    - clustering_model 

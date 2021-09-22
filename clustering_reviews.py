@@ -25,7 +25,7 @@ warnings.filterwarnings('ignore')
 from preprocess_data_module import clean_text
 
 
-def run_clustering(df_path):
+def run_clustering():
     '''
     Function to run clustering models on data
     
@@ -60,70 +60,78 @@ def run_clustering(df_path):
     with open("params.yaml", "r") as file:
         param_file= yaml.safe_load(file)
         
-    model_type= model_dict[param_file['clustering_model']['model_type']]
+    data_source= param_file["clustering_model"]["data_source"]
+    model= model_dict[param_file['clustering_model']['model_type']]
     params = param_file['clustering_model']['params']
-    scale = param_file['clustering_model_model']['scale']
+    scale = param_file['clustering_model_model']["raw_data_params"]['scale']
+    reducer= param_file["clustering_model"]["raw_data_params"]["reducer"]["name"]
+    n_components= param_file["clustering_model"]["raw_data_params"]["reducer"]["n_components"]
     
-    def clustering_reviews():
-    #LOAD DATA
-    # (Confirm with Moutaz)
-    # def load_df(df):
-    #     load_data.py
-
+    data_source_dict= dict(
+        raw= "data/prepared/reviews.pkl",
+        preprocessed= "data/reviews/reviews.pkl",
+        fake_free= "data/fake/fake_free_data/fake_free_reviews.pkl")
+  
     #IMPORT DATA
-    df= pd.read_pickle('data/reviews.pkl')
+    df= pd.read_pickle(data_source_dict.get(data_source))
     
-    # #IMPORT DATA
-    # df= pd.read_pickle(df_path+ "/reviews.pkl") 
-    
-    features = ['reviewText', 'summary']
-    for col in [features]:
-        df[col]= df[col].replace(np.nan, " ")
-    #consolidating review and summary review text  
-    df['features']= (df['reviewText'].str.split() + df['summary'].str.split()).map(pd.unique)
-    print("cleaning...")
-    df['vectorized_reviews']= df['features'].map(clean_text)
-    print("cleaning complete!")
-    
-    #TF-IDF STAGE
-    # (Confirm with Moutaz, tweaked from fd_test_model.py)
-    # (Sheila does not need options for word2vec, as Sheila will only uses tf-idf in clustering)
-    print("starting tfidf transformation...")
-    corpus= [" ".join(lst) for lst in df["vectorized_reviews"]]
-    tfidf_vectorizer = TfidfVectorizer()  # (Sheila needs min_df, max_df, and possibly max_features, stopwords, and ngram_range)
-    tfidf= tfidf_vectorizer.fit_transform(corpus)             
-    df["tfidf"]= [np.array(i) for i in zip(*tfidf_vec.toarray().T)]        
-    print("tfidf transformation done!")
-    
-    #SCALE STAGE
-    # if (params.get('clustering_model').get('scale')) & (params.get('clustering_model').get('pca') == False) :
-    #     scaler_fitted_model= pickle.load(open(Path(params.get("fd_test_stage").get("scaler_fitted_path")), "rb"))
-    #     test_array= scaler_fitted_model.transform(test_arr)
+
+    if data_source_dict.get(data_source).key() == "raw":
+        features = ['reviewText', 'summary']
+        for col in [features]:
+            df[col]= df[col].replace(np.nan, " ")
+        #consolidating review and summary review text  
+        df['features']= (df['reviewText'].str.split() + df['summary'].str.split()).map(pd.unique)
+        print("cleaning...")
+        df['vectorized_reviews']= df['features'].map(clean_text)
+        print("cleaning complete!")
         
+        #TF-IDF STAGE
+        # (Confirm with Moutaz, tweaked from fd_test_model.py)
+        # (Sheila does not need options for word2vec, as Sheila will only uses tf-idf in clustering)
+        print("starting tfidf transformation...")
+        corpus= [" ".join(lst) for lst in df["vectorized_reviews"]]
+        tfidf_vectorizer = TfidfVectorizer(tfidf_params)  # (Sheila needs min_df, max_df, and possibly max_features, stopwords, and ngram_range)
+        tfidf_vec= tfidf_vectorizer.fit_transform(corpus)             
+        df["tfidf"]= [np.array(i) for i in zip(*tfidf_vec.toarray().T)]        
+        print("tfidf transformation done!")
+        X= np.stack(df["tfidf"].to_numpy(), axis=0)
+        #SCALE
+        if scale==True:
+            ss = StandardScaler()
+            X = ss.fit_transform(X)
         
-    def clustering(X, model, reducer, scale=True):
-    
-    #SCALE
-    if scale==True:
-        ss = StandardScaler()
-        X = ss.fit_transform(X)
-    
-    #REDUCER
-    #reducer (n_components, random_state=42)
-    if reducer=='PCA':
-        n_components=3
-        reducer = PCA(n_components=n, random_state=42)
-        reduced_features = reducer.fit_transform(X)
-    if reducer=='LSA':
-        n_components=3
-        reducer=TruncatedSVD(n_components, random_state=42)
-        reduced_features = reducer.fit_transform(X)
-#     else:
-#         n_components=3
-#         reducer = NMF(n_components, random_state=42)
-#         reduced_features = reducer.fit_transform(X)
+        #REDUCER
+        #reducer (n_components, random_state=42)
+        if reducer=='NMF':
+            n_components=3
+            reducer = NMF(n_components, random_state=42)
+            reduced_features = reducer.fit_transform(X)
+            
+        if reducer=='LSA':
+            n_components=3
+            reducer=TruncatedSVD(n_components, random_state=42)
+            reduced_features = reducer.fit_transform(X)
+        else:
+            n_components=3
+            reducer = PCA(n_components=n_components, random_state=42)
+            reduced_features = reducer.fit_transform(X)
+
     
     #MODEL
+    #FINDING BEST K
+    # inertia = [0,0]
+
+    # for k in range(2, 10):
+    #     km = KMeans(n_clusters=k, random_state=42)
+    #     km.fit(lsa_tfidf_data_scaled)
+    #     inertia.append(km.inertia_)
+
+    # best_k = 
+
+
+
+    
     #only DBSCAN has different params
     if model=='KMeans':
         k=6
@@ -137,8 +145,8 @@ def run_clustering(df_path):
         eps=0.02
         min_samples=3  #rule of thumb for min_samples: 2*len(cluster_df.columns)
         model = DBSCAN(metric='cosine', eps=eps, min_samples=min_samples).fit(X)
-        y_pred = db.fit_predict(X)
-        labels = db.labels_
+        y_pred = model.fit_predict(X)
+        labels = model.labels_
         n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
         n_noise_ = list(labels).count(-1)
 
@@ -172,3 +180,4 @@ def run_clustering(df_path):
     print('Silhouette Score: %.4f' % score_silhouette)
     print('Calinski Harabasz Score: %.4f' % score_calinski)
     print('Davies Bouldin Score: %.4f' % score_david)
+    tfidf_params= param_file["clustering_model"]["raw_data_params"]["tfidf_params"]
