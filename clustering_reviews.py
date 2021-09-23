@@ -69,11 +69,17 @@ def run_clustering():
     
     data_source_dict= dict(
         raw= "data/prepared/reviews.pkl",
-        preprocessed= "data/reviews/reviews.pkl",
-        fake_free= "data/fake/fake_free_data/fake_free_reviews.pkl")
+        preprocessed= "data/reviews/reviews.pkl"
+        )
   
     #IMPORT DATA
-    df= pd.read_pickle(data_source_dict.get(data_source))
+    if data_source_dict.get(data_source) not None:
+        df= pd.read_pickle(data_source_dict.get(data_source))
+    else:
+        preds= np.load("data/fake/fake_free_data/fake_free_reviews.npy")
+        df= pd.read_pickle("data/prepared/reviews.pkl")
+        df["preds"]= preds
+        df= df[df["preds"] > 0]
     
 
     if data_source_dict.get(data_source).key() == "raw":
