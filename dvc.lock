@@ -100,20 +100,23 @@ stages:
         supervised_model.best_k: 1000
         supervised_model.cluster_features: true
         supervised_model.gscv: true
-        supervised_model.model_type: AdaBoostClassifier
+        supervised_model.model_type: GradientBoostingClassifier
         supervised_model.n_jobs: -1
         supervised_model.oversample: false
         supervised_model.param_dict:
           learning_rate:
-          - 0.001
           - 0.005
           - 0.01
+          - 0.015
+          subsample:
+          - 0.5
+          - 0.8
           n_estimators:
-          - 1000
-          - 2000
-          - 3000
-          random_state:
-          - 42
+          - 1200
+          - 1300
+          - 1400
+          max_depth:
+          - 8
         supervised_model.params:
           random_state: 42
           C: 0.000954095476
@@ -128,8 +131,8 @@ stages:
         tfidf_product_success.min_df: 0.05
     outs:
     - path: model/product_success/
-      md5: 0e2386c3d316773131ee187f47093954.dir
-      size: 18289302
+      md5: 7d0c24f704a97fe943096df50405397f.dir
+      size: 46531401
       nfiles: 7
   evaluate_supervised:
     cmd: python evaluate_supervised.py prdct_supervised_report.json
@@ -138,8 +141,8 @@ stages:
       md5: 6d0970926d9bc0977e2096dee37fdb93
       size: 6924
     - path: model/product_success/
-      md5: 0e2386c3d316773131ee187f47093954.dir
-      size: 18289302
+      md5: 7d0c24f704a97fe943096df50405397f.dir
+      size: 46531401
       nfiles: 7
     params:
       params.yaml:
@@ -153,8 +156,8 @@ stages:
         evaluate_supervised.y_val: model/product_success/y_val.npy
     outs:
     - path: prdct_supervised_report.json
-      md5: 02651a3ac3ec1cf868194abd073b6b3e
-      size: 3240
+      md5: dfeebecd6620886db16f1bce85ff1ca4
+      size: 3241
   prepare_fake_labeled_model:
     cmd: python load_prepare_fake_labeled_data.py
     deps:
@@ -299,8 +302,8 @@ stages:
       size: 834301147
       nfiles: 2
     - path: fd_test_model.py
-      md5: 1c2f8bb8360b501cc99177bc605493d4
-      size: 5751
+      md5: 3908b289b15b750b66680aa8878c6330
+      size: 5721
     - path: model/fake
       md5: 9522e8f8b2749e77ce79cd2dbeb10b71.dir
       size: 13422769
@@ -317,3 +320,34 @@ stages:
       md5: 0b8f0e45499f92c0b02492a2fa109968.dir
       size: 9644688
       nfiles: 2
+  clustering_reviews:
+    cmd: python clustering_reviews.py
+    deps:
+    - path: clustering_reviews.py
+      md5: 2d112073792df83cb98a0db123c001b5
+      size: 6694
+    - path: data/fake/fake_free_data/fake_free_reviews.npy
+      md5: 3dcaa39c35643f6dba73e3b2b0d9e47d
+      size: 4822344
+    - path: data/prepared/reviews.pkl
+      md5: 463092a59a2edcaab5661372f71e06e9
+      size: 196417016
+    - path: data/reviews/reviews.pkl
+      md5: 141a6cfd714b0751690b16a731ca2ce6
+      size: 158450968
+    params:
+      params.yaml:
+        clustering_model:
+          data_source: fake_free
+          model_type: KMeans
+          params: None
+          raw_data_params:
+            tfidf_params:
+              min_df: 0.05,
+              max_df: 0.7,
+              stop_words: english
+              ngram_range: (1,2)
+            scale: true
+            reducer:
+              name: PCA
+              n_components: 50
