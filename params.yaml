@@ -27,10 +27,11 @@ supervised_model:
     ada_base_model: DecisionTreeClassifier
     ada_base_iter: [1,3,5]
     param_dict: {
-        learning_rate : [0.001,0.005,0.01],
-        n_estimators : [1000,2000,3000],
+        learning_rate : [0.005],
+        n_estimators : [600,800,1000,1200,1400],
         random_state : [42]
     } 
+
     ada_max_depth : 3   #for non-grid search AdaBoost base model
     n_jobs: -1
     return_train_score: False
