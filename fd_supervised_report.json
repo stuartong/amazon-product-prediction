@@ -9,19 +9,16 @@
     },
     "model_specs": {
         "model_type": [
-            "LogisticRegression"
+            "SVC"
         ],
         "params": {
             "scale": true,
             "oversample": false,
             "gscv": true,
             "n_jobs": -1,
-            "return_train_score": true,
             "split": 0.8,
             "random_state": 42,
-            "C": 100,
-            "gamma": 1,
-            "kernel": "rbf"
+            "C": 100
         }
     },
     "scores_report": {

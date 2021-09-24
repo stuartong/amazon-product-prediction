@@ -15,6 +15,10 @@ from preprocess_data_module import tfidf_vectorizer_arr
 from run_pca import run_pca_arr
 from pathlib import Path
 from run_kmean_features import run_kmean_arr
+import neptune.new as neptune
+from neptune.new.types import File 
+from decouple import config
+import neptune.new.integrations.sklearn as npt_utils
 
 def run_model(df_path):
     '''
@@ -63,6 +67,14 @@ def run_model(df_path):
     with open("params.yaml", "r") as file:
         param_file= yaml.safe_load(file)
         
+    #initializing neptune run
+    run = neptune.init(
+    project="Milestone2/MilestoneII",
+    api_token= config("NEPTUNE_API_KEY"),
+    name= "product success classifier",
+    tags= ["supervised model", "train model", "classifier", "product success"]
+)  
+        
     model_type= model_dict[param_file["supervised_model"]["model_type"]]
     ada_base_model = param_file["supervised_model"]['ada_base_model']
     ada_base_iter = param_file["supervised_model"]['ada_base_iter']
@@ -86,7 +98,25 @@ def run_model(df_path):
         param_dict["base_estimator"]= [model_dict[ada_base_model](max_depth= i) for i in ada_base_iter]
         params["base_estimator"]= model_dict[ada_base_model](max_depth=ada_max_depth)
 
-   
+    run["model_desc"]=dict( model= param_file["fd_supervised_model"]["model_type"],
+                           params= params,
+                           grid_search= gscv,
+                           param_dict= param_dict,
+                           n_jobs= n_jobs,
+                           )
+    run["params"]= dict(scale= scale,
+                        oversample= oversample,
+                        split= split,
+                        tfidf= tfidf,
+                        tfidf_maxdf= max_df,
+                        tfidf_mindf= min_df
+        )
+    if model_type == AdaBoostClassifier:
+        run["model_desc/Adaboost"]= dict(
+        BaseModel= ada_base_model,
+        BaseIter= ada_base_iter,
+        MaxDepth= ada_max_depth
+        )
     #import data
     df= pd.read_pickle(df_path+ "/products.pkl") 
     
@@ -208,11 +238,19 @@ def run_model(df_path):
         best_params = CV_clf.best_params_
         print(f'Best Score for CV: {best_score}')
         print(f'Best Parameters: {best_params}')
-        if return_train_score==True:
-            print(CV_clf.cv_results_)
-        else:
-            pass
 
+        run["CV_clf.results"]= CV_clf.cv_results_
+        run["CV_best_score"]= best_score
+        run["CV_best_params"]= best_params
+
+    #logging classification summary
+    run["cls_summary"]= npt_utils.create_classifier_summary(clf, X_train, X_test, y_train, y_test)
+    metrics_df= pd.DataFrame({col : val  for col, val in CV_clf.cv_results_.items() if "score" in col})
+    fig= px.line(data_frame= metrics_df, x= metrics_df.index, y= metrics_df.columns)
+    run["metrics_plot"].upload(neptune.types.File.as_html(fig))
+    for col in metrics_df.columns:
+        run[col].log(list(metrics_df[col].values))
+    return clf,X_train,X_test,X_val,y_train,y_test,y_val, tfidf_fitted_model, pca_fitted_model, scaler
     return clf,X_train,X_test,X_val,y_train,y_test,y_val
 
 if __name__ == "__main__":

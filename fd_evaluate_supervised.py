@@ -8,13 +8,26 @@ import os
 import sys
 from sklearn import metrics
 import pickle
+import neptune.new as neptune
+from neptune.new.types import File 
+from decouple import config
+import neptune.new.integrations.sklearn as npt_utils
+import plotly.express as px
 
 def fd_evaluate_model():
+    #initializing neptune run
+    run = neptune.init(
+    project="Milestone2/MilestoneII",
+    api_token= config("NEPTUNE_API_KEY"),
+    name= "evaluate fd classifier",
+    tags= ["evaluate", "fake reviews", "classification"]
+)  
+    
     #import params
     import yaml
     with open("params.yaml", "r") as file:
-        params= yaml.safe_load(file)
-    f1_avg= params["fd_evaluate_supervised"]["f1_avg"]
+        params_file= yaml.safe_load(file)
+    f1_avg= params_file["fd_evaluate_supervised"]["f1_avg"]
     #loading model, train, eval, test files
     with open("model/fake/model.pkl", "rb") as model:
         clf= pickle.load(model)
@@ -32,18 +45,21 @@ def fd_evaluate_model():
         y_val= np.load(file)
 
     #importing the model_metrics to include in the report
-    model_type= [params["fd_supervised_model"]["model_type"]]
-    ada_base_model = params["fd_supervised_model"]['ada_base_model']
-    ada_base_iter = params["fd_supervised_model"]['ada_base_iter']
-    params_used= params["fd_supervised_model"]["params"] 
-    scale= params["fd_supervised_model"]["scale"]
-    oversample= params["fd_supervised_model"]["oversample"]
-    gscv= params["fd_supervised_model"]["gscv"]
-    param_dict= params["fd_supervised_model"]["param_dict"]
-    n_jobs= params["fd_supervised_model"]["n_jobs"]
-    return_train_score= params["fd_supervised_model"]["return_train_score"]
-    split= params["fd_supervised_model"]["split"]
-    ada_max_depth = params["fd_supervised_model"]["ada_max_depth"]
+    model_type= [params_file["fd_supervised_model"]["model_type"]]
+    ada_base_model = params_file["fd_supervised_model"]['ada_base_model']
+    ada_base_iter = params_file["fd_supervised_model"]['ada_base_iter']
+    params_used= params_file["fd_supervised_model"]["params"] 
+    params= params_file["fd_supervised_model"]["params"] 
+    scale= params_file["fd_supervised_model"]["scale"]
+    oversample= params_file["fd_supervised_model"]["oversample"]
+    gscv= params_file["fd_supervised_model"]["gscv"]
+    param_dict= params_file["fd_supervised_model"]["param_dict"]
+    n_jobs= params_file["fd_supervised_model"]["n_jobs"]
+    split= params_file["fd_supervised_model"]["split"]
+    tfidf= params_file["fd_supervised_model"]["tfidf"]
+    min_df= params_file["tfidf_product_success"]["min_df"]
+    max_df= params_file["tfidf_product_success"]["max_df"]
+    ada_max_depth = params_file["fd_supervised_model"]["ada_max_depth"]
     model_params_dict= dict(
         model_type= model_type)
     ada_model_dict= dict(
@@ -56,7 +72,6 @@ def fd_evaluate_model():
         oversample= oversample,
         gscv= gscv,
         n_jobs= n_jobs,
-        return_train_score= return_train_score,
         split= split,
         )
     model_params.update(params_used)
@@ -66,15 +81,45 @@ def fd_evaluate_model():
         model_params_dict["params"]= model_params
     else:
         model_params_dict["params"]= model_params
-        
+
+    #logging model, params to neptune
+    run["model_desc"]=dict( model= params_file["fd_supervised_model"]["model_type"],
+                           params= params,
+                           grid_search= gscv,
+                           param_dict= param_dict,
+                           n_jobs= n_jobs,
+                           )
+    run["params"]= dict(scale= scale,
+                        oversample= oversample,
+                        split= split,
+                        tfidf= tfidf,
+                        tfidf_maxdf= max_df,
+                        tfidf_mindf= min_df
+        )
+    if model_type == "AdaBoostClassifier":
+        run["model_desc/Adaboost"]= dict(
+        BaseModel= ada_base_model,
+        BaseIter= ada_base_iter,
+        MaxDepth= ada_max_depth
+        )
+
+       
     #import features to include in the report
-    wordvec= params["load_prepare_fake"]["features"]["word2vec_features"]
-    handpicked= params["load_prepare_fake"]["features"]["handpicked_features"]
-    wordvec_model= params["load_prepare_fake"]["word2vec_model_name"]
-    pca= params["fd_supervised_model"]["pca"]
-    pca_comp= params["fd_supervised_model"]["pca_n_components"]
-    tfidf= params["fd_supervised_model"]["tfidf"]
-    
+    wordvec= params_file["load_prepare_fake"]["features"]["word2vec_features"]
+    handpicked= params_file["load_prepare_fake"]["features"]["handpicked_features"]
+    wordvec_model= params_file["load_prepare_fake"]["word2vec_model_name"]
+    pca= params_file["fd_supervised_model"]["pca"]
+    pca_comp= params_file["fd_supervised_model"]["pca_n_components"]
+    tfidf= params_file["fd_supervised_model"]["tfidf"]
+
+    #logging features in neptune
+    run["features"]= dict(
+        wordvec= wordvec,
+        wordvec_model_used= wordvec_model,
+        handpicked= handpicked,
+        pca= pca,
+        pca_components= pca_comp
+        )
     #creating an if\else statement to update subparamters only if their parent parameter is True
     features_dict= dict(
         tfidf= tfidf,
@@ -142,7 +187,11 @@ def fd_evaluate_model():
         preprocess_features= features_dict,
         model_specs= model_params_dict,
         scores_report= acc_scores)
-    
+    #logging the report
+    run["Evaluation Report"]= report
+
+    for key, value in acc_scores.items():
+        run["metrics/" + key].log(value)
     print('calculating metrics complete!')
     
      
@@ -151,20 +200,22 @@ def fd_evaluate_model():
 
       
     #display plots
-    # fig , axes = plt.subplots(1,3,figsize=(24,8))
-    # axes[0].title.set_text('Confusion Matrix')
-    # axes[1].title.set_text('ROC Curve')
-    # axes[2].title.set_text('Precision-Recall Curve')
+    fig , axes = plt.subplots(1,3,figsize=(24,8))
+    axes[0].title.set_text('Confusion Matrix')
+    axes[1].title.set_text('ROC Curve')
+    axes[2].title.set_text('Precision-Recall Curve')
 
-    # cm = plot_confusion_matrix(clf,X_test,y_test,ax=axes[0]);
-    # roc_curve = plot_roc_curve(clf,X_test,y_test,ax=axes[1]);
-    # pr_curve = plot_precision_recall_curve(clf,X_test,y_test,ax=axes[2]);
+    cm = plot_confusion_matrix(clf,X_test,y_test,ax=axes[0]);
+    roc_curve = plot_roc_curve(clf,X_test,y_test,ax=axes[1]);
+    pr_curve = plot_precision_recall_curve(clf,X_test,y_test,ax=axes[2]);
 
-    # cm.plot(ax=axes[0]);
-    # roc_curve.plot(ax=axes[1]); 
-    # pr_curve.plot(ax=axes[2]);
+    cm.plot(ax=axes[0]);
+    roc_curve.plot(ax=axes[1]); 
+    pr_curve.plot(ax=axes[2]);
 
-
+    #logging the plots to neptune
+    run["metrics_plot"].upload(neptune.types.File.as_image(fig))
+    
 if __name__ == "__main__":
     
     fd_evaluate_model()

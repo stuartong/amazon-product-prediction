@@ -194,73 +194,20 @@ stages:
         fd_supervised_model.ada_base_model: DecisionTreeClassifier
         fd_supervised_model.ada_max_depth: 3
         fd_supervised_model.gscv: true
-        fd_supervised_model.model_type: LogisticRegression
+        fd_supervised_model.model_type: SVC
         fd_supervised_model.n_jobs: -1
         fd_supervised_model.oversample: false
         fd_supervised_model.param_dict:
           C:
-          - 0.0001
-          - 0.000145634848
-          - 0.000212095089
-          - 0.00030888436
-          - 0.000449843267
-          - 0.000655128557
-          - 0.000954095476
-          - 0.00138949549
-          - 0.00202358965
-          - 0.0029470517
-          - 0.00429193426
-          - 0.00625055193
-          - 0.00910298178
-          - 0.0132571137
-          - 0.0193069773
-          - 0.028117687
-          - 0.0409491506
-          - 0.0596362332
-          - 0.0868511374
-          - 0.126485522
-          - 0.184206997
-          - 0.26826958
-          - 0.390693994
-          - 0.568986603
-          - 0.828642773
-          - 1.20679264
-          - 1.75751062
-          - 2.55954792
-          - 3.72759372
-          - 5.42867544
-          - 7.90604321
-          - 11.513954
-          - 16.7683294
-          - 24.4205309
-          - 35.5648031
-          - 51.7947468
-          - 75.4312006
-          - 109.854114
-          - 159.985872
-          - 232.995181
-          - 339.322177
-          - 494.171336
-          - 719.685673
-          - 1048.11313
-          - 1526.41797
-          - 2222.99648
-          - 3237.45754
-          - 4714.86636
-          - 6866.48845
-          - 10000.0
-          penalty:
-          - l1
-          - l2
+          - 1
+          - 10
+          kernel:
+          - linear
           random_state:
           - 42
-          solver:
-          - saga
         fd_supervised_model.params:
           random_state: 42
           C: 100
-          gamma: 1
-          kernel: rbf
         fd_supervised_model.pca: true
         fd_supervised_model.pca_n_components: 100
         fd_supervised_model.return_train_score: true
