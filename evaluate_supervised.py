@@ -4,12 +4,24 @@ from sklearn.metrics import plot_precision_recall_curve, f1_score, matthews_corr
 from sklearn.dummy import DummyClassifier
 import matplotlib.pyplot as plt
 import json 
-import os
 import sys
 from sklearn import metrics
 import pickle
+import neptune.new as neptune
+from neptune.new.types import File 
+from decouple import config
+import neptune.new.integrations.sklearn as npt_utils
 
 def evaluate_model():
+    
+     #initializing neptune run
+    run = neptune.init(
+    project="Milestone2/MilestoneII",
+    api_token= config("NEPTUNE_API_KEY"),
+    name= "fake reviews detection classifier",
+    tags= ["supervised model", "fake reviews", "classification"]
+)  # your credentials
+    
     #import params
     import yaml
     with open("params.yaml", "r") as file:
@@ -66,7 +78,8 @@ def evaluate_model():
         model_params_dict["params"]= model_params
     else:
         model_params_dict["params"]= model_params
-        
+    
+       
     #import features to include in the report
     wordvec= params["preprocess_products"]["word2vec_features"]
     handpicked= params["preprocess_products"]["handpicked_features"]
@@ -143,7 +156,8 @@ def evaluate_model():
         preprocess_features= features_dict,
         model_specs= model_params_dict,
         scores_report= acc_scores)
-    
+    #logging the report
+    run["Evaluation Report"]= report
     print('calculating metrics complete!')
     
      
@@ -152,18 +166,21 @@ def evaluate_model():
 
       
     #display plots
-    # fig , axes = plt.subplots(1,3,figsize=(24,8))
-    # axes[0].title.set_text('Confusion Matrix')
-    # axes[1].title.set_text('ROC Curve')
-    # axes[2].title.set_text('Precision-Recall Curve')
+    fig , axes = plt.subplots(1,3,figsize=(24,8))
+    axes[0].title.set_text('Confusion Matrix')
+    axes[1].title.set_text('ROC Curve')
+    axes[2].title.set_text('Precision-Recall Curve')
 
-    # cm = plot_confusion_matrix(clf,X_test,y_test,ax=axes[0]);
-    # roc_curve = plot_roc_curve(clf,X_test,y_test,ax=axes[1]);
-    # pr_curve = plot_precision_recall_curve(clf,X_test,y_test,ax=axes[2]);
+    cm = plot_confusion_matrix(clf,X_test,y_test,ax=axes[0]);
+    roc_curve = plot_roc_curve(clf,X_test,y_test,ax=axes[1]);
+    pr_curve = plot_precision_recall_curve(clf,X_test,y_test,ax=axes[2]);
 
-    # cm.plot(ax=axes[0]);
-    # roc_curve.plot(ax=axes[1]); 
-    # pr_curve.plot(ax=axes[2]);
+    cm.plot(ax=axes[0]);
+    roc_curve.plot(ax=axes[1]); 
+    pr_curve.plot(ax=axes[2]);
+
+    #logging the plots to neptune
+    run["metrics_plot"].upload(neptune.types.File.as_image(fig))
 
 
 if __name__ == "__main__":

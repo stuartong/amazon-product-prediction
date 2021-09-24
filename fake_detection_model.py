@@ -3,7 +3,7 @@ import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import GridSearchCV
 from split_data import split_data
-# from imblearn.over_sampling import SVMSMOTE
+from imblearn.over_sampling import SVMSMOTE
 from collections import Counter
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -14,6 +14,11 @@ from sklearn.naive_bayes import MultinomialNB
 import pickle
 from fake_review_detection_module import fake_tfidf_vectorizer_arr, fake_run_pca_arr
 from pathlib import Path 
+import neptune.new as neptune
+from neptune.new.types import File 
+from decouple import config
+import neptune.new.integrations.sklearn as npt_utils
+import plotly.express as px
 
 
 def fake_detection_model(df_path):
@@ -63,6 +68,14 @@ def fake_detection_model(df_path):
     import yaml
     with open("params.yaml", "r") as file:
         param_file= yaml.safe_load(file)
+
+    #initializing neptune run
+    run = neptune.init(
+    project="Milestone2/MilestoneII",
+    api_token= config("NEPTUNE_API_KEY"),
+    name= "fake reviews detection classifier",
+    tags= ["supervised model", "train model", "classifier", "fake detection"]
+)  
         
     model_type= model_dict[param_file["fd_supervised_model"]["model_type"]]
     ada_base_model = param_file["fd_supervised_model"]['ada_base_model']
@@ -73,7 +86,6 @@ def fake_detection_model(df_path):
     gscv= param_file["fd_supervised_model"]["gscv"]
     param_dict= param_file["fd_supervised_model"]["param_dict"]
     n_jobs= param_file["fd_supervised_model"]["n_jobs"]
-    return_train_score= param_file["fd_supervised_model"]["return_train_score"]
     split= param_file["fd_supervised_model"]["split"]
     ada_max_depth = param_file["fd_supervised_model"]["ada_max_depth"]
     tfidf= param_file["fd_supervised_model"]["tfidf"]
@@ -84,8 +96,28 @@ def fake_detection_model(df_path):
     if model_type == AdaBoostClassifier:
         param_dict["base_estimator"]= [model_dict[ada_base_model](max_depth= i) for i in ada_base_iter]
         params["base_estimator"]= model_dict[ada_base_model](max_depth=ada_max_depth)
-
-   
+                
+    run["model_desc"]=dict( model= param_file["fd_supervised_model"]["model_type"],
+                           params= params,
+                           grid_search= gscv,
+                           param_dict= param_dict,
+                           n_jobs= n_jobs,
+                           )
+    run["params"]= dict(scale= scale,
+                        oversample= oversample,
+                        split= split,
+                        tfidf= tfidf,
+                        tfidf_maxdf= max_df,
+                        tfidf_mindf= min_df
+        )
+    if model_type == AdaBoostClassifier:
+        run["model_desc/Adaboost"]= dict(
+        BaseModel= ada_base_model,
+        BaseIter= ada_base_iter,
+        MaxDepth= ada_max_depth
+        )
+    
+        
     path= Path(df_path)
     df= pd.read_pickle(path / "labeled_processed.pkl")
     
@@ -186,7 +218,6 @@ def fake_detection_model(df_path):
         CV_clf = GridSearchCV(model,
                               param_dict,
                               scoring='accuracy',
-                              return_train_score=return_train_score,
                               n_jobs=n_jobs,
                               verbose=3
                               )
@@ -196,16 +227,22 @@ def fake_detection_model(df_path):
         best_params = CV_clf.best_params_
         print(f'Best Score for CV: {best_score}')
         print(f'Best Parameters: {best_params}')
-        if return_train_score==True:
-            print(CV_clf.cv_results_)
-        else:
-            pass
 
+        run["CV_clf.results"]= CV_clf.cv_results_
+        run["CV_best_score"]= best_score
+        run["CV_best_params"]= best_params
+        
+    #logging classification summary
+    run["cls_summary"]= npt_utils.create_classifier_summary(clf, X_train, X_test, y_train, y_test)
+    metrics_df= pd.DataFrame({col : val  for col, val in CV_clf.cv_results_.items() if "score" in col})
+    fig= px.line(data_frame= metrics_df, x= metrics_df.index, y= metrics_df.columns)
+    run["metrics_plot"].upload(neptune.types.File.as_html(fig))
+    for col in metrics_df.columns:
+        run[col].log(list(metrics_df[col].values))
     return clf,X_train,X_test,X_val,y_train,y_test,y_val, tfidf_fitted_model, pca_fitted_model, scaler
 
 if __name__ == "__main__":
     import argparse
-    import os
     parser= argparse.ArgumentParser()
     parser.add_argument("df_path", help= "target dataframe path (str)")
     args= parser.parse_args()
