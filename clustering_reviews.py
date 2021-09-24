@@ -73,7 +73,7 @@ def run_clustering():
         )
   
     #IMPORT DATA
-    if data_source_dict.get(data_source) not None:
+    if data_source_dict.get(data_source) is not None:
         df= pd.read_pickle(data_source_dict.get(data_source))
     else:
         preds= np.load("data/fake/fake_free_data/fake_free_reviews.npy")

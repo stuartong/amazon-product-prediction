@@ -143,6 +143,6 @@ stages:
     - clustering_reviews.py
     - data/prepared/reviews.pkl
     - data/reviews/reviews.pkl
-    - data/fake/fake_free_data/fake_free_reviews.pkl
+    - data/fake/fake_free_data/fake_free_reviews.npy
     params:
     - clustering_model 
