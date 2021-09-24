@@ -119,6 +119,7 @@ fd_test_stage:
     pca_fitted_path: model/fake/pca_fitted_model.pkl
     scaler_fitted_path: model/fake/scaler_fitted_model.pkl
     model_fitted: model/fake/model.pkl
+    
 clustering_model:
     data_source: fake_free  #options: raw, preprocessed, fake_free
     model_type: KMeans #options: KMeans, MiniBatchKMeans, DBSCAN
@@ -132,6 +133,17 @@ clustering_model:
         scale: True
         reducer:
             name: PCA  #options: LSA, NMF (PCA is default)
-            n_components: 50
-   
-    
+            n_components: 3 ###confirm this section if this is right
+            random_state: 42
+    preprocessed_params:
+        scale: True
+        reducer:
+        name: PCA  #options: LSA, NMF (PCA is default)
+        n_components: 3
+        random_state: 42
+    fake_free_params:
+        scale: True
+        reducer:
+        name: PCA  #options: LSA, NMF (PCA is default)
+        n_components: 3
+        random_state: 42
