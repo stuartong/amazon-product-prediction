@@ -202,14 +202,15 @@ stages:
         fd_supervised_model.oversample: false
         fd_supervised_model.param_dict:
           C:
-          - 0.001
-          - 0.01
-          - 0.1
-          - 1
           - 10
-          - 100
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
           kernel:
-          - poly
+          - linear
           random_state:
           - 42
         fd_supervised_model.params:
@@ -224,8 +225,8 @@ stages:
         tfidf_fake_review.min_df: 0.05
     outs:
     - path: model/fake/
-      md5: df41fbb95c275e7441d079fe8d393db7.dir
-      size: 20045973
+      md5: 44bbf929153205664f8904f015730279.dir
+      size: 18832375
       nfiles: 10
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
@@ -234,16 +235,16 @@ stages:
       md5: 2ed663f3cca88eeea40333b7be9ec046
       size: 8870
     - path: model/fake/
-      md5: df41fbb95c275e7441d079fe8d393db7.dir
-      size: 20045973
+      md5: 44bbf929153205664f8904f015730279.dir
+      size: 18832375
       nfiles: 10
     params:
       params.yaml:
         fd_evaluate_supervised.f1_avg: weighted
     outs:
     - path: fd_supervised_report.json
-      md5: f784c7b00f0d2d305223a26c86e9410a
-      size: 3181
+      md5: 78c4118b3b9a9e61b93caa7c24a1e3e6
+      size: 3179
   predicting_fake_reviews:
     cmd: python fd_test_model.py
     deps:
