@@ -199,7 +199,7 @@ stages:
         fd_supervised_model.gscv: true
         fd_supervised_model.model_type: SVC
         fd_supervised_model.n_jobs: -1
-        fd_supervised_model.oversample: false
+        fd_supervised_model.oversample: true
         fd_supervised_model.param_dict:
           C:
           - 10
@@ -225,8 +225,8 @@ stages:
         tfidf_fake_review.min_df: 0.05
     outs:
     - path: model/fake/
-      md5: 44bbf929153205664f8904f015730279.dir
-      size: 18832375
+      md5: 0201ccb3c50fe11c7707e0ba502ff4d3.dir
+      size: 24261768
       nfiles: 10
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
@@ -235,16 +235,16 @@ stages:
       md5: 2ed663f3cca88eeea40333b7be9ec046
       size: 8870
     - path: model/fake/
-      md5: 44bbf929153205664f8904f015730279.dir
-      size: 18832375
+      md5: 0201ccb3c50fe11c7707e0ba502ff4d3.dir
+      size: 24261768
       nfiles: 10
     params:
       params.yaml:
         fd_evaluate_supervised.f1_avg: weighted
     outs:
     - path: fd_supervised_report.json
-      md5: 78c4118b3b9a9e61b93caa7c24a1e3e6
-      size: 3179
+      md5: 8f210ff3a100be42b6ca958ebbed927e
+      size: 3178
   predicting_fake_reviews:
     cmd: python fd_test_model.py
     deps:

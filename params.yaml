@@ -74,7 +74,7 @@ load_prepare_fake:
 fd_supervised_model:
     model_type: SVC
     scale: True
-    oversample: False
+    oversample: True
     gscv: True
     tfidf: True
     pca: True

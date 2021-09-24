@@ -5,7 +5,7 @@ The purpose of this repo is to consolidate and track code related to our Milesto
 
 We plan to accomplish 3 main things:
 1. Predict the likelihood of success of a product (defined by a metric related to total/average number of stars or salesrank) from product metadata as features
-2. Feature Engineering - Use topic modeling and NLP techniques to create new target variables that represent keywords/sentiment from review text as new target variables to see if we can predict and enable a merchant to understand how buyers on the platform would react to a newly launch prodcut with similar features
+2. Feature Engineering - Use topic modeling and NLP techniques to create new target variables that represent keywords/sentiment from review text as new target variables to see if we can predict and enable a merchant to understand how buyers on the platform would react to a newly launch product with similar features
 3. Clustering - We intend to use clustering to improve product search enabling customer to search for products with similar features and potentially use methods like DBScan for outlier detection to see if we can pick up fake reviews
 
 ## Key Links
@@ -14,7 +14,7 @@ We plan to accomplish 3 main things:
 - [Project Tracker](https://docs.google.com/spreadsheets/d/1cw7917PWv5VBahoYk_9mUvYMjN5BM_jAM6zCysu4KYE/edit#gid=0)
 
 ## Pipeline
-
+!
 ### 1. load_data.py
 For a specific category, loads product metadata and reviews metadata from respective urls and return products_df and reviews_df
 
