@@ -82,8 +82,8 @@ fd_supervised_model:
     ada_base_model: DecisionTreeClassifier
     ada_base_iter: [2,8,10]
     param_dict: {
-        C : [0.07,0.08,0.09, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7,0.8],
-        kernel : ['linear'],
+        C : [0.001,0.01,0.1, 1, 10, 100],
+        kernel : ['poly'],
         random_state : [42],
         
     } 
