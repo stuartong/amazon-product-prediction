@@ -59,7 +59,6 @@ stages:
     - supervised_model.ada_base_iter
     - supervised_model.ada_max_depth
     - supervised_model.n_jobs
-    - supervised_model.return_train_score
     - tfidf_product_success.min_df
     - tfidf_product_success.max_df
     outs:
@@ -110,7 +109,6 @@ stages:
     - fd_supervised_model.param_dict
     - fd_supervised_model.ada_max_depth
     - fd_supervised_model.n_jobs
-    - fd_supervised_model.return_train_score
     - fd_supervised_model.split
     - fd_supervised_model.params
     - tfidf_fake_review.min_df
