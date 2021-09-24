@@ -182,12 +182,12 @@ stages:
     cmd: python fake_detection_model.py data/fake/training/
     deps:
     - path: data/fake/training/
-      md5: 2a47d685f308895398780699301dec48.dir
-      size: 70775417
-      nfiles: 2
+      md5: 466b9e866bd31e9406c7890d34ea576a.dir
+      size: 70775394
+      nfiles: 1
     - path: fake_detection_model.py
-      md5: bef48a2eb7acad7fd329e8fb5b985468
-      size: 9911
+      md5: 92119297df19db7c08b7fed41cd3c2c4
+      size: 11738
     params:
       params.yaml:
         fd_supervised_model.ada_base_iter:
@@ -202,10 +202,16 @@ stages:
         fd_supervised_model.oversample: false
         fd_supervised_model.param_dict:
           C:
+          - 0.0001
+          - 0.001
+          - 0.01
+          - 0.1
           - 1
           - 10
+          - 100
           kernel:
           - linear
+          - rbf
           random_state:
           - 42
         fd_supervised_model.params:
@@ -213,7 +219,6 @@ stages:
           C: 100
         fd_supervised_model.pca: true
         fd_supervised_model.pca_n_components: 100
-        fd_supervised_model.return_train_score: true
         fd_supervised_model.scale: true
         fd_supervised_model.split: 0.8
         fd_supervised_model.tfidf: true
@@ -221,8 +226,8 @@ stages:
         tfidf_fake_review.min_df: 0.05
     outs:
     - path: model/fake/
-      md5: 9522e8f8b2749e77ce79cd2dbeb10b71.dir
-      size: 13422769
+      md5: 773f52c8f4e8fda137d71d5868c5f413.dir
+      size: 18851242
       nfiles: 10
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
