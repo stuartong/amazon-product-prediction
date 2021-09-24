@@ -250,7 +250,7 @@ def run_model(df_path):
     run["metrics_plot"].upload(neptune.types.File.as_html(fig))
     for col in metrics_df.columns:
         run[col].log(list(metrics_df[col].values))
-    return clf,X_train,X_test,X_val,y_train,y_test,y_val, tfidf_fitted_model, pca_fitted_model, scaler
+    
     return clf,X_train,X_test,X_val,y_train,y_test,y_val
 
 if __name__ == "__main__":
