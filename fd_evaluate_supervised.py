@@ -74,7 +74,10 @@ def fd_evaluate_model():
         n_jobs= n_jobs,
         split= split,
         )
-    model_params.update(params_used)
+    try:
+        model_params.update(params_used)
+    except:
+        pass 
     #creating an if\else statement to update subparamters only if their parent parameter is True
     if model_type == "AdaBoostClassifier":
         model_params_dict["ada_model_params"]= ada_model_dict

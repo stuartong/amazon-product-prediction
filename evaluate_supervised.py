@@ -53,7 +53,6 @@ def evaluate_model():
     gscv= params["supervised_model"]["gscv"]
     param_dict= params["supervised_model"]["param_dict"]
     n_jobs= params["supervised_model"]["n_jobs"]
-    return_train_score= params["supervised_model"]["return_train_score"]
     split= params["supervised_model"]["split"]
     ada_max_depth = params["supervised_model"]["ada_max_depth"]
     model_params_dict= dict(
@@ -68,7 +67,6 @@ def evaluate_model():
         oversample= oversample,
         gscv= gscv,
         n_jobs= n_jobs,
-        return_train_score= return_train_score,
         split= split,
         )
     model_params.update(params_used)

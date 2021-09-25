@@ -49,7 +49,6 @@ stages:
     - supervised_model.gscv
     - supervised_model.param_dict
     - supervised_model.n_jobs
-    - supervised_model.return_train_score
     - supervised_model.split
     - supervised_model.pca
     - supervised_model.pca_n_components

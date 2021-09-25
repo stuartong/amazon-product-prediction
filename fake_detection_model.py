@@ -7,8 +7,8 @@ from imblearn.over_sampling import SVMSMOTE
 from collections import Counter
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
-from sklearn.ensemble import GradientBoostingClassifier,AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import GradientBoostingClassifier,AdaBoostClassifier, RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier 
 from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import ComplementNB, MultinomialNB
 import pickle
@@ -63,7 +63,8 @@ def fake_detection_model(df_path):
         GradientBoostingClassifier= GradientBoostingClassifier,
         MLPClassifier= MLPClassifier,
         AdaBoostClassifier=AdaBoostClassifier,
-        DecisionTreeClassifier=DecisionTreeClassifier
+        DecisionTreeClassifier=DecisionTreeClassifier,        
+        RandomForestClassifier= RandomForestClassifier
         )
     
     import yaml
