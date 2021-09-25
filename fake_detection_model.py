@@ -186,6 +186,7 @@ def fake_detection_model(df_path):
         X_test = scaler.transform(X_test)
         X_val = scaler.transform(X_val)
     else:
+        scaler= None
         print('No scaling done')
 
     # if oversample is True, we will use SMOTEEN to oversample
