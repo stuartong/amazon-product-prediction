@@ -228,7 +228,6 @@ def run_model(df_path):
         CV_clf = GridSearchCV(model,
                               param_dict,
                               scoring='accuracy',
-                              return_train_score=return_train_score,
                               n_jobs=n_jobs,
                               verbose=3
                               )
