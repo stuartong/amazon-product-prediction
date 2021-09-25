@@ -19,6 +19,7 @@ import neptune.new as neptune
 from neptune.new.types import File 
 from decouple import config
 import neptune.new.integrations.sklearn as npt_utils
+import plotly.express as px
 
 def run_model(df_path):
     '''
@@ -242,14 +243,14 @@ def run_model(df_path):
         run["CV_clf.results"]= CV_clf.cv_results_
         run["CV_best_score"]= best_score
         run["CV_best_params"]= best_params
-
+        metrics_df= pd.DataFrame({col : val  for col, val in CV_clf.cv_results_.items() if "score" in col})
+        fig= px.line(data_frame= metrics_df, x= metrics_df.index, y= metrics_df.columns)
+        run["metrics_plot"].upload(neptune.types.File.as_html(fig))
+        for col in metrics_df.columns:
+            run[col].log(list(metrics_df[col].values))
     #logging classification summary
     run["cls_summary"]= npt_utils.create_classifier_summary(clf, X_train, X_test, y_train, y_test)
-    metrics_df= pd.DataFrame({col : val  for col, val in CV_clf.cv_results_.items() if "score" in col})
-    fig= px.line(data_frame= metrics_df, x= metrics_df.index, y= metrics_df.columns)
-    run["metrics_plot"].upload(neptune.types.File.as_html(fig))
-    for col in metrics_df.columns:
-        run[col].log(list(metrics_df[col].values))
+    
     
     return clf,X_train,X_test,X_val,y_train,y_test,y_val
 
