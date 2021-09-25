@@ -85,7 +85,6 @@ def run_model(df_path):
     gscv= param_file["supervised_model"]["gscv"]
     param_dict= param_file["supervised_model"]["param_dict"]
     n_jobs= param_file["supervised_model"]["n_jobs"]
-    return_train_score= param_file["supervised_model"]["return_train_score"]
     split= param_file["supervised_model"]["split"]
     ada_max_depth = param_file["supervised_model"]["ada_max_depth"]
     tfidf= param_file["supervised_model"]["tfidf"]
