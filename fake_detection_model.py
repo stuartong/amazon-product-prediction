@@ -10,7 +10,7 @@ from sklearn.svm import SVC
 from sklearn.ensemble import GradientBoostingClassifier,AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import ComplementNB, MultinomialNB
 import pickle
 from fake_review_detection_module import fake_tfidf_vectorizer_arr, fake_run_pca_arr
 from pathlib import Path 
@@ -56,7 +56,8 @@ def fake_detection_model(df_path):
 
 
     model_dict= dict(
-        MultinomialNB= MultinomialNB,
+        MultinomialNB= MultinomialNB, 
+        ComplementNB= ComplementNB,
         LogisticRegression= LogisticRegression,        
         SVC= SVC,
         GradientBoostingClassifier= GradientBoostingClassifier,
@@ -94,8 +95,9 @@ def fake_detection_model(df_path):
     pca= param_file["fd_supervised_model"]["pca"]
     pca_n_components= param_file["fd_supervised_model"]["pca_n_components"]
     if model_type == AdaBoostClassifier:
-        param_dict["base_estimator"]= [model_dict[ada_base_model](max_depth= i) for i in ada_base_iter]
-        params["base_estimator"]= model_dict[ada_base_model](max_depth=ada_max_depth)
+        param_dict["base_estimator"]= [model_dict.get(ada_base_model)(max_depth= i) for i in ada_base_iter]
+        
+        params["base_estimator"]= model_dict.get(ada_base_model)(max_depth= int(ada_max_depth))
                 
     run["model_desc"]=dict( model= param_file["fd_supervised_model"]["model_type"],
                            params= params,
@@ -124,7 +126,7 @@ def fake_detection_model(df_path):
     feature = 'features'
 
     # list of models where feature scaling is recommended
-    scaling_recommended = [LogisticRegression,SVC, MultinomialNB]
+    scaling_recommended = [LogisticRegression,SVC, MultinomialNB, ComplementNB]
 
     # check and drop feature matrix that aren't full
     median_vec = df[feature].map(len).median()
@@ -174,9 +176,11 @@ def fake_detection_model(df_path):
         y_val = list(val['label'])
 
     # if scale is True, we will fit and transform all X
+    
     # with a MinMaxScaler
     if (scale==True) | (model_type in scaling_recommended):
-        print('Scaling features...')
+        
+        print('MinMax scaling features...')
         scaler = preprocessing.MinMaxScaler().fit(X_train)
         X_train = scaler.transform(X_train)
         X_test = scaler.transform(X_test)
@@ -208,7 +212,10 @@ def fake_detection_model(df_path):
     # gridsearch/fit classifier
     
     if gscv == False:
-        clf = model_type(**params).fit(X_train,y_train)
+        if (model_type == MultinomialNB) or (model_type == ComplementNB):
+            clf = model_type().fit(X_train,y_train)
+        else:
+            clf = model_type(**params).fit(X_train,y_train)
     elif (gscv==True) & (param_dict==None):
         print('GridSearchCV requires param_dict in order to run')
         clf = model_type(**params).fit(X_train,y_train)
@@ -231,14 +238,14 @@ def fake_detection_model(df_path):
         run["CV_clf.results"]= CV_clf.cv_results_
         run["CV_best_score"]= best_score
         run["CV_best_params"]= best_params
-        
+        metrics_df= pd.DataFrame({col : val  for col, val in CV_clf.cv_results_.items() if "score" in col})
+        fig= px.line(data_frame= metrics_df, x= metrics_df.index, y= metrics_df.columns)
+        run["metrics_plot"].upload(neptune.types.File.as_html(fig))
+        for col in metrics_df.columns:
+            run[col].log(list(metrics_df[col].values))
     #logging classification summary
     run["cls_summary"]= npt_utils.create_classifier_summary(clf, X_train, X_test, y_train, y_test)
-    metrics_df= pd.DataFrame({col : val  for col, val in CV_clf.cv_results_.items() if "score" in col})
-    fig= px.line(data_frame= metrics_df, x= metrics_df.index, y= metrics_df.columns)
-    run["metrics_plot"].upload(neptune.types.File.as_html(fig))
-    for col in metrics_df.columns:
-        run[col].log(list(metrics_df[col].values))
+    
     return clf,X_train,X_test,X_val,y_train,y_test,y_val, tfidf_fitted_model, pca_fitted_model, scaler
 
 if __name__ == "__main__":
