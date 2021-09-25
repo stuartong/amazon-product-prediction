@@ -199,7 +199,7 @@ stages:
         fd_supervised_model.gscv: true
         fd_supervised_model.model_type: DecisionTreeClassifier
         fd_supervised_model.n_jobs: -1
-        fd_supervised_model.oversample: false
+        fd_supervised_model.oversample: true
         fd_supervised_model.param_dict:
           criterion:
           - gini
@@ -226,15 +226,15 @@ stages:
         fd_supervised_model.params: None
         fd_supervised_model.pca: true
         fd_supervised_model.pca_n_components: 100
-        fd_supervised_model.scale: false
+        fd_supervised_model.scale: true
         fd_supervised_model.split: 0.8
         fd_supervised_model.tfidf: true
         tfidf_fake_review.max_df: 0.7
         tfidf_fake_review.min_df: 0.05
     outs:
     - path: model/fake/
-      md5: bbc30d149617b74e9105ea5c9651a24e.dir
-      size: 13345035
+      md5: eb553fb68e13bcc6e10a98f68293afa7.dir
+      size: 16922705
       nfiles: 10
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
@@ -243,16 +243,16 @@ stages:
       md5: 2ac32cf895ad1f7f7607cb9033e0e509
       size: 8912
     - path: model/fake/
-      md5: bbc30d149617b74e9105ea5c9651a24e.dir
-      size: 13345035
+      md5: eb553fb68e13bcc6e10a98f68293afa7.dir
+      size: 16922705
       nfiles: 10
     params:
       params.yaml:
         fd_evaluate_supervised.f1_avg: weighted
     outs:
     - path: fd_supervised_report.json
-      md5: 36819879ad7f1991d24fdada86d871c1
-      size: 3150
+      md5: 0e93b433931014ac8408dca48a2c4006
+      size: 3133
   predicting_fake_reviews:
     cmd: python fd_test_model.py
     deps:
