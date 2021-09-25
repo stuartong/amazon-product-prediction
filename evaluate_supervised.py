@@ -18,8 +18,8 @@ def evaluate_model():
     run = neptune.init(
     project="Milestone2/MilestoneII",
     api_token= config("NEPTUNE_API_KEY"),
-    name= "fake reviews detection classifier",
-    tags= ["supervised model", "fake reviews", "classification"]
+    name= "product success classifier",
+    tags= ["supervised model", "product success", "classification"]
 )  # your credentials
     
     #import params
