@@ -186,8 +186,8 @@ stages:
       size: 70775394
       nfiles: 1
     - path: fake_detection_model.py
-      md5: 715859642e6a0d9c37ab0563c57c141c
-      size: 12036
+      md5: 0747d207c07f2400772805d6a46ae2af
+      size: 12126
     params:
       params.yaml:
         fd_supervised_model.ada_base_iter:
@@ -197,32 +197,118 @@ stages:
         fd_supervised_model.ada_base_model: DecisionTreeClassifier
         fd_supervised_model.ada_max_depth: 3
         fd_supervised_model.gscv: true
-        fd_supervised_model.model_type: DecisionTreeClassifier
+        fd_supervised_model.model_type: LogisticRegression
         fd_supervised_model.n_jobs: -1
         fd_supervised_model.oversample: true
         fd_supervised_model.param_dict:
-          criterion:
-          - gini
-          - entropy
-          max_depth:
-          - 4
-          - 5
-          - 6
-          - 7
-          - 8
-          - 9
-          - 10
-          - 11
-          - 12
-          - 15
-          - 20
-          - 30
-          - 40
-          - 50
-          - 70
-          - 90
-          - 120
-          - 150
+          C:
+          - 1e-05
+          - 1.26185688e-05
+          - 1.59228279e-05
+          - 2.009233e-05
+          - 2.53536449e-05
+          - 3.19926714e-05
+          - 4.03701726e-05
+          - 5.09413801e-05
+          - 6.42807312e-05
+          - 8.11130831e-05
+          - 0.000102353102
+          - 0.000129154967
+          - 0.000162975083
+          - 0.000205651231
+          - 0.000259502421
+          - 0.000327454916
+          - 0.00041320124
+          - 0.000521400829
+          - 0.000657933225
+          - 0.000830217568
+          - 0.00104761575
+          - 0.00132194115
+          - 0.00166810054
+          - 0.00210490414
+          - 0.00265608778
+          - 0.00335160265
+          - 0.00422924287
+          - 0.00533669923
+          - 0.00673415066
+          - 0.00849753436
+          - 0.0107226722
+          - 0.0135304777
+          - 0.0170735265
+          - 0.0215443469
+          - 0.0271858824
+          - 0.0343046929
+          - 0.0432876128
+          - 0.0546227722
+          - 0.068926121
+          - 0.0869749003
+          - 0.109749877
+          - 0.138488637
+          - 0.17475284
+          - 0.220513074
+          - 0.27825594
+          - 0.351119173
+          - 0.443062146
+          - 0.559081018
+          - 0.705480231
+          - 0.890215085
+          - 1.12332403
+          - 1.41747416
+          - 1.78864953
+          - 2.25701972
+          - 2.84803587
+          - 3.59381366
+          - 4.53487851
+          - 5.72236766
+          - 7.22080902
+          - 9.11162756
+          - 11.49757
+          - 14.5082878
+          - 18.3073828
+          - 23.101297
+          - 29.1505306
+          - 36.7837977
+          - 46.4158883
+          - 58.5702082
+          - 73.9072203
+          - 93.2603347
+          - 117.681195
+          - 148.496826
+          - 187.381742
+          - 236.448941
+          - 298.364724
+          - 376.493581
+          - 475.081016
+          - 599.48425
+          - 756.463328
+          - 954.548457
+          - 1204.50354
+          - 1519.91108
+          - 1917.91026
+          - 2420.12826
+          - 3053.85551
+          - 3853.52859
+          - 4862.60158
+          - 6135.90727
+          - 7742.63683
+          - 9770.09957
+          - 12328.4674
+          - 15556.7614
+          - 19630.4065
+          - 24770.7636
+          - 31257.1585
+          - 39442.0606
+          - 49770.2356
+          - 62802.9144
+          - 79248.2898
+          - 100000.0
+          penalty:
+          - l1
+          - l2
+          random_state:
+          - 42
+          solver:
+          - saga
         fd_supervised_model.params: None
         fd_supervised_model.pca: true
         fd_supervised_model.pca_n_components: 100
@@ -233,8 +319,8 @@ stages:
         tfidf_fake_review.min_df: 0.05
     outs:
     - path: model/fake/
-      md5: eb553fb68e13bcc6e10a98f68293afa7.dir
-      size: 16922705
+      md5: 166d5b44f4cba6dd3feef6fd5fcabdea.dir
+      size: 16688562
       nfiles: 10
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
@@ -243,16 +329,16 @@ stages:
       md5: 2ac32cf895ad1f7f7607cb9033e0e509
       size: 8912
     - path: model/fake/
-      md5: eb553fb68e13bcc6e10a98f68293afa7.dir
-      size: 16922705
+      md5: 166d5b44f4cba6dd3feef6fd5fcabdea.dir
+      size: 16688562
       nfiles: 10
     params:
       params.yaml:
         fd_evaluate_supervised.f1_avg: weighted
     outs:
     - path: fd_supervised_report.json
-      md5: 0e93b433931014ac8408dca48a2c4006
-      size: 3133
+      md5: deb703f89b929cb28e1c5c8948c7d4f9
+      size: 3139
   predicting_fake_reviews:
     cmd: python fd_test_model.py
     deps:
