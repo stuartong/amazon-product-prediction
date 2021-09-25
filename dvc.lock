@@ -240,19 +240,19 @@ stages:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
     deps:
     - path: fd_evaluate_supervised.py
-      md5: 2ed663f3cca88eeea40333b7be9ec046
-      size: 8870
+      md5: 2ac32cf895ad1f7f7607cb9033e0e509
+      size: 8912
     - path: model/fake/
-      md5: 0201ccb3c50fe11c7707e0ba502ff4d3.dir
-      size: 24261768
+      md5: bbc30d149617b74e9105ea5c9651a24e.dir
+      size: 13345035
       nfiles: 10
     params:
       params.yaml:
         fd_evaluate_supervised.f1_avg: weighted
     outs:
     - path: fd_supervised_report.json
-      md5: 8f210ff3a100be42b6ca958ebbed927e
-      size: 3178
+      md5: 36819879ad7f1991d24fdada86d871c1
+      size: 3150
   predicting_fake_reviews:
     cmd: python fd_test_model.py
     deps:
