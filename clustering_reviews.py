@@ -60,13 +60,13 @@ def run_clustering():
     with open("params.yaml", "r") as file:
         param_file= yaml.safe_load(file)
         
-    #initializing neptune run
-    run = neptune.init(
-    project = 'Milestone2/MilestoneII',
-    api_token = config('NEPTUNE_API_KEY'),
-    name = 'clustering reviews',
-    tags = ['clustering model', 'cluster reviews']
-)  
+#     #initializing neptune run
+#     run = neptune.init(
+#     project = 'Milestone2/MilestoneII',
+#     api_token = config('NEPTUNE_API_KEY'),
+#     name = 'clustering reviews',
+#     tags = ['clustering model', 'cluster reviews']
+# )  
         
     data_source= param_file["clustering_model"]["data_source"]
     model= model_dict[param_file['clustering_model']['model_type']]
