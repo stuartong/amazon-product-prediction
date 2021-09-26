@@ -60,6 +60,14 @@ def run_clustering():
     with open("params.yaml", "r") as file:
         param_file= yaml.safe_load(file)
         
+    #initializing neptune run
+    run = neptune.init(
+    project = 'Milestone2/MilestoneII',
+    api_token = config('NEPTUNE_API_KEY'),
+    name = 'clustering reviews',
+    tags = ['clustering model', 'cluster reviews']
+)  
+        
     data_source= param_file["clustering_model"]["data_source"]
     model= model_dict[param_file['clustering_model']['model_type']]
     params = param_file['clustering_model']['params']
@@ -93,8 +101,6 @@ def run_clustering():
         print("cleaning complete!")
         
         #TF-IDF STAGE
-        # (Confirm with Moutaz, tweaked from fd_test_model.py)
-        # (Sheila does not need options for word2vec, as Sheila will only uses tf-idf in clustering)
         print("starting tfidf transformation...")
         corpus= [" ".join(lst) for lst in df["vectorized_reviews"]]
         tfidf_vectorizer = TfidfVectorizer(tfidf_params)  # (Sheila needs min_df, max_df, and possibly max_features, stopwords, and ngram_range)
@@ -102,6 +108,7 @@ def run_clustering():
         df["tfidf"]= [np.array(i) for i in zip(*tfidf_vec.toarray().T)]        
         print("tfidf transformation done!")
         X= np.stack(df["tfidf"].to_numpy(), axis=0)
+        
         #SCALE
         if scale==True:
             ss = StandardScaler()
@@ -124,16 +131,16 @@ def run_clustering():
             reduced_features = reducer.fit_transform(X)
 
     
-    #MODEL
-    #FINDING BEST K
-    # inertia = [0,0]
+        #MODEL
+        #FINDING BEST K
+        # inertia = [0,0]
 
-    # for k in range(2, 10):
-    #     km = KMeans(n_clusters=k, random_state=42)
-    #     km.fit(lsa_tfidf_data_scaled)
-    #     inertia.append(km.inertia_)
+        # for k in range(2, 10):
+        #     km = KMeans(n_clusters=k, random_state=42)
+        #     km.fit(lsa_tfidf_data_scaled)
+        #     inertia.append(km.inertia_)
 
-    # best_k = 
+        # best_k = 
 
 
 
@@ -158,8 +165,14 @@ def run_clustering():
 
         print('Estimated number of clusters: %d' % n_clusters_)
         print('Estimated number of noise points: %d' % n_noise_)
-        print("Silhouette Coefficient: %0.3f"
+       
+        print("Silhouette Score: %0.3f"
             % silhouette_score(X, labels))
+        print("Calinski Harabasz Score: %0.3f"
+            % calinski_harabasz_score(X, labels))
+        print("Davies Bouldin Score: %0.3f"
+            % davies_bouldin_score(X, labels))
+ 
         #     plt.scatter(reduced_features[:,0], reduced_features[:,1],c=y_pred, cmap='Paired')
         #     plt.title('DBSCAN')
         #     plt.plot()
