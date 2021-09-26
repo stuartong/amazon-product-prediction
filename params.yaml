@@ -85,7 +85,7 @@ load_prepare_fake:
     word2vec_model_name: 'glove-wiki-gigaword-300' 
 
 fd_supervised_model:
-    model_type: SVC
+    model_type: LogisticRegression
     scale: True
     oversample: True
     gscv: True

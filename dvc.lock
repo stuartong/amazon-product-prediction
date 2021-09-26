@@ -59,7 +59,7 @@ stages:
       md5: c37424c125e8f06833a1c8c2d34ce07c
       size: 1662
     - path: data/fake/fake_free_data
-      md5: eaf1ab24cef5f20b1947522088cc8713.dir
+      md5: 93b696a442641d14d8d3fe7ea22488ef.dir
       size: 4822472
       nfiles: 2
     - path: data/products
@@ -217,18 +217,18 @@ stages:
         fake_review_labeled_file_path: data/fake/labeled_data/amazon_reviews_labeled.txt
         load_prepare_fake.features:
           word2vec_features: true
-          handpicked_features: false
+          handpicked_features: true
         load_prepare_fake.word2vec_model_name: glove-wiki-gigaword-300
     outs:
     - path: data/fake/training/labeled_processed.pkl
-      md5: 8eb0f7535e118b000ffa65db685d092f
-      size: 50377393
+      md5: a47919a26eae77a09ac3a3f27afdb403
+      size: 70775394
   fd_supervised_model:
     cmd: python fake_detection_model.py data/fake/training/
     deps:
     - path: data/fake/training/
-      md5: fa55ff6d6eb1d003a4b45d905a5a5850.dir
-      size: 50377393
+      md5: 466b9e866bd31e9406c7890d34ea576a.dir
+      size: 70775394
       nfiles: 1
     - path: fake_detection_model.py
       md5: 6ff312bf7f7f784cda5a4a52288ccdcb
@@ -242,29 +242,70 @@ stages:
         fd_supervised_model.ada_base_model: DecisionTreeClassifier
         fd_supervised_model.ada_max_depth: 3
         fd_supervised_model.gscv: true
-        fd_supervised_model.model_type: SVC
+        fd_supervised_model.model_type: LogisticRegression
         fd_supervised_model.n_jobs: -1
         fd_supervised_model.oversample: true
         fd_supervised_model.param_dict:
           C:
-          - 0.01
-          - 0.1
-          - 1
-          - 10
-          - 40
-          - 60
-          - 80
-          - 100
-          kernel:
-          - linear
-          - rbf
-          gamma:
-          - scale
-          - auto
+          - 0.0001
+          - 0.000145634848
+          - 0.000212095089
+          - 0.00030888436
+          - 0.000449843267
+          - 0.000655128557
+          - 0.000954095476
+          - 0.00138949549
+          - 0.00202358965
+          - 0.0029470517
+          - 0.00429193426
+          - 0.00625055193
+          - 0.00910298178
+          - 0.0132571137
+          - 0.0193069773
+          - 0.028117687
+          - 0.0409491506
+          - 0.0596362332
+          - 0.0868511374
+          - 0.126485522
+          - 0.184206997
+          - 0.26826958
+          - 0.390693994
+          - 0.568986603
+          - 0.828642773
+          - 1.20679264
+          - 1.75751062
+          - 2.55954792
+          - 3.72759372
+          - 5.42867544
+          - 7.90604321
+          - 11.513954
+          - 16.7683294
+          - 24.4205309
+          - 35.5648031
+          - 51.7947468
+          - 75.4312006
+          - 109.854114
+          - 159.985872
+          - 232.995181
+          - 339.322177
+          - 494.171336
+          - 719.685673
+          - 1048.11313
+          - 1526.41797
+          - 2222.99648
+          - 3237.45754
+          - 4714.86636
+          - 6866.48845
+          - 10000.0
+          penalty:
+          - l1
+          - l2
           random_state:
           - 42
+          solver:
+          - saga
         fd_supervised_model.params: None
-        fd_supervised_model.pca: false
+        fd_supervised_model.pca: true
         fd_supervised_model.pca_n_components: 100
         fd_supervised_model.scale: true
         fd_supervised_model.split: 0.8
@@ -273,8 +314,8 @@ stages:
         tfidf_fake_review.min_df: 0.05
     outs:
     - path: model/fake/
-      md5: 3088e17a6adf8929db4179b72a19fcdb.dir
-      size: 55559209
+      md5: 488ade79a26851011956137407c5a8ca.dir
+      size: 16362971
       nfiles: 10
   fd_evaluate_supervised:
     cmd: python fd_evaluate_supervised.py fd_supervised_report.json
@@ -283,16 +324,16 @@ stages:
       md5: 2ac32cf895ad1f7f7607cb9033e0e509
       size: 8912
     - path: model/fake/
-      md5: 3088e17a6adf8929db4179b72a19fcdb.dir
-      size: 55559209
+      md5: 488ade79a26851011956137407c5a8ca.dir
+      size: 16362971
       nfiles: 10
     params:
       params.yaml:
         fd_evaluate_supervised.f1_avg: weighted
     outs:
     - path: fd_supervised_report.json
-      md5: b81fd3b197935a607588459ee5cfa331
-      size: 3101
+      md5: b38fc4fc8e65eb95b7ed29c44ebd72c7
+      size: 3139
   predicting_fake_reviews:
     cmd: python fd_test_model.py
     deps:
@@ -304,8 +345,8 @@ stages:
       md5: 3908b289b15b750b66680aa8878c6330
       size: 5837
     - path: model/fake
-      md5: 3088e17a6adf8929db4179b72a19fcdb.dir
-      size: 55559209
+      md5: 488ade79a26851011956137407c5a8ca.dir
+      size: 16362971
       nfiles: 10
     params:
       params.yaml:
@@ -316,7 +357,7 @@ stages:
           model_fitted: model/fake/model.pkl
     outs:
     - path: data/fake/fake_free_data/
-      md5: eaf1ab24cef5f20b1947522088cc8713.dir
+      md5: 93b696a442641d14d8d3fe7ea22488ef.dir
       size: 4822472
       nfiles: 2
   clustering_reviews:
@@ -326,7 +367,7 @@ stages:
       md5: 2d112073792df83cb98a0db123c001b5
       size: 6882
     - path: data/fake/fake_free_data/fake_free_reviews.npy
-      md5: 35084d3ac5d278d8b85c8295778c7809
+      md5: d943f5b39b67ab3adf6752f949563bda
       size: 2411236
     - path: data/prepared/reviews.pkl
       md5: 463092a59a2edcaab5661372f71e06e9
