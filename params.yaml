@@ -89,7 +89,7 @@ fd_supervised_model:
     scale: True
     oversample: True
     gscv: True
-    tfidf: False
+    tfidf: True
     pca: True
     pca_n_components : 100
     ada_base_model: DecisionTreeClassifier
