@@ -50,12 +50,6 @@ def run_clustering():
     Output: Model, clustering result, topics
     '''
     
-    model_dict= dict(
-        KMeans = KMeans,
-        MiniBatchKMeans = MiniBatchKMeans,
-        DBSCAN = DBSCAN,
-        )
-    
     import yaml
     with open("params.yaml", "r") as file:
         param_file= yaml.safe_load(file)
@@ -68,16 +62,21 @@ def run_clustering():
 #     tags = ['clustering model', 'cluster reviews']
 # )  
         
-    data_source= param_file["clustering_model"]["data_source"]
+    data_source= data_source_dict[param_file["clustering_model"]["data_source"]]
     model= model_dict[param_file['clustering_model']['model_type']]
     params = param_file['clustering_model']['params']
     scale = param_file['clustering_model_model']["raw_data_params"]['scale']
     reducer= param_file["clustering_model"]["raw_data_params"]["reducer"]["name"]
     n_components= param_file["clustering_model"]["raw_data_params"]["reducer"]["n_components"]
     
-    data_source_dict= dict(
-        raw= "data/prepared/reviews.pkl",
-        preprocessed= "data/reviews/reviews.pkl"
+    data_source_dict = dict(
+        raw = "data/prepared/reviews.pkl",
+        preprocessed = "data/reviews/reviews.pkl"
+        )
+    model_dict= dict(
+        KMeans = KMeans,
+        MiniBatchKMeans = MiniBatchKMeans,
+        DBSCAN = DBSCAN,
         )
   
     #IMPORT DATA
