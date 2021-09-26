@@ -174,6 +174,8 @@ def run_model(df_path):
         X_val = np.stack(val[feature],axis=0)
         y_val = list(val['class_label'])
 
+     
+
     #adding in cluster - MUST RUN AFTER TFIDF - needs existing features
     #adds an addtional cluster label to the feature column
 

@@ -176,6 +176,8 @@ def fake_detection_model(df_path):
         X_val = np.stack(val[feature],axis=0)
         y_val = list(val['label'])
 
+        tfidf_fitted_model= None
+
     # if scale is True, we will fit and transform all X
     
     # with a MinMaxScaler
@@ -209,6 +211,8 @@ def fake_detection_model(df_path):
         print("Generating PCAs to reduce data dimensions...")
         X_train, X_val, X_test, pca_fitted_model = fake_run_pca_arr(X_train,X_val,X_test,n_components= pca_n_components)
         print("PCA process done!")
+    else:
+        pca_fitted_model= None
         
     
     # gridsearch/fit classifier
