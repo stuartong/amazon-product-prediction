@@ -305,3 +305,15 @@ def run_clustering():
         plt.scatter(nn_df['PC1'], nn_df['PC2'], c=nn_df['labels'], cmap='Paired')
         plt.title('DBSCAN - No Noise')
         plt.plot();
+
+        
+# TOPICS        
+def topic_modeling(model, feature_names, no_top_words=10, topic_names=None):
+    for index, topic in enumerate(model.components_):
+        if not topic_names or not topic_names[index]:
+            print(f'\nTopic {index}')
+        else:
+            print(f'\nTopic {topic_names[index]}:')
+        the_topics = ', '.join([f'{feature_names[i]} ({topic[i]:6.4f})' 
+                             for i in topic.argsort()[:-no_top_words-1:-1]])
+        print(the_topics)
