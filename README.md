@@ -11,79 +11,44 @@ We plan to accomplish 3 main things:
 ## Key Links
 - [Full Proposal](https://docs.google.com/document/d/1qO5qy0LVd6yYzDum-VQhvQ-wNo1fDjyhly71D3Y5NtQ/edit)
 - [Data Set](http://deepyeti.ucsd.edu/jianmo/amazon/index.html)
-- [Project Tracker](https://docs.google.com/spreadsheets/d/1cw7917PWv5VBahoYk_9mUvYMjN5BM_jAM6zCysu4KYE/edit#gid=0)
+
 
 ## Pipeline
 !
-### 1. load_data.py
-For a specific category, loads product metadata and reviews metadata from respective urls and return products_df and reviews_df
-
-Input: product metadata url path, review metadata url path
-
-Output: product_df, review_df , meta_filename, review_filename
+### 1. load_data
+In this first stage of our pipeline, we take the metadata and the reviews data directly from the category URL (in this case :
+‘Appliances’, and we parse, clean, and convert those into Pandas dataframes. Readers may be able to load different categories
+than ‘Appliances’ by simply replacing the URL in this Python file to the desired category’s URL.
 
 
-### 2. preprocess_data_module.py
-A .py file acting as a library to feed in during the preprocess stage of the pipeline. It covers all the needed functions to run on both the product and review dataframes to clean, extract, and prepare the data for the Machine Learning stage. It includes the below functions:
-
-#### <b> clean_category_columns: </b>
-- It  takes in a dataframe and return the categories per item that occur 500 or more times in the full product space. It starts by generating a total category list of all categories tagged to every product then it counts the occurrence of every cat in the list and extracts only the list with 500 occurrences or more. Finally it updates the category column to only include these categories per product to help with feature selection/ generation.
-
-Input: data_frame
-
-Args:
-    df (data_frame): data_frame that includes "category" labelled column
-
-Returns:
-    df: same data_frame with the category column updated
+### 2. preprocess_data
+Once the data frame was processed thoroughly through previous functions, we designed this stage to turn the raw text data
+into a machine readable vectorized feature space that can be introduced to different machine learning algorithms. We do
+multiple preprocessing steps such as further cleaning, lemmatizing, removing stopwords, vectorizing every product/review
+features.
+We would then save this data in a pickle format as an output from this pipeline stage to be passed on to both our supervised
+and unsupervised models.
+Additionally there were aggregation on different features such as individual word weights using pre-trained word2vec
+models, tf-idf representations, and descriptive statistics of product/review in multiple forms(length of text, number of
+tables/images describing a product, and whether a review is verified or not).
 
 
-### 3. vectorize_XXX.py
-Convert tokens to vectorzied format using method XXX. Note might need multiple vectorizing functions for different purposes.
+### 3. success metric creation
+Scoring each review with a point system ranging from -2 to 2, there is also an option to remove identified fake reviews
 
-Input: List or df_column
+### 4. Supervised Model 1
+Train algorithms to predict a product’s success rate on combinations of word embeddings, handcrafted features, tf-idf vectors,
+cluster labels.
 
-Output: Updated list or df_column
+### 5. Supervised Model 2
+Train algorithms to identify potential fake reviews based on review word embeddings, tfidf, length of reviews, whether a
+review is from a verified user. The aim is to test whether fake reviews detection and elimination would improve product
+success predictions.
 
-### 4. run_supervised.py
-Takes a cleaned dataframe as input with Xs and Y specified. High level steps as follows:
+### 6. evaluate supervised model
+Reporting the train-val-test and dummy accuracy scores, F1 scores, correlation coefficient. Confusion matrix, ROC curve,
+and Precision Recall curve is also provided.
 
-1. Vectorize (if required)
-2. Split to train/test
-3. Train pre-determined model/models
-4. Train dummy & baseline models
-5. Run predictions on test data
-6. Evalulate Models
-7. Create evaluation tables/visuals (if any)
-
-Input: cleaned dataframe
-
-Output: Trained model, Evaluation details, Visuals
-
-### 5. create_features.py
-Takes a cleaned dataframe as input and uses topic modeling methods to extract features from product reivews and descriptions. Creates new features to be used as Xs and Y in run_supervised.py that are appended to the dataframe that can be used in run_supervised.py.
-
-Input: cleaned dataframe
-
-Output: updated dataframe with new features
-
-### 6. clustering_features.py
-Clustering on updated dataframe with new features to to find products that are similar.
-
-Input: Updated dataframe with new features
-
-Output: KNN decision boundary plot, dendograms, t-SNE
-
-### 7. clustering_reviews.py
-Clean, tokenenize and vectorize a specific category/ multiple categories review data and runs clustering to identify potential outliers interesting cluster that could signal fake reviews. 
-
-Input: review_df
-
-Output: Cluster plot
-
-### 8. clustering_product_reviews.py
-Uses combined_df to cluster products to find outliers that could signal potential fake reviews or interesting structure.
-
-Input: combined_df
-
-Output: Cluster plot
+### 7. clustering and evalution
+Clustering reviews data to identify trends/insights/anomalies, display graphs, compute the optimal parameter for each
+clustering model, and provide silhouette/calinski harabasz/davies bouldin scores.
