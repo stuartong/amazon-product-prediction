@@ -33,7 +33,7 @@ models, tf-idf representations, and descriptive statistics of product/review in 
 tables/images describing a product, and whether a review is verified or not).
 
 
-### 3. success metric creation
+### 3. Success Metric Creation
 Scoring each review with a point system ranging from -2 to 2, there is also an option to remove identified fake reviews
 
 ### 4. Supervised Model 1
@@ -45,10 +45,10 @@ Train algorithms to identify potential fake reviews based on review word embeddi
 review is from a verified user. The aim is to test whether fake reviews detection and elimination would improve product
 success predictions.
 
-### 6. evaluate supervised model
+### 6. Evaluate Supervised Models
 Reporting the train-val-test and dummy accuracy scores, F1 scores, correlation coefficient. Confusion matrix, ROC curve,
 and Precision Recall curve is also provided.
 
-### 7. clustering and evalution
+### 7. Clustering and Evaluation
 Clustering reviews data to identify trends/insights/anomalies, display graphs, compute the optimal parameter for each
 clustering model, and provide silhouette/calinski harabasz/davies bouldin scores.
